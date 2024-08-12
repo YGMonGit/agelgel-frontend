@@ -1,5 +1,4 @@
-# Senior Project
-## Agelgil primer healthy recipe hub using industry standard recommender algorithms
+# Agelgil primer healthy recipe hub using industry standard recommender algorithms
 
 The connection between food and health is crucial in the dynamic world of healthy living. In
 order to manage chronic diseases, avoid health problems, and enhance general wellbeing,
