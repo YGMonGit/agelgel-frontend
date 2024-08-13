@@ -14,14 +14,14 @@ function SignUp() {
   const [showPassword, setShowPassword] = useState(false);
   const [rememberMe, setRememberMe] = useState(false);
 
-  const handleSubmit = async (e: React.FocusEvent<HTMLInputElement>) => {
-
+  async function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
+    e.preventDefault();
+    // Handle form submission logic here
   }
   const handleWithGoogleClick = () => {
 
   };
 
-  // const onUsernameChange = (e: React.FocusEvent<HTMLInputElement>) => setUsername(e.target.value);
   const onUsernameChange = (e: React.ChangeEvent<HTMLInputElement>) => setUsername(e.target.value);
   const onPasswordChange = (e: React.ChangeEvent<HTMLInputElement>) => setPassword(e.target.value);
   const handleToggle = () => setRememberMe(!rememberMe);
@@ -30,7 +30,7 @@ function SignUp() {
     <div className="w-full flex-grow flex flex-col justify-start items-center">
       <PageHeader header="Register" detail="Sign up and create your account." />
       <UseGoogle clickAction={handleWithGoogleClick} />
-      <div className="w-full flex flex-col justify-start items-center flex-grow">
+      <form className="w-full flex flex-col justify-start items-center flex-grow" onSubmit={handleSubmit}>
         <Input label="Your username" placeholder="username" value={username} onChange={onUsernameChange} />
         <Input label="Password" placeholder="password" value={password} isPassword={true} showPassword={showPassword} onChange={onPasswordChange}>
           <div
@@ -50,7 +50,7 @@ function SignUp() {
           </label>
           <a href="/" className="text-content-color font-[470]">Forgot Password?</a>
         </div>
-      </div>
+      </form>
       <WideButton label="Next" color="bg-content-color" />
       <div className="w-full px-5 text-slate-400 text-[1rem] mb-10">Already have an account? <a href={loginUrl} className="text-content-color font-[470]">Login</a></div>
     </div>

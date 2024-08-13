@@ -4,7 +4,7 @@ import ArrowUpRight from "../assets/icons/arrow-up-right.png";
 
 function Navbar() {
   return (
-    <div className="w-full h-[56px] py-[14px] px-5 border-b flex justify-between items-center">
+    <div className="w-full h-[56px] py-[14px] px-5 border-b fixed top-0 left-0 right-0 bg-white flex justify-between items-center z-50">
       <div className="flex justify-start items-center gap-2">
         <img src={logo} alt="agelgel logo" className="w-[23.91px] h-[28px]" />
         <p className="text-[1.2rem] font-semibold">Agelgel</p>
