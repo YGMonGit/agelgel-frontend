@@ -3,11 +3,10 @@ import Navbar from './components/Navbar';
 import Home from './pages/Home';
 import Login from './pages/Login';
 import { Routes, Route } from "react-router-dom";
-import { signUpUrl, createPasswordUrl, loginUrl, healthConditionUrl, homeUrl, recipeDetailUrl } from './assets/data';
-import SignUpUsername from './pages/SignUpUsername';
-import SignUpCreatePassword from './pages/SignUpCreatePassword';
-import HealthConditions from './pages/HealthConditions';
+import { signUpUrl, loginUrl, homeUrl, recipeDetailUrl, postUrl } from './assets/data';
 import RecipeDetail from './pages/RecipeDetail';
+import NewRecipeForm from './pages/NewRecipeForm';
+import SignUp from './pages/SignUp';
 
 import '@fontsource/roboto/300.css';
 import '@fontsource/roboto/400.css';
@@ -22,10 +21,9 @@ function App() {
       <Routes> 
         <Route path={homeUrl} element={<Home />} />
         <Route path={loginUrl} element={<Login />} />
-        <Route path={signUpUrl} element={<SignUpUsername />} />
-        <Route path={createPasswordUrl} element={<SignUpCreatePassword />} />
-        <Route path={healthConditionUrl} element={<HealthConditions />} />
+        <Route path={signUpUrl} element={<SignUp />} />
         <Route path={`${recipeDetailUrl}/:id`} element={<RecipeDetail />} />
+        <Route path={postUrl} element={<NewRecipeForm />} />
       </Routes>
     </div>
   );

@@ -53,7 +53,9 @@ function Login() {
           <a href="/" className="text-content-color font-[470]">Forgot Password?</a>
         </div>
       </form>
-      <WideButton label="Login" color="bg-content-color" />
+      <div className="w-full px-5">
+        <WideButton label="Login" color="bg-content-color" />
+      </div>
       <div className="w-full px-5 text-slate-400 text-[1rem] mb-10">Not Registered? <a href={signUpUrl} className="text-content-color font-[470]">Create Account</a></div>
     </div>
   );

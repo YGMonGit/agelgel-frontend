@@ -8,6 +8,7 @@ interface InputProps {
   isPassword?: boolean;
   showPassword?: boolean;
   onChange?: (event: React.ChangeEvent<HTMLInputElement>) => void;
+  instruction?: string;
   children?: React.ReactNode;
 }
 
@@ -15,7 +16,7 @@ interface UseGoogleProps {
   clickAction?: () => void;
 }
 
-function Input({ label, placeholder, value, isPassword, showPassword, onChange, children }: InputProps) {
+function Input({ label, placeholder, value, isPassword, showPassword, onChange, instruction, children }: InputProps) {
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     if (onChange) {
@@ -43,6 +44,9 @@ function Input({ label, placeholder, value, isPassword, showPassword, onChange, 
         />
         {children}
       </div>
+      <p className="text-[.9rem] text-slate-400">
+        {instruction}
+      </p>
     </div>
   );
 } 

@@ -1,4 +1,4 @@
-import React, { useState, useRef, useEffect } from "react";
+import React, { useRef, useEffect } from "react";
 import { TextField, Chip, Autocomplete, IconButton } from "@mui/material";
 import { IoIosClose } from "react-icons/io";
 
@@ -6,11 +6,18 @@ interface ChipsBoxProps {
   label: string;
   options: string[];
   detail: string;
+  selectedConditions: string[];
+  setSelectedConditions: React.Dispatch<React.SetStateAction<string[]>>;
 }
 
-const ChipsBox: React.FC<ChipsBoxProps> = ({ label, options, detail }) => {
-  const [selectedConditions, setSelectedConditions] = useState<string[]>([]);
-  const [inputValue, setInputValue] = useState("");
+const ChipsBox: React.FC<ChipsBoxProps> = ({
+  label,
+  options,
+  detail,
+  selectedConditions,
+  setSelectedConditions,
+}) => {
+  const [inputValue, setInputValue] = React.useState("");
   const inputRef = useRef<HTMLInputElement>(null);
   const scrollableDivRef = useRef<HTMLDivElement>(null);
 
@@ -56,7 +63,11 @@ const ChipsBox: React.FC<ChipsBoxProps> = ({ label, options, detail }) => {
             key={index}
             label={condition}
             onDelete={() => handleDelete(condition)}
-            sx={{ margin: "0 4px", borderRadius: "8px", backgroundColor: "#F3F4F6" }}
+            sx={{
+              margin: "0 4px",
+              borderRadius: "8px",
+              backgroundColor: "#F3F4F6",
+            }}
             deleteIcon={
               <span className="text-[1.2rem] text-neutral-100 mx-2 cursor-pointer">
                 <IoIosClose className="text-neutral-500" />
@@ -108,7 +119,9 @@ const ChipsBox: React.FC<ChipsBoxProps> = ({ label, options, detail }) => {
           )}
         />
       </div>
-      <h2 className="text-[.9rem] font-normal text-slate-500 mt-1 leading-5">{detail}</h2>
+      <h2 className="text-[.9rem] font-normal text-slate-500 mt-1 leading-5">
+        {detail}
+      </h2>
     </div>
   );
 };

@@ -1,17 +1,19 @@
+// Temp imports
 import image1 from "./images/post/image_1.png"; 
 import image2 from "./images/post/image_2.png"; 
 import image3 from "./images/post/image_3.png"; 
 import image4 from "./images/post/image_4.png"; 
 import user1 from "./images/post/user_1.png"; 
 
+// Url prefix
 export const domainUrl = "http://localhost:3000";
 
+// Page urls
 export const homeUrl = "/";
 export const loginUrl = "/login";
 export const signUpUrl = "/sign-up";
-export const createPasswordUrl = "/create-password";
-export const healthConditionUrl = "/health-condition";
 export const recipeDetailUrl = "/recipe-detail";
+export const postUrl = "/post";
 
 export const allergies = [
   "Peanuts",
