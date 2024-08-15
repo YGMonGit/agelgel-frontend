@@ -35,3 +35,7 @@ export interface IUserSignUpFrom {
     phone_number: string;
     profile_img?: string;
 }
+
+export interface IUserUpdateFrom extends Partial<IUserSignUpFrom> {
+}
+
