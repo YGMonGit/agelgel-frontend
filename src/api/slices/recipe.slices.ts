@@ -1,7 +1,7 @@
 import agelgilAPI from "..";
 import { INewRecipeFrom, INutritionData, IRecipe, IRecipeSearchFrom, IRecipeUpdateFrom } from "../types/recipe.type";
 
-const userApiSlice = agelgilAPI.injectEndpoints({
+const recipeApiSlice = agelgilAPI.injectEndpoints({
     endpoints: (builder) => ({
         getRecipeById: builder.query<IRecipe, string>({
             query: (recipeId) => `/public/recipe/${recipeId}`,
@@ -63,4 +63,4 @@ export const {
     useSearchRecipesMutation,
     useCreateRecipeMutation,
     useUpdateRecipeMutation,
-} = userApiSlice
+} = recipeApiSlice

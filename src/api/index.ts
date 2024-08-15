@@ -15,7 +15,7 @@ export const agelgilAPI = createApi({
         }
     }),
     endpoints: () => ({}),
-    tagTypes: ["User", "Recipe", "Recipe-SEARCH", "Recipe-LIST"],
+    tagTypes: ["User", "Recipe", "Recipe-SEARCH", "Recipe-LIST", "Ingredient", "Ingredient-LIST"],
 })
 
 export default agelgilAPI;
