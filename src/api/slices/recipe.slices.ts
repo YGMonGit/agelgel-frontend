@@ -43,7 +43,7 @@ const recipeApiSlice = agelgilAPI.injectEndpoints({
                 method: 'POST',
                 body: newRecipe,
             }),
-            invalidatesTags: (result, error) => result ? [{ type: 'Recipe', id: result?._id }] : [],
+            invalidatesTags: (result) => result ? [{ type: 'Recipe', id: result?._id }] : [],
         }),
         updateRecipe: builder.mutation<IRecipe, { recipeId: string; updates: IRecipeUpdateFrom }>({
             query: ({ recipeId, updates }) => ({
@@ -51,7 +51,7 @@ const recipeApiSlice = agelgilAPI.injectEndpoints({
                 method: 'PATCH',
                 body: updates,
             }),
-            invalidatesTags: (result, error, { recipeId }) => result ? [{ type: 'Recipe', id: recipeId }] : [],
+            invalidatesTags: (result, _, { recipeId }) => result ? [{ type: 'Recipe', id: recipeId }] : [],
         }),
     }),
 });

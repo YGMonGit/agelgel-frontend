@@ -1,3 +1,4 @@
+import { IRecipe } from "./recipe.type";
 
 export enum EStatus {
     active = "active",
@@ -8,6 +9,7 @@ export enum EStatus {
 export type TStatus = "active" | "disabled" | "blocked";
 
 export interface IUser {
+    _id: string;
     profile_img?: string;
     email: string;
     password: string;
@@ -17,8 +19,8 @@ export interface IUser {
     phone_number: string;
     status: TStatus;
 
-    // booked_recipes: IRecipe[];
-    // my_recipes: IRecipe[];
+    booked_recipes: string[] | IRecipe[];
+    my_recipes: string | IRecipe[];
 }
 
 

@@ -1,17 +1,18 @@
 import agelgilAPI from "..";
+import { IRecipe } from "../types/recipe.type";
 import { IUser, IUserSignUpFrom, IUserLogInFrom, IUserUpdateFrom } from "../types/user.type";
 
 const userApiSlice = agelgilAPI.injectEndpoints({
     endpoints: (builder) => ({
         getUserById: builder.query<IUser, string>({
             query: (id) => `/public/user/id/${id}`,
-            providesTags: (result, error, id) => [{ type: 'User', id }],
-            transformResponse: (response: any) => response.body,
+            providesTags: (result, _, id) => result ? [{ type: 'User', id }] : [],
+            transformResponse: (response: { body: IUser }) => response.body,
         }),
         getUser: builder.query<IUser, void>({
             query: () => `/private/user/`,
             providesTags: ['User'],
-            transformResponse: (response: any) => response.body,
+            transformResponse: (response: { body: IUser }) => response.body,
         }),
         updateUser: builder.mutation<IUser, { id: string, data: IUserUpdateFrom }>({
             query: ({ id, data }) => ({
@@ -19,32 +20,39 @@ const userApiSlice = agelgilAPI.injectEndpoints({
                 method: 'PATCH',
                 body: data,
             }),
-            invalidatesTags: (result, error, { id }) => [{ type: 'User', id }],
-            transformResponse: (response: any) => response.body,
-
+            invalidatesTags: (result, _, { id }) => result ? [{ type: 'User', id }] : [],
+            transformResponse: (response: { body: IUser }) => response.body,
         }),
-        getUserBookedRecipes: builder.query<any, { skip: number; limit: number }>({
+        getUserBookedRecipes: builder.query<IRecipe[], { skip: number; limit: number }>({
             query: ({ skip, limit }) => `/private/user/bookedRecipes/${skip}/${limit}`,
-            //TODO: add recipe tag
-            // providesTags: (result, error, { id }) => [{ type: 'User', id }], 
-            transformResponse: (response: any) => response.body,
-
+            providesTags: (result) =>
+                result
+                    ? [
+                        ...result.map((recipe) => ({ type: 'Recipe' as const, id: recipe._id })),
+                        { type: 'Recipe' as const, id: 'BookRecipe' },
+                    ]
+                    : [{ type: 'Recipe' as const, id: 'BookRecipe' }],
+            transformResponse: (response: { body: IRecipe[] }) => response.body,
         }),
-        getMyRecipes: builder.query<any, { skip: number; limit: number }>({
+        getMyRecipes: builder.query<IRecipe[], { skip: number; limit: number }>({
             query: ({ skip, limit }) => `/private/user/myRecipe/${skip}/${limit}`,
-            //TODO: add recipe tag
-            // providesTags: (result, error, { id }) => [{ type: 'User', id }],
-            transformResponse: (response: any) => response.body,
-
+            providesTags: (result) =>
+                result
+                    ? [
+                        ...result.map((recipe) => ({ type: 'Recipe' as const, id: recipe._id })),
+                        { type: 'Recipe' as const, id: 'MyRecipe' },
+                    ]
+                    : [{ type: 'Recipe' as const, id: 'MyRecipe' }],
+            transformResponse: (response: { body: IRecipe[] }) => response.body,
         }),
-        toggleBookedRecipe: builder.mutation<void, { recipeId: string }>({
+        toggleBookedRecipe: builder.mutation<IRecipe[], { recipeId: string }>({
             query: ({ recipeId }) => ({
                 url: `/private/user/bookedRecipes/toggle/${recipeId}`,
-                method: 'GET',
+                method: 'PATCH',
             }),
-            //TODO: add recipe tag
-            // invalidatesTags: (result, error) => [{ type: 'User', id }],
-            transformResponse: (response: any) => response.body,
+            invalidatesTags: ['BookRecipe'],
+            transformResponse: (response: { body: IRecipe[] }) => response.body,
+
         }),
         signUp: builder.mutation<IUser, { data: IUserSignUpFrom }>({
             query: ({ data }) => ({
@@ -53,7 +61,8 @@ const userApiSlice = agelgilAPI.injectEndpoints({
                 body: data,
             }),
             invalidatesTags: ['User'],
-            transformResponse: (response: any) => response.body,
+            transformResponse: (response: { body: IUser }) => response.body,
+
             onQueryStarted: async (_, { queryFulfilled }) => {
                 try {
                     const { meta } = await queryFulfilled;

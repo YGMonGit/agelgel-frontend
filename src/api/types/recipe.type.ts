@@ -1,3 +1,4 @@
+import { IReview } from "./review.type";
 import { IUser } from "./user.type";
 
 export enum EPreferredMealTime {
@@ -44,7 +45,7 @@ export interface IRecipe {
     instructions: string;
 
     rating: number;
-    // reviews: string[] | IReview[];
+    reviews: string[] | IReview[];
 
     status: TRecipeStatus;
     moderator?: {
