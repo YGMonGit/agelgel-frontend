@@ -4,18 +4,18 @@ import { IUser, IUserSignUpFrom, IUserLogInFrom, IUserUpdateFrom } from "../type
 const userApiSlice = agelgilAPI.injectEndpoints({
     endpoints: (builder) => ({
         getUserById: builder.query<IUser, string>({
-            query: (id) => `user/id/${id}`,
+            query: (id) => `/public/user/id/${id}`,
             providesTags: (result, error, id) => [{ type: 'User', id }],
             transformResponse: (response: any) => response.body,
         }),
         getUser: builder.query<IUser, void>({
-            query: () => `user/`,
+            query: () => `/private/user/`,
             providesTags: ['User'],
             transformResponse: (response: any) => response.body,
         }),
         updateUser: builder.mutation<IUser, { id: string, data: IUserUpdateFrom }>({
             query: ({ id, data }) => ({
-                url: `user/update/${id}`,
+                url: `/private/user/update/${id}`,
                 method: 'PATCH',
                 body: data,
             }),
@@ -24,14 +24,14 @@ const userApiSlice = agelgilAPI.injectEndpoints({
 
         }),
         getUserBookedRecipes: builder.query<any, { skip: number; limit: number }>({
-            query: ({ skip, limit }) => `user/bookedRecipes/${skip}/${limit}`,
+            query: ({ skip, limit }) => `/private/user/bookedRecipes/${skip}/${limit}`,
             //TODO: add recipe tag
             // providesTags: (result, error, { id }) => [{ type: 'User', id }], 
             transformResponse: (response: any) => response.body,
 
         }),
         getMyRecipes: builder.query<any, { skip: number; limit: number }>({
-            query: ({ skip, limit }) => `user/myRecipe/${skip}/${limit}`,
+            query: ({ skip, limit }) => `/private/user/myRecipe/${skip}/${limit}`,
             //TODO: add recipe tag
             // providesTags: (result, error, { id }) => [{ type: 'User', id }],
             transformResponse: (response: any) => response.body,
@@ -39,7 +39,7 @@ const userApiSlice = agelgilAPI.injectEndpoints({
         }),
         toggleBookedRecipe: builder.mutation<void, { recipeId: string }>({
             query: ({ recipeId }) => ({
-                url: `user/bookedRecipes/toggle/${recipeId}`,
+                url: `/private/user/bookedRecipes/toggle/${recipeId}`,
                 method: 'GET',
             }),
             //TODO: add recipe tag
@@ -48,7 +48,7 @@ const userApiSlice = agelgilAPI.injectEndpoints({
         }),
         signUp: builder.mutation<IUser, { data: IUserSignUpFrom }>({
             query: ({ data }) => ({
-                url: `/user/signUp`,
+                url: `/public/user/signUp`,
                 method: 'POST',
                 body: data,
             }),
@@ -71,20 +71,19 @@ const userApiSlice = agelgilAPI.injectEndpoints({
         }),
         logIn: builder.mutation<IUser, { data: IUserLogInFrom }>({
             query: ({ data }) => ({
-                url: `/user/logIn`,
+                url: `/public/user/logIn`,
                 method: 'POST',
                 body: data,
             }),
             invalidatesTags: ['User'],
-            transformResponse: (response: any) => response.body,
             onQueryStarted: async (_, { queryFulfilled }) => {
                 try {
-                    const { meta } = await queryFulfilled;
+                    const { meta, data } = await queryFulfilled;
                     const authorizationToken = meta?.response?.headers.get("Authorization");
                     const refreshToken = meta?.response?.headers.get("RefreshToken");
                     if (authorizationToken && refreshToken) {
-                        localStorage.setItem('agelgilAuthorizationToken', authorizationToken);
-                        localStorage.setItem('agelgilRefreshToken', refreshToken);
+                        localStorage.setItem('agelgilAuthorizationToken', authorizationToken.split("Bearer")[1].trim());
+                        localStorage.setItem('agelgilRefreshToken', refreshToken.split("Bearer")[1].trim());
                     }
                 } catch (error) {
                     console.error('Failed to refresh token:', error);
@@ -93,7 +92,7 @@ const userApiSlice = agelgilAPI.injectEndpoints({
         }),
         refreshToken: builder.query<void, void>({
             query: () => ({
-                url: `/user/refreshToken`,
+                url: `/private/user/refreshToken`,
                 method: 'GET',
                 headers: {
                     RefreshToken: `Bearer ${localStorage.getItem('agelgilRefreshToken')}`
@@ -116,7 +115,7 @@ const userApiSlice = agelgilAPI.injectEndpoints({
         }),
         logOut: builder.mutation<void, void>({
             query: () => ({
-                url: `/user/logOut`,
+                url: `/private/user/logOut`,
                 method: 'DELETE',
             }),
             invalidatesTags: ['User'],

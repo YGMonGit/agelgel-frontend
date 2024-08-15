@@ -17,8 +17,8 @@ export interface IUser {
     phone_number: string;
     status: TStatus;
 
-    booked_recipes: IRecipe[];
-    my_recipes: IRecipe[];
+    // booked_recipes: IRecipe[];
+    // my_recipes: IRecipe[];
 }
 
 
