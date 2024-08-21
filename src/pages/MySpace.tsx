@@ -1,13 +1,20 @@
 import React, { useState } from 'react'
 import MySpaceNav from '../components/MySpaceNav';
 import PageHeader from '../components/PageHeader';
-import { filterData, posts } from "../assets/data";
 import DisplayCard from '../components/DisplayCard';
-import { Post } from '../types/post';
+import { useGetMyRecipesQuery, useGetUserBookedRecipesQuery } from '../api/slices/user.slices';
+import { ERecipeStatus } from '../api/types/recipe.type';
 
 function MySpace() {
 
   const [spaceType, setSpaceType] = useState(true);
+
+  const { data: myRecipes, isLoading: myRecipesIsLoading } = useGetMyRecipesQuery({ status: ERecipeStatus.verified, skip: 0, limit: 10 }, {
+    skip: !spaceType
+  });
+  const { data: myBookedRecipes, isLoading: myBookedRecipesIsLoading } = useGetUserBookedRecipesQuery({ skip: 0, limit: 10 }, {
+    skip: spaceType
+  });
 
   const mainHeader = spaceType ? "My Recipes" : "Saved Recipes"
   const subHeader = spaceType ? "Your recipe contributions." : "The recipe suggestions you took to heart."
@@ -21,15 +28,15 @@ function MySpace() {
       />
       {spaceType ? (
         <div className="w-full px-5 flex justify-evenly items-start gap-3 flex-wrap">
-          {/* {posts.map((post, index) => (
-            <DisplayCard post={post as Post} key={index} />
-          ))} */}
+          {myRecipes?.map((post, index) => (
+            <DisplayCard post={post} key={index} />
+          ))}
         </div>
       ) : (
         <div className="w-full px-5 flex justify-evenly items-start gap-3 flex-wrap">
-          {/* {posts.map((post, index) => (
-            <DisplayCard post={post as Post} key={index} />
-          ))} */}
+          {myBookedRecipes?.map((post, index) => (
+            <DisplayCard post={post} key={index} />
+          ))}
         </div>
       )}
     </div>
