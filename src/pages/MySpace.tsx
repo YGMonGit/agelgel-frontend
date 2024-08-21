@@ -21,15 +21,15 @@ function MySpace() {
       />
       {spaceType ? (
         <div className="w-full px-5 flex justify-evenly items-start gap-3 flex-wrap">
-          {posts.map((post, index) => (
+          {/* {posts.map((post, index) => (
             <DisplayCard post={post as Post} key={index} />
-          ))}
+          ))} */}
         </div>
       ) : (
         <div className="w-full px-5 flex justify-evenly items-start gap-3 flex-wrap">
-          {posts.map((post, index) => (
+          {/* {posts.map((post, index) => (
             <DisplayCard post={post as Post} key={index} />
-          ))}
+          ))} */}
         </div>
       )}
     </div>

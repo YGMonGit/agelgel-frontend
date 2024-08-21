@@ -11,6 +11,8 @@ export interface IReview {
     recipe: string | IRecipe;
     comment: string;
     rating: number;
+    createdAt: Date;
+    updatedAt: Date;
 }
 
 export interface INewReviewFrom {

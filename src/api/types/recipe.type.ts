@@ -67,6 +67,21 @@ export interface IRecipe {
         full_name: string;
         profile_img: string;
     }
+
+    createdAt: Date;
+    updatedAt: Date;
+}
+
+export interface IRecipeCard {
+    _id: string;
+    name: string;
+    description?: string;
+    imgs: string[];
+    preferredMealTime: TPreferredMealTime[];
+    preparationDifficulty: TPreparationDifficulty;
+    cookingTime: number;
+    rating: number;
+
 }
 
 export interface INewRecipeFrom {
