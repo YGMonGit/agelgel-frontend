@@ -53,7 +53,30 @@ const recipeApiSlice = agelgilAPI.injectEndpoints({
             }),
             invalidatesTags: (result, _, { recipeId }) => result ? [{ type: 'Recipe', id: recipeId }] : [],
         }),
+        recommendation: builder.query<IRecipe[], { skip: number; limit: number }>({
+            query: ({ skip, limit }) => `/private/recipe/recommendation/${skip}/${limit}`,
+            transformResponse: (response: { body: IRecipe[] }) => response.body,
+            providesTags: (result) =>
+                result
+                    ? [
+                        ...result.map((recipe) => ({ type: 'Recipe' as const, id: recipe._id })),
+                        { type: 'Recipe' as const, id: 'Recipe-LIST' },
+                    ]
+                    : [{ type: 'Recipe' as const, id: 'Recipe-LIST' }],
+        }),
+        similar: builder.query<IRecipe[], { recipeId: string, skip: number; limit: number }>({
+            query: ({ skip, limit, recipeId }) => `/public/recipe/similar.${recipeId}/${skip}/${limit}`,
+            transformResponse: (response: { body: IRecipe[] }) => response.body,
+            providesTags: (result) =>
+                result
+                    ? [
+                        ...result.map((recipe) => ({ type: 'Recipe' as const, id: recipe._id })),
+                        { type: 'Recipe' as const, id: 'Recipe-LIST' },
+                    ]
+                    : [{ type: 'Recipe' as const, id: 'Recipe-LIST' }],
+        }),
     }),
+
 });
 
 export const {
@@ -63,4 +86,6 @@ export const {
     useSearchRecipesMutation,
     useCreateRecipeMutation,
     useUpdateRecipeMutation,
+    useRecommendationQuery,
+    useSimilarQuery,
 } = recipeApiSlice

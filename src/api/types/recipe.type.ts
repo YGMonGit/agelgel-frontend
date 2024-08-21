@@ -1,5 +1,7 @@
+import { IIngredient } from "./ingredient.type";
+import { IModerator } from "./moderator.type";
 import { IReview } from "./review.type";
-import { IUser } from "./user.type";
+import { IMedicalCondition, IUser } from "./user.type";
 
 export enum EPreferredMealTime {
     breakfast = "breakfast",
@@ -7,10 +9,9 @@ export enum EPreferredMealTime {
     dinner = "dinner",
     snack = "snack",
     dessert = "dessert",
-    drink = "drink",
     other = "other",
 }
-export type TPreferredMealTime = "breakfast" | "lunch" | "dinner" | "snack" | "dessert" | "drink" | "other";
+export type TPreferredMealTime = "breakfast" | "lunch" | "dinner" | "snack" | "dessert" | "other";
 
 
 export enum EPreparationDifficulty {
@@ -28,7 +29,7 @@ export enum ERecipeStatus {
 }
 export type TRecipeStatus = "verified" | "pending" | "rejected";
 interface IngredientDetail {
-    // ingredient: string | IIngredient;
+    ingredient: string | IIngredient;
     amount: number;
 }
 
@@ -43,13 +44,21 @@ export interface IRecipe {
     cookingTime: number;
     ingredients: IngredientDetail[];
     instructions: string;
+    youtubeLink?: string;
 
     rating: number;
     reviews: string[] | IReview[];
+    totalReviews: number;
+
 
     status: TRecipeStatus;
+
+    medical_condition: IMedicalCondition;
+
+    shareableLink: string;
+
     moderator?: {
-        // moderator: string | IModerator;
+        moderator: string | IModerator;
         Comment: string;
     };
 
@@ -69,6 +78,8 @@ export interface INewRecipeFrom {
     cookingTime: number;
     ingredients: IngredientDetail[];
     instructions: string;
+    medical_condition: IMedicalCondition;
+    youtubeLink?: string;
 }
 
 export interface IRecipeUpdateFrom extends Partial<INewRecipeFrom> {
@@ -80,6 +91,10 @@ export interface IRecipeSearchFrom {
     preparationDifficulty?: TPreparationDifficulty;
     cookingTime?: number;
     ingredients: string[]
+    sort?: { field: string, order: 1 | -1 }[];
+    medical_condition?: IMedicalCondition;
+    status?: TRecipeStatus;
+    rating?: number;
 }
 
 export interface INutritionData {
