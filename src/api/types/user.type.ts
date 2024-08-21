@@ -8,6 +8,43 @@ export enum EStatus {
 
 export type TStatus = "active" | "disabled" | "blocked";
 
+export type TChronicDisease = "diabetes" | "hypertension" | "obesity" | "heart_disease" | "kidney_disease" | "liver_disease" | "other" | "none";
+
+export enum EDietaryPreferences {
+    vegetarian = "vegetarian",
+    vegan = "vegan",
+    gluten_free = "gluten_free",
+    dairy_free = "dairy_free",
+    nut_free = "nut_free",
+    LowSugar = "LowSugar",
+    other = "other",
+    none = "none",
+}
+
+export type TDietaryPreferences = "vegetarian" | "vegan" | "gluten_free" | "dairy_free" | "nut_free" | "LowSugar" | "other" | "none";
+
+export enum EAllergies {
+    peanuts = "peanuts",
+    tree_nuts = "tree_nuts",
+    shellfish = "shellfish",
+    dairy = "dairy",
+    eggs = "eggs",
+    wheat = "wheat",
+    soy = "soy",
+    fish = "fish",
+    other = "other",
+    none = "none",
+}
+
+export type TAllergies = "peanuts" | "tree_nuts" | "shellfish" | "dairy" | "eggs" | "wheat" | "soy" | "fish" | "other" | "none";
+
+
+export interface IMedicalCondition {
+    chronicDiseases: TChronicDisease[];
+    dietary_preferences: EDietaryPreferences[];
+    allergies: EAllergies[];
+}
+
 export interface IUser {
     _id: string;
     profile_img?: string;
@@ -18,6 +55,9 @@ export interface IUser {
     full_name: string;
     phone_number: string;
     status: TStatus;
+
+    medical_condition: IMedicalCondition;
+
 
     booked_recipes: string[] | IRecipe[];
     my_recipes: string | IRecipe[];
@@ -36,6 +76,9 @@ export interface IUserSignUpFrom {
     last_name: string;
     phone_number: string;
     profile_img?: string;
+
+    medical_condition: IMedicalCondition;
+
 }
 
 export interface IUserUpdateFrom extends Partial<IUserSignUpFrom> {

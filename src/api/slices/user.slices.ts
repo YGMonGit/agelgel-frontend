@@ -1,5 +1,5 @@
 import agelgilAPI from "..";
-import { IRecipe } from "../types/recipe.type";
+import { ERecipeStatus, IRecipe } from "../types/recipe.type";
 import { IUser, IUserSignUpFrom, IUserLogInFrom, IUserUpdateFrom } from "../types/user.type";
 
 const userApiSlice = agelgilAPI.injectEndpoints({
@@ -34,8 +34,8 @@ const userApiSlice = agelgilAPI.injectEndpoints({
                     : [{ type: 'Recipe' as const, id: 'BookRecipe' }],
             transformResponse: (response: { body: IRecipe[] }) => response.body,
         }),
-        getMyRecipes: builder.query<IRecipe[], { skip: number; limit: number }>({
-            query: ({ skip, limit }) => `/private/user/myRecipe/${skip}/${limit}`,
+        getMyRecipes: builder.query<IRecipe[], { status: ERecipeStatus, skip: number; limit: number }>({
+            query: ({ skip, limit, status }) => `/private/user/myRecipe/${status}/${skip}/${limit}`,
             providesTags: (result) =>
                 result
                     ? [
