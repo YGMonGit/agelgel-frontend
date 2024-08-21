@@ -12,8 +12,11 @@ export const domainUrl = "http://localhost:3000";
 export const homeUrl = "/";
 export const loginUrl = "/login";
 export const signUpUrl = "/sign-up";
+export const editUserUrl = "/edit-user";
 export const recipeDetailUrl = "/recipe-detail";
 export const postUrl = "/post";
+export const editPostUrl = "/edit-post";
+export const mySpaceUrl = "/my-space";
 
 export const allergies = [
   "Peanuts",
@@ -26,6 +29,11 @@ export const allergies = [
   "Wheat",
   "Fish",
   "Sesame"
+];
+
+export const healthIssue = [
+  "Diabetes",
+  "Lactose Intolerance",
 ];
 
 export const mealPreferences = [

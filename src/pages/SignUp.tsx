@@ -15,8 +15,7 @@ function SignUp() {
   const [confirmPassword, setConfirmPassword] = useState("");
 
   // For form sign up health conditions
-  const [rememberDiabetes, setRememberDiabetes] = useState(false);
-  const [rememberLI, setRememberLI] = useState(false);
+  const [healthCondition, setHealthCondition] = useState<string[]>([]);
   const [allergy, setAllergy] = useState<string[]>([]);
   const [mealPreference, setMealPreference] = useState<string[]>([]);
 
@@ -41,10 +40,8 @@ function SignUp() {
           />
         ) : (
           <HealthConditions
-            rememberDiabetes={rememberDiabetes}
-            setRememberDiabetes={setRememberDiabetes}
-            rememberLI={rememberLI}
-            setRememberLI={setRememberLI}
+            healthCondition={healthCondition}
+            setHealthCondition={setHealthCondition}
             allergy={allergy}
             setAllergy={setAllergy}
             mealPreference={mealPreference}
