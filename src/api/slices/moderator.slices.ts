@@ -1,6 +1,6 @@
 import agelgilAPI from "..";
 import { IModerator, IModeratorLogInFrom, IModeratorRecipeUpdateFrom, IModeratorSignUpFrom, IModeratorUpdateFrom } from "../types/moderator.type";
-import { IRecipe } from "../types/recipe.type";
+import { ERecipeStatus, IRecipe } from "../types/recipe.type";
 
 const moderatorApiSlice = agelgilAPI.injectEndpoints({
     endpoints: (builder) => ({
@@ -119,6 +119,11 @@ const moderatorApiSlice = agelgilAPI.injectEndpoints({
             }),
             invalidatesTags: (result, _, { recipeId }) => result ? [{ type: 'Recipe', id: recipeId }] : [],
         }),
+        moderatedRecipes: builder.query<IRecipe[], { status: ERecipeStatus, skip: number; limit: number }>({
+            query: ({ status, skip, limit }) => `/moderator/recipes/${status}?skip=${skip}&limit=${limit}`,
+            providesTags: (result, _, { status }) => result ? [{ type: 'Recipe', status }] : [],
+            transformResponse: (response: { body: IRecipe[] }) => response.body,
+        }),
     }),
 });
 
@@ -131,4 +136,5 @@ export const {
     useModeratorRefreshTokenQuery,
     useModeratorIogOutMutation,
     useUpdateRecipeStatusMutation,
+    useModeratedRecipesQuery
 } = moderatorApiSlice
