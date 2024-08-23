@@ -10,6 +10,17 @@ export type TStatus = "active" | "disabled" | "blocked";
 
 export type TChronicDisease = "diabetes" | "hypertension" | "obesity" | "heart_disease" | "kidney_disease" | "liver_disease" | "other" | "none";
 
+export enum EChronicDisease {
+    diabetes = "diabetes",
+    hypertension = "hypertension",
+    obesity = "obesity",
+    heart_disease = "heart_disease",
+    kidney_disease = "kidney_disease",
+    liver_disease = "liver_disease",
+    other = "other",
+    none = "none",
+}
+
 export enum EDietaryPreferences {
     vegetarian = "vegetarian",
     vegan = "vegan",
