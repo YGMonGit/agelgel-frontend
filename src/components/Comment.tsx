@@ -19,7 +19,7 @@ function Comment({ comments }: CommentProps) {
         <img src={comments.user.profile_img} className="min-w-8 w-8" alt="pic" />
       </div>
       <div className="flex flex-col justify-start items-start flex-grow">
-        <h3 className="font-semibold mb-1">{comments.user.full_name} <span className="text-slate-400 font-normal pl-1">{comments.createdAt.toLocaleTimeString()}</span></h3>
+        <h3 className="font-semibold mb-1">{comments.user.full_name} <span className="text-slate-400 font-normal pl-1">{(new Date(comments.createdAt)).toLocaleTimeString()}</span></h3>
         <div className="w-full flex justify-start items-center gap-1 my-2">
           <StyledRating name="read-only" defaultValue={comments.rating} precision={0.5} size="small" readOnly />
           <p className="leading-3 px-1 rounded-md text-content-color text-[.8rem] bg-[#EBFFF8]">{comments.rating.toFixed(1)}</p>

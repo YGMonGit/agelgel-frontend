@@ -94,7 +94,7 @@ function RecipeDetail() {
   const { data: macroNutrients, isLoading: macroNutrientsIsLoading } = useGetRecipeCarbsQuery(String(rID.id));
 
   const onNewCommentChange = (e: React.ChangeEvent<HTMLInputElement>) => setNewComment(e.target.value);
-  
+
   if (!recipe) {
     return (
       <div className="w-full h-full max-w-[800px] px-5 flex flex-col justify-start items-start gap-3">
@@ -154,7 +154,7 @@ function RecipeDetail() {
             <img src={User} className="min-w-8 w-8" alt="pic" />
             <p className="text-[1.3rem] font-semibold">Name</p>
           </div>
-          <BsFillPersonCheckFill className="text-content-color text-[1.5rem]"/>
+          <BsFillPersonCheckFill className="text-content-color text-[1.5rem]" />
         </div>
         <div className="w-full flex justify-between items-center mt-6">
           <h2 className="text-[1.3rem] font-bold">{recipe.description}</h2>
@@ -241,11 +241,11 @@ function RecipeDetail() {
         </div>
         <div className="w-full flex flex-col justify-start items-start mt-5">
           <h3 className="font-semibold mb-1">Comments {recipe.totalReviews}</h3>
-          {/* {
+          {
             recipe.reviews.map((review, index) => (
               <Comment key={index} comments={review as IReview} />
             ))
-          } */}
+          }
         </div>
         <form className="group w-full flex flex-col justify-start items-start gap-3" onSubmit={addComment}>
           <Rating
