@@ -72,7 +72,7 @@ function Navbar() {
   const getLeftContent = () => {
     if (location.pathname === homeUrl || location.pathname === loginUrl || location.pathname === signUpUrl || location.pathname === postUrl) {
       return (
-        <div className="flex justify-start items-center gap-2 select-none">
+        <div className="flex justify-start items-center gap-2 select-none" onClick={() => navigate(homeUrl)}>
           <img src={logo} alt="agelgel logo" className="w-[23.91px] h-[28px]" />
           <p className="text-[1.2rem] font-semibold">Agelgel</p>
         </div>

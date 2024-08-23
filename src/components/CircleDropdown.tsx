@@ -1,6 +1,9 @@
 import React, { useState, useRef, useEffect } from "react";
+import { useNavigate } from "react-router-dom";
+import { mySpaceUrl } from "../assets/data";
 
 function CircleDropdown() {
+  const navigate = useNavigate();
   const [isOpen, setIsOpen] = useState<boolean>(false);
   const dropdownRef = useRef<HTMLDivElement>(null);
 
@@ -39,7 +42,7 @@ function CircleDropdown() {
               <p className="text-[.9rem] font-semibold">Full Name</p>
               <p className="text-[.8rem] text-slate-500 -mt-1">name@example.com</p>
             </li>
-            <li className="hover:bg-gray-100 text-slate-500 rounded-md p-1 px-3 cursor-pointer">
+            <li className="hover:bg-gray-100 text-slate-500 rounded-md p-1 px-3 cursor-pointer" onClick={() => navigate(mySpaceUrl)}>
               Recipes
             </li>
             <li className="hover:bg-gray-100 text-slate-500 rounded-md p-1 px-3 cursor-pointer">

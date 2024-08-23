@@ -6,12 +6,13 @@ import { RiEyeCloseLine, RiEyeLine } from "react-icons/ri";
 
 import { Checkbox } from "../components/ui/checkbox";
 import WideButton from "../components/WideButton";
-import { signUpUrl } from "../assets/data";
+import { homeUrl, signUpUrl } from "../assets/data";
 import { useLogInMutation } from "../api/slices/user.slices";
 import { useForm } from "react-hook-form";
 import { IUserLogInFrom } from "../api/types/user.type";
 import { joiResolver } from "@hookform/resolvers/joi";
 import Joi from "joi";
+import { useNavigate } from "react-router-dom";
 
 function Login() {
 
@@ -19,6 +20,8 @@ function Login() {
   const [password, setPassword] = useState("");
   const [showPassword, setShowPassword] = useState(false);
   const [rememberMe, setRememberMe] = useState(false);
+
+  const navigate = useNavigate();
 
 
   const [logIn] = useLogInMutation();
@@ -36,6 +39,7 @@ function Login() {
     try {
       const data = await logIn({ data: { email, password } }).unwrap();
       console.log(data);
+      navigate(homeUrl);
     } catch (error) {
       console.error("Failed to log in:", error);
     }
@@ -74,9 +78,6 @@ function Login() {
           <a href="/" className="text-content-color font-[470]">Forgot Password?</a>
         </div>
         <div className="w-full px-5">
-          {/* <button color="bg-content-color" type="submit" >
-            Login
-          </button> */}
           <WideButton label="Login" color="bg-content-color" />
         </div>
       </form>

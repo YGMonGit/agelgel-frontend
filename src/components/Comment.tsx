@@ -16,7 +16,7 @@ function Comment({ comments }: CommentProps) {
   return (
     <div className="w-full flex justify-start items-start mt-1 mb-3 pb-8 border-b gap-3">
       <div className="h-full flex justify-center items-start">
-        <img src={comments.user.profile_img} className="min-w-8 w-8" />
+        <img src={comments.user.profile_img} className="min-w-8 w-8" alt="pic" />
       </div>
       <div className="flex flex-col justify-start items-start flex-grow">
         <h3 className="font-semibold mb-1">{comments.user.full_name} <span className="text-slate-400 font-normal pl-1">{comments.createdAt.toLocaleTimeString()}</span></h3>

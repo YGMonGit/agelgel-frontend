@@ -8,8 +8,9 @@ import { ERecipeStatus } from '../api/types/recipe.type';
 function MySpace() {
 
   const [spaceType, setSpaceType] = useState(true);
+  const [postStatus, setPostStatus] = useState(ERecipeStatus.verified);
 
-  const { data: myRecipes, isLoading: myRecipesIsLoading } = useGetMyRecipesQuery({ status: ERecipeStatus.verified, skip: 0, limit: 10 }, {
+  const { data: myRecipes, isLoading: myRecipesIsLoading } = useGetMyRecipesQuery({ status: postStatus, skip: 0, limit: 10 }, {
     skip: !spaceType
   });
   const { data: myBookedRecipes, isLoading: myBookedRecipesIsLoading } = useGetUserBookedRecipesQuery({ skip: 0, limit: 10 }, {
@@ -26,6 +27,11 @@ function MySpace() {
         header={mainHeader}
         detail={subHeader}
       />
+      <div className='w-full px-5 flex justify-start items-center gap-2'>
+        <button className='px-4 py-1 rounded-lg bg-content-color text-white outline-none border-none' onClick={() => setPostStatus(ERecipeStatus.verified)}>verified</button>
+        <button className='px-4 py-1 rounded-lg bg-neutral-100 outline-none border-none' onClick={() => setPostStatus(ERecipeStatus.pending)}>pending</button>
+        <button className='px-4 py-1 rounded-lg bg-red-600 text-white outline-none border-none' onClick={() => setPostStatus(ERecipeStatus.rejected)}>rejected</button>
+      </div>
       {spaceType ? (
         <div className="w-full px-5 flex justify-evenly items-start gap-3 flex-wrap">
           {myRecipes?.map((post, index) => (
