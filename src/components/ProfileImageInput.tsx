@@ -3,19 +3,18 @@ import { IoMdAdd } from "react-icons/io";
 
 interface ProfileImageInputProps {
   defaultImage?: string;
-  register?:any
-  setValue:any
+  register?: any
+  setValue: any
 }
 
-const ProfileImageInput: React.FC<ProfileImageInputProps> = ({ defaultImage, register = (placeholder:string)=> {},setValue }) => {
+const ProfileImageInput: React.FC<ProfileImageInputProps> = ({ defaultImage, register = (placeholder: string) => { }, setValue }) => {
   const [image, setImage] = useState<string | null>(defaultImage || null);
 
   const handleFileInput = useCallback((e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
-    console.log({files:e.target.files,file})
     if (file) {
       const imageUrl = URL.createObjectURL(file);
-      setImage(imageUrl);
+      setImage(imageUrl)
       setValue("profile_img", file, { shouldValidate: true });
     }
   }, [setValue]);

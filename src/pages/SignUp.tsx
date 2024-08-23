@@ -4,10 +4,12 @@ import SignUpCreatePassword from "./sub_pages/SignUpCreatePassword";
 import HealthConditions from "./sub_pages/HealthConditions";
 import { useForm } from "react-hook-form";
 import { zodResolver } from '@hookform/resolvers/zod';
-import { z } from 'zod';
-import { EChronicDisease,EAllergies,EDietaryPreferences,IUserSignUpFrom } from "../api/types/user.type";
+import { IUserSignUpFrom } from "../api/types/user.type";
 import { useSignUpMutation } from "../api/slices/user.slices";
 import * as Bytescale from "@bytescale/sdk";
+import { useNavigate } from "react-router-dom";
+import { signUpSchema } from "../validation/user.validation";
+import { homeUrl } from "../assets/data";
 
 
 function SignUp() {
@@ -28,66 +30,38 @@ function SignUp() {
   const [allergy, setAllergy] = useState<string[]>([]);
   const [mealPreference, setMealPreference] = useState<string[]>([]);
 
-  const fileSchema = z
-  .any()
-  .refine((file) => file == null, {
-    message: "Profile image is required.",
-  });
-
-  const signUpSchema = z.object({
-  //   email: z.string()
-  //   .email({ message: "Please enter a valid email address." })
-  //   .nonempty({ message: "Email is required." }),
-  // password: z.string()
-  //   .min(8, { message: "Password must be at least 8 characters long." })
-  //   .nonempty({ message: "Password is required." }),
-    first_name: z.string().nonempty({ message: "first Name is required." }),
-    last_name: z.string().nonempty({ message: "last Name is required." }),
-    phone_number: z.string().nonempty({ message: "phone Number is required." }),
-    profile_img: z.any().refine((file) => file != null, {
-      message: "Profile image is required.",
-    }),
-    // medical_condition: z.object({
-    //   chronicDiseases: z.array(z.nativeEnum(EChronicDisease)),
-    //   allergy: z.array(z.nativeEnum(EAllergies)),
-    //   dietary_preferences: z.array(z.nativeEnum(EDietaryPreferences)),
-    // }),
-  });
-
-  const { register, handleSubmit, formState: { errors }, setError,setValue } = useForm<IUserSignUpFrom>({
-    resolver: zodResolver(signUpSchema),
-  });
-  
-  console.log({errors});
-
-  const _handleSubmit = async (data: any) => {};
+  const navigate = useNavigate();
 
   const [signUp] = useSignUpMutation();
+
+  const { register, handleSubmit, formState: { errors }, setError, setValue, getValues } = useForm<IUserSignUpFrom>({
+    resolver: zodResolver(signUpSchema),
+  });
 
 
   async function SignUp(user: IUserSignUpFrom) {
     console.log("signing up in...");
 
     const uploadManager = new Bytescale.UploadManager({
-      apiKey: process.env.REACT_APP_BYTESCLE??""
+      apiKey: process.env.REACT_APP_BYTESCLE ?? ""
     });
 
     try {
       const file = user.profile_img;
-      const { fileUrl, filePath } = await uploadManager.upload({ data: file as any });
-      console.log(file,fileUrl, filePath);
-      const data = await signUp({ data: {...user,profile_img:fileUrl} }).unwrap();
-      console.log(data);
-    } catch (error:any) {
+      const { fileUrl } = await uploadManager.upload({ data: file as any });
+      await signUp({ data: { ...user, profile_img: fileUrl } }).unwrap();
+      navigate(homeUrl);
+    } catch (error: any) {
       if (!error.data.error) return;
-        const err = error.data.error;
-        if (err.type === "Validation")
-          setError("email", { message: err.msg });
-
+      const err = error.data.error;
+      if (err.type === "Validation")
+        setError(err.attr, { message: err.error });
     }
   }
 
-  const handleWithGoogleClick = () => {};
+  async function _handleSubmit() { }
+
+  const handleWithGoogleClick = () => { };
 
 
   return (
@@ -105,36 +79,50 @@ function SignUp() {
         ) : (
           <HealthConditions
             healthCondition={healthCondition}
-            setHealthCondition={setHealthCondition}
+            setHealthCondition={(value) => {
+              setValue("medical_condition.chronicDiseases", [...getValues().medical_condition.chronicDiseases, value as any]);
+              setHealthCondition(value);
+            }}
             allergy={allergy}
-            setAllergy={setAllergy}
+            setAllergy={
+              (value) => {
+                setValue("medical_condition.allergies", [...getValues().medical_condition.allergies, value as any]);
+                setAllergy(value);
+              }
+            }
             mealPreference={mealPreference}
-            setMealPreference={setMealPreference}
+            setMealPreference={
+              (value) => {
+                setValue("medical_condition.dietary_preferences", [...getValues().medical_condition.dietary_preferences, value as any]);
+                setMealPreference(value);
+              }
+            }
+            register={register}
             handleSubmit={_handleSubmit}
           />
         )
       ) : (
         <>
-        <form onSubmit={handleSubmit(SignUp)}>
-        <SignUpUsername
-          setFormNumber={setFormNumber}
-          firstName={firstName}
-          setFirstName={setFirstName}
-          lastName={lastName}
-          setLastName={setLastName}
-          phone={phone}
-          setPhone={setPhone}
-          handleSubmit={_handleSubmit}
-          register={register}
-          setValue={setValue}
+          <form onSubmit={handleSubmit(SignUp)}>
+            <SignUpUsername
+              setFormNumber={setFormNumber}
+              firstName={firstName}
+              setFirstName={setFirstName}
+              lastName={lastName}
+              setLastName={setLastName}
+              phone={phone}
+              setPhone={setPhone}
+              handleSubmit={_handleSubmit}
+              register={register}
+              setValue={setValue}
 
-          handleWithGoogleClick={handleWithGoogleClick}
+              handleWithGoogleClick={handleWithGoogleClick}
 
-          
-        />
 
-        <button type="submit">Submit</button>
-        </form>
+            />
+
+            <button type="submit">Submit</button>
+          </form>
         </>
       )}
     </div>

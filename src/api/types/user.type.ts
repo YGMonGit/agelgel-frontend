@@ -51,7 +51,7 @@ export type TAllergies = "peanuts" | "tree_nuts" | "shellfish" | "dairy" | "eggs
 
 
 export interface IMedicalCondition {
-    chronicDiseases: TChronicDisease[];
+    chronicDiseases: EChronicDisease[];
     dietary_preferences: EDietaryPreferences[];
     allergies: EAllergies[];
 }

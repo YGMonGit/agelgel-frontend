@@ -14,6 +14,7 @@ import { zodResolver } from '@hookform/resolvers/zod';
 import { z } from 'zod';
 import { useNavigate } from "react-router-dom";
 import ProfileImageInput from "../components/ProfileImageInput";
+import { logInSchema } from "../validation/user.validation";
 
 function Login() {
 
@@ -24,36 +25,29 @@ function Login() {
 
   const navigate = useNavigate();
 
-
   const [logIn] = useLogInMutation();
-
-  const logInSchema = z.object({
-    email: z.string()
-    .email({ message: "Please enter a valid email address." })
-    .nonempty({ message: "Email is required." }),
-  password: z.string()
-    .min(8, { message: "Password must be at least 8 characters long." })
-    .nonempty({ message: "Password is required." }),
-  });
 
   const { register, handleSubmit, formState: { errors }, setError } = useForm<IUserLogInFrom>({
     resolver: zodResolver(logInSchema),
   });
 
-  async function login(user: IUserLogInFrom) {
+  async function login(data: IUserLogInFrom) {
     console.log("Logging in...");
     try {
-      const data = await logIn({ data: { email:user.email, password:user.password } }).unwrap();
-      console.log(data);
+      await logIn({ data }).unwrap();
       navigate(homeUrl);
-    } catch (error:any) {
+    } catch (error: any) {
       if (!error.data.error) return;
-        const err = error.data.error;
-        if (err.type === "Validation")
+      const err = error.data.error;
+      if (err.type === "Validation")
+        if (err.attr === "")
           setError("email", { message: err.msg });
-        // const [sreverError, setSreverError] = useState<string | null>(null);
-        //  setSreverError(err.msg);
-        // sreverError && { <p>{sreverError}</p>
+        else
+          setError(err.attr, { message: err.error });
+
+      // const [sreverError, setSreverError] = useState<string | null>(null);
+      //  setSreverError(err.msg);
+      // sreverError && { <p>{sreverError}</p>
 
     }
   }
