@@ -99,13 +99,8 @@ const moderatorApiSlice = agelgilAPI.injectEndpoints({
             invalidatesTags: ['Moderator'],
             onQueryStarted: async (_, { queryFulfilled }) => {
                 try {
-                    const { meta } = await queryFulfilled;
-                    const authorizationToken = meta?.response?.headers.get("Authorization");
-                    const refreshToken = meta?.response?.headers.get("RefreshToken");
-                    if (authorizationToken && refreshToken) {
-                        localStorage.setItem('agelgilAuthorizationToken', authorizationToken);
-                        localStorage.setItem('agelgilRefreshToken', refreshToken);
-                    }
+                    localStorage.removeItem('agelgilAuthorizationToken');
+                    localStorage.removeItem('agelgilRefreshToken');
                 } catch (error) {
                     console.error('Failed to refresh token:', error);
                 }
