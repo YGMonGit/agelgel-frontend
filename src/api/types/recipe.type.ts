@@ -30,6 +30,7 @@ export enum ERecipeStatus {
 export type TRecipeStatus = "verified" | "pending" | "rejected";
 interface IngredientDetail {
     ingredient: string | IIngredient;
+    name: string;
     amount: number;
 }
 

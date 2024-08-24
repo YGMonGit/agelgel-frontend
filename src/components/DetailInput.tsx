@@ -5,6 +5,8 @@ interface DetailInputProps {
   placeholder: string;
   value: string;
   onChange?: (event: React.ChangeEvent<HTMLTextAreaElement>) => void;
+  register?:any
+  errors?:any
 }
 
 function DetailInput({
@@ -12,6 +14,8 @@ function DetailInput({
   placeholder,
   value,
   onChange,
+  register = (placeholder:string)=> {},
+  errors,
 }: DetailInputProps) {
   const handleChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
     if (onChange) {
@@ -19,12 +23,15 @@ function DetailInput({
     }
   };
 
+  const errorStyle = "text-[.8rem] text-red-400";
+
   return (
     <div className="w-full px-5 flex flex-col justify-start items-start gap-1 mb-6 relative">
       <label htmlFor={placeholder} className="text-[1rem] font-semibold">
         {label}
       </label>
       <textarea
+        {...register(placeholder)}
         name={placeholder}
         rows={8}
         cols={50}
@@ -35,6 +42,7 @@ function DetailInput({
         style={{ scrollbarWidth: "none", msOverflowStyle: "none" }}
         onChange={handleChange}
       ></textarea>
+      {errors && <p className={errorStyle}>{errors.message}</p>}
     </div>
   );
 }

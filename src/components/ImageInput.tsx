@@ -2,8 +2,15 @@ import React, { useState, useCallback } from "react";
 import { IoSearchOutline, IoCloseCircle } from "react-icons/io5";
 import upload_logo from "../assets/icons/upload-logo.png";
 
-const ImageInput: React.FC = () => {
-  const [images, setImages] = useState<string[]>([]);
+interface ImageInputProps {
+  images: string[];
+  setImages: React.Dispatch<React.SetStateAction<string[]>>;
+  register: any;
+  setValue: any;
+}
+
+const ImageInput = ({images, setImages}: ImageInputProps) => {
+  // const [images, setImages] = useState<string[]>([]);
 
   const handleFileInput = useCallback((e: React.ChangeEvent<HTMLInputElement> | React.DragEvent<HTMLDivElement>) => {
     let files: FileList | null = null;

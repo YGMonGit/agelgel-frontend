@@ -2,6 +2,7 @@ import ChipsList from "../../components/ChipsList";
 import React from "react";
 import WideButton from "../../components/WideButton";
 import DetailInput from "../../components/DetailInput";
+import WideLink from "../../components/WideLink";
 
 interface NewRecipeFormThreeProps {
   setFormNumber: React.Dispatch<React.SetStateAction<number>>;
@@ -9,10 +10,11 @@ interface NewRecipeFormThreeProps {
   setIngredientList: React.Dispatch<React.SetStateAction<string[]>>;
   instructions: string;
   setInstructions: React.Dispatch<React.SetStateAction<string>>;
-  handleSubmit: (e: React.FormEvent<HTMLButtonElement>) => Promise<void>;
+  register: any;
+  errors: any;
 }
 
-function NewRecipeFormThree({ setFormNumber, ingredientList, setIngredientList, instructions, setInstructions, handleSubmit }: NewRecipeFormThreeProps) {
+function NewRecipeFormThree({ setFormNumber, ingredientList, setIngredientList, instructions, setInstructions, register, errors }: NewRecipeFormThreeProps) {
   const onInstructionChange = (e: React.ChangeEvent<HTMLTextAreaElement>) =>
     setInstructions(e.target.value);
 
@@ -35,8 +37,8 @@ function NewRecipeFormThree({ setFormNumber, ingredientList, setIngredientList, 
         />
       </div>
       <div className="w-full px-5 flex justify-center items-end gap-2">
-        <WideButton label="Back" color="bg-white" outline={true} clickAction={onBackClick} />
-        <WideButton label="Finish" color="bg-content-color" clickEvent={handleSubmit} />
+        <WideLink label="Back" color="bg-white" outline={true} clickAction={onBackClick} />
+        <WideButton label="Finish" color="bg-content-color" />
       </div>
     </div>
   );

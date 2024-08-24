@@ -52,6 +52,7 @@ const ingredientApiSlice = agelgilAPI.injectEndpoints({
 export const {
     useGetIngredientByIdQuery,
     useGetIngredientsQuery,
+    useGetIngredientByNameQuery,
     // useCreateIngredientMutation,
     // useUpdateIngredientMutation,
 } = ingredientApiSlice

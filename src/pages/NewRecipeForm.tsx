@@ -3,33 +3,94 @@ import PageHeader from "../components/PageHeader";
 import NewRecipeFormOne from "./sub_pages/NewRecipeFormOne";
 import NewRecipeFormTwo from "./sub_pages/NewRecipeFormTwo";
 import NewRecipeFormThree from "./sub_pages/NewRecipeFormThree";
+import { zodResolver } from '@hookform/resolvers/zod';
+import { INewRecipeFrom,EPreparationDifficulty,EPreferredMealTime } from "../api/types/recipe.type";
+import { useForm } from "react-hook-form";
+import { newRecipeSchema } from "../validation/recipe.validation";
+import * as Bytescale from "@bytescale/sdk";
+import { useNavigate } from "react-router-dom";
+import { useCreateRecipeMutation } from "../api/slices/recipe.slices";
+import { EAllergies,EDietaryPreferences,EChronicDisease } from "../api/types/user.type";
+
 
 function NewRecipeForm() {
   // Form navigator state
   const [formNumber, setFormNumber] = useState(1);
 
+  const [healthCondition, setHealthCondition] = useState<EChronicDisease[]>([]);
+  const [allergy, setAllergy] = useState<EAllergies[]>([]);
+  const [mealPreference, setMealPreference] = useState<EDietaryPreferences[]>([]);
+
 
   // For form one
   const [recipeName, setRecipeName] = useState("");
   const [description, setDescription] = useState("");
-  const [mealTime, setMealTime] = useState("");
-  const [difficulty, setDifficulty] = useState("");
+  const [mealTime, setMealTime] = useState<EPreferredMealTime[]>([EPreferredMealTime.breakfast]);
+  const [difficulty, setDifficulty] = useState<EPreparationDifficulty[]>([EPreparationDifficulty.easy]);
   const [time, setTime] = useState("");
+  const [images, setImages] = useState<string[]>([]);
+
+  useEffect(() => {
+    console.log(mealTime);
+    
+  }, [mealTime])
+  useEffect(() => {
+    console.log(difficulty);
+    
+  }, [difficulty])
   
   // For form two
   const [ingredientList, setIngredientList] = useState<string[]>([]);
 
-  async function handleSubmit(e: React.FormEvent<HTMLButtonElement>) {
-    // Handle form submission logic here
-    console.log("Hello");
-    
-  }
-
-  // For form three
   const [instructions, setInstructions] = useState("");
 
+  const { register, handleSubmit, formState: { errors }, setError, setValue, getValues } = useForm<INewRecipeFrom>({
+    resolver: zodResolver(newRecipeSchema),
+  });
+
+  console.log({errors});
+
+  const [CreateRecipe] = useCreateRecipeMutation();
+
+
+  async function NewRecipe(recipe: INewRecipeFrom) {
+    console.log("Adding New Recipe....");
+
+    const uploadManager = new Bytescale.UploadManager({
+      apiKey: process.env.REACT_APP_BYTESCLE ?? ""
+    });
+
+  try {
+    const files = recipe.imgs;
+    const fileUrls:string[] = [];
+    files.forEach(async (file) => {
+      const { fileUrl } = await uploadManager.upload({ data: file });
+      fileUrls.push(fileUrl);
+    });
+
+    await CreateRecipe({ ...recipe, 
+        imgs: fileUrls,
+        preparationDifficulty: difficulty.length == 0 ? EPreparationDifficulty.easy : difficulty[0],
+        preferredMealTime: mealTime,
+        medical_condition: {
+          chronicDiseases: healthCondition.length == 0 ? [EChronicDisease.none] : healthCondition,
+          allergies: allergy.length == 0 ? [EAllergies.none] : allergy,
+          dietary_preferences: mealPreference.length == 0 ? [EDietaryPreferences.none] : mealPreference
+        }
+   }).unwrap();
+    // navigate(homeUrl);
+  } catch (error: any) {
+    if (!error.data.error) return;
+    const err = error.data.error;
+    if (err.type === "Validation")
+      setError(err.attr, { message: err.error });
+  }
+}
+
   return (
-    <div className="w-full flex-grow flex flex-col justify-start items-center mb-6">
+    <form className="w-full flex-grow flex flex-col justify-start items-center mb-6"
+    onSubmit={handleSubmit(NewRecipe)}
+    >
       <PageHeader
         header="Add a New Recipe"
         detail="Thanks for contributing to our database of recipes!"
@@ -39,6 +100,8 @@ function NewRecipeForm() {
           setFormNumber={setFormNumber}
           ingredientList={ingredientList}
           setIngredientList={setIngredientList}
+          register={register}
+          errors={errors}
         />
       ) : (
         <NewRecipeFormThree
@@ -47,12 +110,15 @@ function NewRecipeForm() {
           setIngredientList={setIngredientList}
           instructions={instructions}
           setInstructions={setInstructions}
-          handleSubmit={handleSubmit}
+          register={register}
+          errors={errors}
         />
       ) : (
         <NewRecipeFormOne
           setFormNumber={setFormNumber}
           recipeName={recipeName}
+          images={images}
+          setImages={setImages}
           setRecipeName={setRecipeName}
           description={description}
           setDescription={setDescription}
@@ -62,9 +128,12 @@ function NewRecipeForm() {
           setDifficulty={setDifficulty}
           time={time}
           setTime={setTime}
+          register={register}
+          setValue={setValue}
+          errors={errors}
         />
       )}
-    </div>
+    </form>
   );
 }
 

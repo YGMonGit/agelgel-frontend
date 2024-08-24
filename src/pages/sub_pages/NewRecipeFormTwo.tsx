@@ -2,15 +2,25 @@ import { Input } from "../../components/Input";
 import ChipsList from "../../components/ChipsList";
 import React, { useState } from "react";
 import { MdAdd, MdRemove } from "react-icons/md";
-import WideButton from "../../components/WideButton";
+import WideLink from "../../components/WideLink";
+import { useGetIngredientByNameQuery } from "../../api/slices/ingredient.slices";
 
 interface NewRecipeFormTwoProps {
   setFormNumber: React.Dispatch<React.SetStateAction<number>>;
   ingredientList: string[];
   setIngredientList: React.Dispatch<React.SetStateAction<string[]>>;
+  register: any;
+  errors: any;
 }
 
-function NewRecipeFormTwo({ setFormNumber, ingredientList, setIngredientList }: NewRecipeFormTwoProps) {
+function NewRecipeFormTwo({ setFormNumber, ingredientList, setIngredientList, register, errors }: NewRecipeFormTwoProps) {
+
+  const [ingredientSearch, setIngredientSearch] = useState("");
+  const {data:ingredients,isFetching,refetch} = useGetIngredientByNameQuery({
+    name: ingredientSearch,
+    nameType: "name",
+  });
+
   const [ingredient, setIngredient] = useState("");
   const [ingredientQuantity, setIngredientQuantity] = useState(0);
 
@@ -39,9 +49,11 @@ function NewRecipeFormTwo({ setFormNumber, ingredientList, setIngredientList }: 
       />
       <Input
         label="Ingredient"
-        placeholder="Add here ..."
+        placeholder="ingredients"
         value={ingredient}
         onChange={onIngredientChange}
+        register={register}
+        errors={errors.ingredients}
       />
       <div className="w-full px-5 flex flex-col justify-start items-start flex-grow">
         <label htmlFor="ingredientQuantity" className="text-[1rem] font-semibold">
@@ -85,8 +97,8 @@ function NewRecipeFormTwo({ setFormNumber, ingredientList, setIngredientList }: 
         </p>
       </div>
       <div className="w-full px-5 flex justify-center items-end gap-2">
-        <WideButton label="Back" color="bg-white" outline={true} clickAction={onBackClick}/>
-        <WideButton label="Next" color="bg-content-color" clickAction={onNextClick} />
+        <WideLink label="Back" color="bg-white" outline={true} clickAction={onBackClick}/>
+        <WideLink label="Next" color="bg-content-color" clickAction={onNextClick} />
       </div>
     </div>
   );

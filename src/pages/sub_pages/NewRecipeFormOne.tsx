@@ -3,26 +3,34 @@ import { Input } from "../../components/Input";
 import ImageInput from "../../components/ImageInput";
 import DetailInput from "../../components/DetailInput";
 import Choice from "../../components/Choice";
-import WideButton from "../../components/WideButton";
+import WideLink from "../../components/WideLink";
+import { EPreferredMealTime, EPreparationDifficulty } from "../../api/types/recipe.type";
 
 interface NewRecipeFormOneProps {
   setFormNumber: React.Dispatch<React.SetStateAction<number>>;
   recipeName: string;
   setRecipeName: React.Dispatch<React.SetStateAction<string>>;
+  images: string[];
+  setImages: React.Dispatch<React.SetStateAction<string[]>>;
   description: string;
   setDescription: React.Dispatch<React.SetStateAction<string>>;
-  mealTime: string;
-  setMealTime: React.Dispatch<React.SetStateAction<string>>;
-  difficulty: string;
-  setDifficulty: React.Dispatch<React.SetStateAction<string>>;
+  mealTime: any;
+  setMealTime: any;
+  difficulty: any;
+  setDifficulty: any;
   time: string;
   setTime: React.Dispatch<React.SetStateAction<string>>;
+  register: any;
+  setValue: any;
+  errors: any;
 }
 
 function NewRecipeFormOne({
   setFormNumber,
   recipeName,
   setRecipeName,
+  images,
+  setImages,
   description,
   setDescription,
   mealTime,
@@ -31,6 +39,9 @@ function NewRecipeFormOne({
   setDifficulty,
   time,
   setTime,
+  register,
+  setValue,
+  errors,
 }: NewRecipeFormOneProps) {
   const onRecipeNameChange = (e: React.ChangeEvent<HTMLInputElement>) =>
     setRecipeName(e.target.value);
@@ -41,45 +52,55 @@ function NewRecipeFormOne({
 
   const onNextClick = () => {setFormNumber(2)};
 
+  const errorStyle = "text-[.8rem] text-red-400";
 
   return (
     <div className="w-full flex-col justify-start items-start mt-2">
       <Input
         label="Recipe Name"
-        placeholder="Add here ..."
+        placeholder="name"
         value={recipeName}
         onChange={onRecipeNameChange}
+        register={register}
+        errors={errors.name}
       />
       <div className="w-full px-5">
-        <ImageInput />
+        <ImageInput register={register} setValue={setValue} images={images} setImages={setImages} />
+        {errors.imgs && <p className={errorStyle}>{errors.imgs.message}</p>}
       </div>
       <DetailInput
         label="Description"
-        placeholder="Write a recipe description here ..."
+        placeholder="description"
         value={description}
         onChange={onDescriptionChange}
+        register={register}
+        errors={errors.description}
       />
       <Choice
         label="Preferred Meal Time"
-        data={["Breakfast", "Lunch", "Dinner", "Snacks"]}
+        data={Object.values(EPreferredMealTime)}
         value={mealTime}
-        setValue={setMealTime}
+        setValues={setMealTime}
+        multiSelect={true}
       />
       <Choice
         label="Preparation Difficulty"
-        data={["Easy", "Medium", "Hard"]}
+        data={Object.values(EPreparationDifficulty)}
         value={difficulty}
-        setValue={setDifficulty}
+        setValues={setDifficulty}
+        multiSelect={false}
       />
       <Input
         label="Cooking Time"
-        placeholder="Add here ..."
+        placeholder="cookingTime"
         value={time}
         onChange={onTimeChange}
         instruction="In minutes."
+        register={register}
+        errors={errors.cookingTime}
       />
       <div className="w-full px-5">
-        <WideButton label="Next" color="bg-content-color" clickAction={onNextClick} />
+        <WideLink label="Next" color="bg-content-color" clickAction={onNextClick} />
       </div>
     </div>
   );
