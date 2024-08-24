@@ -92,14 +92,13 @@ function SignUp() {
           />
         ) : (
           <HealthConditions
+            setFormNumber={setFormNumber}
             healthCondition={healthCondition}
             setHealthCondition={setHealthCondition}
             allergy={allergy}
             setAllergy={setAllergy}
             mealPreference={mealPreference}
             setMealPreference={setMealPreference}
-            handleSubmit={_handleSubmit}
-
           />
         )
       ) : (

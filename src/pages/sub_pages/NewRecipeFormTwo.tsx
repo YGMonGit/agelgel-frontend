@@ -57,11 +57,11 @@ function NewRecipeFormTwo({ setFormNumber, ingredientList, setIngredientList, se
     }
   };
 
-  const onBackClick = () => { setFormNumber(1) };
-  const onNextClick = () => { setFormNumber(3) };
+  const onBackClick = () => { setFormNumber(2) };
+  const onNextClick = () => { setFormNumber(4) };
 
   return (
-    <div className="w-full flex-grow flex flex-col justify-start items-start mt-2">
+    <div className="w-full flex-grow flex flex-col justify-start items-start mt-2 select-none">
       <ChipsList
         label="Added Ingredients"
         detail="Make sure to not forget anything!"
@@ -81,18 +81,18 @@ function NewRecipeFormTwo({ setFormNumber, ingredientList, setIngredientList, se
         register={register}
         errors={errors && errors.ingredients}
       />
-      <div className="w-full px-5 flex flex-col justify-start items-start flex-grow">
+      <div className="w-full px-5 flex flex-col justify-start items-start flex-grow mt-5 mb-10">
         <label htmlFor="ingredientQuantity" className="text-[1rem] font-semibold">
           Ingredient Quantity
         </label>
         <div className="flex justify-start items-start outline-none my-2 gap-2">
           <div className="flex justify-start items-start border rounded-lg outline-none border-gray-300">
-            <button
+            <div
               className="h-[37px] w-[40px] bg-gray-200 rounded-l-lg flex justify-center items-center"
               onClick={() => setIngredientQuantity(Math.max(ingredientQuantity - 1, 0))}
             >
               <MdRemove />
-            </button>
+            </div>
             <input
               type="text"
               placeholder="_"
@@ -104,12 +104,12 @@ function NewRecipeFormTwo({ setFormNumber, ingredientList, setIngredientList, se
               required
               className="w-[65px] text-center h-[37px] bg-[#F9FAFB] text-[1rem] border-x outline-none border-gray-300"
             />
-            <button
+            <div
               className="h-[37px] w-[40px] bg-gray-200 rounded-r-lg flex justify-center items-center"
               onClick={() => setIngredientQuantity(ingredientQuantity + 1)}
             >
               <MdAdd />
-            </button>
+            </div>
           </div>
           <button
             className="h-[37px] px-3 rounded-md flex justify-center items-center border border-content-color bg-content-color text-white text-[.85rem] leading-none"
