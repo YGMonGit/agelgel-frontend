@@ -37,10 +37,10 @@ function NewRecipeForm() {
 
   const [instructions, setInstructions] = useState("");
 
-  const { register, control, handleSubmit, formState: { errors }, setError, setValue, getValues } = useForm<INewRecipeFrom>({
+  const { register, control, handleSubmit, formState: { errors }, setError, setValue } = useForm<INewRecipeFrom>({
     resolver: zodResolver(newRecipeSchema),
     defaultValues: {
-      cookingTime: 0,
+      cookingTime: "0",
     }
   });
 
@@ -49,16 +49,20 @@ function NewRecipeForm() {
     name: "ingredients",
   });
 
-  // const { replace: replaceMealTime } = useFieldArray({
-  //   control,
-  //   name: "",
-  // });
 
   useEffect(() => {
     replaceIngredients(ingredients);
   }, [ingredients]);
 
-  console.log({ errors, time });
+  useEffect(() => {
+    setValue("preferredMealTime", mealTime);
+  }, [mealTime]);
+
+  useEffect(() => {
+    setValue("preparationDifficulty", difficulty[0]);
+  }, [difficulty]);
+
+  console.log({ errors });
 
   const [CreateRecipe] = useCreateRecipeMutation();
 
@@ -73,10 +77,11 @@ function NewRecipeForm() {
     try {
       const files = recipe.imgs;
       const fileUrls: string[] = [];
-      files.forEach(async (file) => {
+      for (let i = 0; i < files.length; i++) {
+        const file = files[i];
         const { fileUrl } = await uploadManager.upload({ data: file });
         fileUrls.push(fileUrl);
-      });
+      }
 
       await CreateRecipe({
         ...recipe,

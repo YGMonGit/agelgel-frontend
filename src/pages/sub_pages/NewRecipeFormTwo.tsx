@@ -3,7 +3,7 @@ import ChipsList from "../../components/ChipsList";
 import React, { useState } from "react";
 import { MdAdd, MdRemove } from "react-icons/md";
 import WideLink from "../../components/WideLink";
-import { useGetIngredientByNameQuery } from "../../api/slices/ingredient.slices";
+import { useGetIngredientByNameQuery, useGetIngredientsQuery } from "../../api/slices/ingredient.slices";
 
 import DropdownInput from "../../components/DropdownInput";
 import { IIngredient } from "@/src/api/types/ingredient.type";
@@ -28,6 +28,8 @@ function NewRecipeFormTwo({ setFormNumber, ingredientList, setIngredientList, se
   }, {
     skip: ingredientSearch.length == 0,
   });
+
+  const { data: ingredientsQuery } = useGetIngredientsQuery({ skip: 0, limit: 10 });
 
   const [ingredient, setIngredient] = useState<IIngredient | null>(null);
   const [ingredientQuantity, setIngredientQuantity] = useState(0);
@@ -54,6 +56,7 @@ function NewRecipeFormTwo({ setFormNumber, ingredientList, setIngredientList, se
       set_IngredientList([..._IngredientList, newIngredient]);
       setIngredient(null);
       setIngredientQuantity(0);
+      setIngredientSearch("");
     }
   };
 
@@ -67,11 +70,14 @@ function NewRecipeFormTwo({ setFormNumber, ingredientList, setIngredientList, se
         detail="Make sure to not forget anything!"
         selectedConditions={ingredientList}
         setSelectedConditions={setIngredientList}
+        errors={errors && errors.ingredients}
       />
       <DropdownInput
         boxLabel="Select Ingredient"
-        data={ingredients || []}
+        data={ingredientSearch.length == 0 ? ingredientsQuery || [] : ingredients || []}
         usedFor="ingredient"
+        ingredientSearch={ingredientSearch}
+        setIngredientSearch={setIngredientSearch}
         value={ingredient as any}
         onChange={onIngredientChange}
         onClick={(option: IIngredient) => {
@@ -79,7 +85,6 @@ function NewRecipeFormTwo({ setFormNumber, ingredientList, setIngredientList, se
         }}
         wFull
         register={register}
-        errors={errors && errors.ingredients}
       />
       <div className="w-full px-5 flex flex-col justify-start items-start flex-grow">
         <label htmlFor="ingredientQuantity" className="text-[1rem] font-semibold">
@@ -104,6 +109,9 @@ function NewRecipeFormTwo({ setFormNumber, ingredientList, setIngredientList, se
               required
               className="w-[65px] text-center h-[37px] bg-[#F9FAFB] text-[1rem] border-x outline-none border-gray-300"
             />
+
+            <p className="px-2 ml-5 mi-5 flex items-center text-[1rem] font-medium">{ingredient?.unit}</p>
+
             <button
               className="h-[37px] w-[40px] bg-gray-200 rounded-r-lg flex justify-center items-center"
               onClick={() => setIngredientQuantity(ingredientQuantity + 1)}
