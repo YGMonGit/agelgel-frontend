@@ -98,7 +98,7 @@ export interface INewRecipeFrom {
     imgs: string[];
     preferredMealTime: EPreferredMealTime[];
     preparationDifficulty: TPreparationDifficulty;
-    cookingTime: number;
+    cookingTime: string;
     ingredients: IngredientDetail[];
     instructions: string;
     medical_condition: IMedicalCondition;

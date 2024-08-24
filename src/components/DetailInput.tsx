@@ -5,8 +5,8 @@ interface DetailInputProps {
   placeholder: string;
   value: string;
   onChange?: (event: React.ChangeEvent<HTMLTextAreaElement>) => void;
-  register?:any
-  errors?:any
+  register?: any
+  errors?: any
 }
 
 function DetailInput({
@@ -14,7 +14,7 @@ function DetailInput({
   placeholder,
   value,
   onChange,
-  register = (placeholder:string)=> {},
+  register = (placeholder: string) => { },
   errors,
 }: DetailInputProps) {
   const handleChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
@@ -41,7 +41,7 @@ function DetailInput({
         className={`border border-[#D1D5DB] pt-3 outline-none w-full px-4 rounded-lg text-gray-600`}
         style={{ scrollbarWidth: "none", msOverflowStyle: "none" }}
         onChange={handleChange}
-      ></textarea>
+      />
       {errors && <p className={errorStyle}>{errors.message}</p>}
     </div>
   );

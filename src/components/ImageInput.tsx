@@ -9,7 +9,7 @@ interface ImageInputProps {
   setValue: any;
 }
 
-const ImageInput = ({images, setImages}: ImageInputProps) => {
+const ImageInput = ({ images, setImages, setValue, register }: ImageInputProps) => {
   // const [images, setImages] = useState<string[]>([]);
 
   const handleFileInput = useCallback((e: React.ChangeEvent<HTMLInputElement> | React.DragEvent<HTMLDivElement>) => {
@@ -19,9 +19,10 @@ const ImageInput = ({images, setImages}: ImageInputProps) => {
     } else if ('target' in e && e.target instanceof HTMLInputElement) {
       files = e.target.files;
     }
-
     if (files) {
-      const newImages = Array.from(files).map(file => URL.createObjectURL(file));
+      const AFiles = Array.from(files)
+      setValue("imgs", AFiles);
+      const newImages = AFiles.map(file => URL.createObjectURL(file));
       setImages(prevImages => [...prevImages, ...newImages]);
     }
   }, []);
@@ -48,6 +49,7 @@ const ImageInput = ({images, setImages}: ImageInputProps) => {
       onDrop={handleDrop}
     >
       <input
+        {...register("imgs")}
         type="file"
         accept="image/*"
         multiple
@@ -55,7 +57,7 @@ const ImageInput = ({images, setImages}: ImageInputProps) => {
         id="imageUpload"
         onChange={handleFileInput}
       />
-      
+
       {images.length === 0 ? (
         <>
           <img src={upload_logo} alt="upload logo pic" className="w-[33px] mb-4" />
@@ -85,7 +87,7 @@ const ImageInput = ({images, setImages}: ImageInputProps) => {
           ))}
         </div>
       )}
-      
+
       <label
         htmlFor="imageUpload"
         className="flex justify-center items-center h-full bg-content-color leading-none text-[1rem] px-3 py-[10px] mt-4 border outline-none rounded-lg border-[#D1D5DB] gap-1 text-white cursor-pointer"

@@ -13,6 +13,8 @@ interface DropdownInputProps {
   mustFill?: boolean;
   register?: any
   errors?: any
+  ingredientSearch: string;
+  setIngredientSearch: any;
 }
 
 const DropdownInput: React.FC<DropdownInputProps> = ({
@@ -26,11 +28,12 @@ const DropdownInput: React.FC<DropdownInputProps> = ({
   onClick,
   mustFill = false,
   register = (placeholder: string) => { },
-  errors
+  errors,
+  ingredientSearch,
+  setIngredientSearch
 
 }) => {
   const [isOpen, setIsOpen] = useState(false);
-  const [searchTerm, setSearchTerm] = useState('');
   const dropdownRef = useRef<HTMLDivElement>(null);
 
 
@@ -46,19 +49,19 @@ const DropdownInput: React.FC<DropdownInputProps> = ({
   }, [value]);
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setSearchTerm(e.target.value);
+    setIngredientSearch(e.target.value);
     onChange(e);
     setIsOpen(true);
   };
 
   const handleOptionClick = (option: any) => {
     onClick(option);
-    setSearchTerm(option.name);
+    setIngredientSearch(option.name);
     setIsOpen(false);
   };
 
   const filteredOptions = data.filter(option =>
-    option.name.toLowerCase().includes(searchTerm.toLowerCase())
+    option.name.toLowerCase().includes(ingredientSearch.toLowerCase())
   );
 
   const [isFocused, setIsFocused] = useState(false);
@@ -96,8 +99,7 @@ const DropdownInput: React.FC<DropdownInputProps> = ({
         type="text"
         id={usedFor}
         name={usedFor}
-        placeholder='Add here ...'
-        value={value?.name || searchTerm}
+        value={ingredientSearch}
         onFocus={handleFocus}
         onBlur={handleBlur}
         onChange={handleInputChange}

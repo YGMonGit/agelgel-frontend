@@ -8,6 +8,7 @@ interface ChipsListProps {
   detail: string;
   selectedConditions: IngredientDetailWithUnit[];
   setSelectedConditions: React.Dispatch<React.SetStateAction<IngredientDetailWithUnit[]>>;
+  errors?: any;
 }
 
 const ChipsList: React.FC<ChipsListProps> = ({
@@ -15,6 +16,7 @@ const ChipsList: React.FC<ChipsListProps> = ({
   detail,
   selectedConditions,
   setSelectedConditions,
+  errors,
 }) => {
   const scrollableDivRef = useRef<HTMLDivElement>(null);
 
@@ -30,6 +32,9 @@ const ChipsList: React.FC<ChipsListProps> = ({
       scrollableDivRef.current.scrollLeft += wheelDelta * 30;
     }
   };
+
+  const errorStyle = "text-[.8rem] text-red-400";
+
 
   return (
     <div className="w-full px-5 mb-6">
@@ -63,9 +68,7 @@ const ChipsList: React.FC<ChipsListProps> = ({
           <span className="text-slate-400 italic px-2 py-2">No ingredient yet</span>
         )}
       </div>
-      <h2 className="text-[.9rem] font-normal text-white-500 mt-1 leading-5 border-b pb-8">
-        {detail}
-      </h2>
+      {errors && <p className={errorStyle}>{errors.message}</p>}
     </div>
   );
 };
