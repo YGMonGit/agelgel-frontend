@@ -4,13 +4,13 @@ import NewRecipeFormOne from "./sub_pages/NewRecipeFormOne";
 import NewRecipeFormTwo from "./sub_pages/NewRecipeFormTwo";
 import NewRecipeFormThree from "./sub_pages/NewRecipeFormThree";
 import { zodResolver } from '@hookform/resolvers/zod';
-import { INewRecipeFrom,EPreparationDifficulty,EPreferredMealTime } from "../api/types/recipe.type";
-import { useForm } from "react-hook-form";
+import { INewRecipeFrom, EPreparationDifficulty, EPreferredMealTime, IngredientDetail, IngredientDetailWithUnit } from "../api/types/recipe.type";
+import { useFieldArray, useForm } from "react-hook-form";
 import { newRecipeSchema } from "../validation/recipe.validation";
 import * as Bytescale from "@bytescale/sdk";
 import { useNavigate } from "react-router-dom";
 import { useCreateRecipeMutation } from "../api/slices/recipe.slices";
-import { EAllergies,EDietaryPreferences,EChronicDisease } from "../api/types/user.type";
+import { EAllergies, EDietaryPreferences, EChronicDisease } from "../api/types/user.type";
 
 
 function NewRecipeForm() {
@@ -27,28 +27,38 @@ function NewRecipeForm() {
   const [description, setDescription] = useState("");
   const [mealTime, setMealTime] = useState<EPreferredMealTime[]>([EPreferredMealTime.breakfast]);
   const [difficulty, setDifficulty] = useState<EPreparationDifficulty[]>([EPreparationDifficulty.easy]);
-  const [time, setTime] = useState("");
+  const [time, setTime] = useState<number>(0);
   const [images, setImages] = useState<string[]>([]);
 
-  useEffect(() => {
-    console.log(mealTime);
-    
-  }, [mealTime])
-  useEffect(() => {
-    console.log(difficulty);
-    
-  }, [difficulty])
-  
+
   // For form two
-  const [ingredientList, setIngredientList] = useState<string[]>([]);
+  const [ingredientList, setIngredientList] = useState<IngredientDetailWithUnit[]>([]);
+  const [ingredients, setIngredients] = useState<IngredientDetail[]>([]);
 
   const [instructions, setInstructions] = useState("");
 
-  const { register, handleSubmit, formState: { errors }, setError, setValue, getValues } = useForm<INewRecipeFrom>({
+  const { register, control, handleSubmit, formState: { errors }, setError, setValue, getValues } = useForm<INewRecipeFrom>({
     resolver: zodResolver(newRecipeSchema),
+    defaultValues: {
+      cookingTime: 0,
+    }
   });
 
-  console.log({errors});
+  const { replace: replaceIngredients } = useFieldArray({
+    control,
+    name: "ingredients",
+  });
+
+  // const { replace: replaceMealTime } = useFieldArray({
+  //   control,
+  //   name: "",
+  // });
+
+  useEffect(() => {
+    replaceIngredients(ingredients);
+  }, [ingredients]);
+
+  console.log({ errors, time });
 
   const [CreateRecipe] = useCreateRecipeMutation();
 
@@ -60,15 +70,16 @@ function NewRecipeForm() {
       apiKey: process.env.REACT_APP_BYTESCLE ?? ""
     });
 
-  try {
-    const files = recipe.imgs;
-    const fileUrls:string[] = [];
-    files.forEach(async (file) => {
-      const { fileUrl } = await uploadManager.upload({ data: file });
-      fileUrls.push(fileUrl);
-    });
+    try {
+      const files = recipe.imgs;
+      const fileUrls: string[] = [];
+      files.forEach(async (file) => {
+        const { fileUrl } = await uploadManager.upload({ data: file });
+        fileUrls.push(fileUrl);
+      });
 
-    await CreateRecipe({ ...recipe, 
+      await CreateRecipe({
+        ...recipe,
         imgs: fileUrls,
         preparationDifficulty: difficulty.length == 0 ? EPreparationDifficulty.easy : difficulty[0],
         preferredMealTime: mealTime,
@@ -77,62 +88,77 @@ function NewRecipeForm() {
           allergies: allergy.length == 0 ? [EAllergies.none] : allergy,
           dietary_preferences: mealPreference.length == 0 ? [EDietaryPreferences.none] : mealPreference
         }
-   }).unwrap();
-    // navigate(homeUrl);
-  } catch (error: any) {
-    if (!error.data.error) return;
-    const err = error.data.error;
-    if (err.type === "Validation")
-      setError(err.attr, { message: err.error });
+      }).unwrap();
+      // navigate(homeUrl);
+    } catch (error: any) {
+      if (!error.data.error) return;
+      const err = error.data.error;
+      if (err.type === "Validation")
+        setError(err.attr, { message: err.error });
+    }
   }
-}
 
   return (
     <form className="w-full flex-grow flex flex-col justify-start items-center mb-6"
-    onSubmit={handleSubmit(NewRecipe)}
+      onSubmit={handleSubmit(NewRecipe)}
     >
       <PageHeader
         header="Add a New Recipe"
         detail="Thanks for contributing to our database of recipes!"
       />
-      {formNumber !== 1 ? formNumber === 2 ? (
-        <NewRecipeFormTwo
-          setFormNumber={setFormNumber}
-          ingredientList={ingredientList}
-          setIngredientList={setIngredientList}
-          register={register}
-          errors={errors}
-        />
+      {formNumber !== 1 ? (
+        formNumber === 2 ? (
+          <>
+            <NewRecipeFormTwo
+              setFormNumber={setFormNumber}
+              ingredients={ingredients}
+              ingredientList={ingredientList}
+              setIngredients={setIngredients}
+              setIngredientList={setIngredientList}
+              register={register}
+              errors={errors}
+            />
+            <button type="submit" className="btn-primary mt-4">Submit</button>
+          </>
+        ) : (
+          <>
+            <NewRecipeFormThree
+              setFormNumber={setFormNumber}
+              ingredients={ingredients}
+              ingredientList={ingredientList}
+              setIngredients={setIngredients}
+              setIngredientList={setIngredientList}
+              instructions={instructions}
+              setInstructions={setInstructions}
+              register={register}
+              errors={errors}
+            />
+          </>
+        )
       ) : (
-        <NewRecipeFormThree
-          setFormNumber={setFormNumber}
-          ingredientList={ingredientList}
-          setIngredientList={setIngredientList}
-          instructions={instructions}
-          setInstructions={setInstructions}
-          register={register}
-          errors={errors}
-        />
-      ) : (
-        <NewRecipeFormOne
-          setFormNumber={setFormNumber}
-          recipeName={recipeName}
-          images={images}
-          setImages={setImages}
-          setRecipeName={setRecipeName}
-          description={description}
-          setDescription={setDescription}
-          mealTime={mealTime}
-          setMealTime={setMealTime}
-          difficulty={difficulty}
-          setDifficulty={setDifficulty}
-          time={time}
-          setTime={setTime}
-          register={register}
-          setValue={setValue}
-          errors={errors}
-        />
+        <>
+          <NewRecipeFormOne
+            setFormNumber={setFormNumber}
+            recipeName={recipeName}
+            images={images}
+            setImages={setImages}
+            setRecipeName={setRecipeName}
+            description={description}
+            setDescription={setDescription}
+            mealTime={mealTime}
+            setMealTime={setMealTime}
+            difficulty={difficulty}
+            setDifficulty={setDifficulty}
+            time={time}
+            setTime={setTime}
+            register={register}
+            setValue={setValue}
+            errors={errors}
+          />
+          <button type="submit" className="btn-primary mt-4">Submit</button>
+        </>
       )}
+
     </form>
   );
 }

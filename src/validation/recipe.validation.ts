@@ -6,7 +6,7 @@ const MAX_FILE_SIZE = 5 * 1024 * 1024; // 5MB
 const ACCEPTED_IMAGE_TYPES = ["image/jpeg", "image/png", "image/webp", "image/jpg"];
 
 export const newRecipeSchema = z.object({
-    cookingTime: z.number().nonnegative().min(1, "Cooking time must be a positive number"),
+    cookingTime: z.string().min(1, "Cooking time is required"),
     description: z.string().min(1, "Description is required"),
     imgs: z
         .array(

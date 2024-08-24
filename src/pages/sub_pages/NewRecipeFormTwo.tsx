@@ -5,39 +5,60 @@ import { MdAdd, MdRemove } from "react-icons/md";
 import WideLink from "../../components/WideLink";
 import { useGetIngredientByNameQuery } from "../../api/slices/ingredient.slices";
 
+import DropdownInput from "../../components/DropdownInput";
+import { IIngredient } from "@/src/api/types/ingredient.type";
+import { IngredientDetail, IngredientDetailWithUnit } from "@/src/api/types/recipe.type";
+
 interface NewRecipeFormTwoProps {
   setFormNumber: React.Dispatch<React.SetStateAction<number>>;
-  ingredientList: string[];
-  setIngredientList: React.Dispatch<React.SetStateAction<string[]>>;
+  ingredients: IngredientDetail[];
+  ingredientList: IngredientDetailWithUnit[];
+  setIngredientList: React.Dispatch<React.SetStateAction<IngredientDetailWithUnit[]>>;
+  setIngredients: React.Dispatch<React.SetStateAction<IngredientDetail[]>>;
   register: any;
   errors: any;
 }
 
-function NewRecipeFormTwo({ setFormNumber, ingredientList, setIngredientList, register, errors }: NewRecipeFormTwoProps) {
+function NewRecipeFormTwo({ setFormNumber, ingredientList, setIngredientList, setIngredients, register, errors }: NewRecipeFormTwoProps) {
 
   const [ingredientSearch, setIngredientSearch] = useState("");
-  const {data:ingredients,isFetching,refetch} = useGetIngredientByNameQuery({
+  const { data: ingredients, isFetching, isUninitialized, refetch } = useGetIngredientByNameQuery({
     name: ingredientSearch,
     nameType: "name",
+  }, {
+    skip: ingredientSearch.length == 0,
   });
 
-  const [ingredient, setIngredient] = useState("");
+  const [ingredient, setIngredient] = useState<IIngredient | null>(null);
   const [ingredientQuantity, setIngredientQuantity] = useState(0);
 
-  const onIngredientChange = (e: React.ChangeEvent<HTMLInputElement>) => setIngredient(e.target.value);
+  const [_IngredientList, set_IngredientList] = useState<string[]>([]);
+
+  const onIngredientChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    setIngredientSearch(e.target.value);
+    if (!isFetching && !isUninitialized) refetch();
+  };
   const onIngredientQuantityChange = (e: React.ChangeEvent<HTMLInputElement>) => setIngredientQuantity(Number(e.target.value));
 
   const handleAddIngredient = () => {
     if (ingredient && ingredientQuantity > 0) {
-      const newIngredient = `${ingredient}, ${ingredientQuantity}`;
-      setIngredientList([...ingredientList, newIngredient]);
-      setIngredient("");
+      setIngredientList((prev: IngredientDetailWithUnit[]) => {
+        const _IngredientDetail = { ingredient: ingredient._id, name: ingredient.name, amount: ingredientQuantity, unit: ingredient.unit };
+        return prev.includes(_IngredientDetail) ? prev : [...prev, _IngredientDetail];
+      });
+      setIngredients((prev: IngredientDetail[]) => {
+        const _IngredientDetail = { ingredient: ingredient._id, name: ingredient.name, amount: ingredientQuantity };
+        return prev.includes(_IngredientDetail) ? prev : [...prev, _IngredientDetail];
+      });
+      const newIngredient = `${ingredient.name}, ${ingredientQuantity} ${ingredient.unit}`;
+      set_IngredientList([..._IngredientList, newIngredient]);
+      setIngredient(null);
       setIngredientQuantity(0);
     }
   };
 
-  const onBackClick = () => {setFormNumber(1)};
-  const onNextClick = () => {setFormNumber(3)};
+  const onBackClick = () => { setFormNumber(1) };
+  const onNextClick = () => { setFormNumber(3) };
 
   return (
     <div className="w-full flex-grow flex flex-col justify-start items-start mt-2">
@@ -47,13 +68,18 @@ function NewRecipeFormTwo({ setFormNumber, ingredientList, setIngredientList, re
         selectedConditions={ingredientList}
         setSelectedConditions={setIngredientList}
       />
-      <Input
-        label="Ingredient"
-        placeholder="ingredients"
-        value={ingredient}
+      <DropdownInput
+        boxLabel="Select Ingredient"
+        data={ingredients || []}
+        usedFor="ingredient"
+        value={ingredient as any}
         onChange={onIngredientChange}
+        onClick={(option: IIngredient) => {
+          setIngredient(option);
+        }}
+        wFull
         register={register}
-        errors={errors.ingredients}
+        errors={errors && errors.ingredients}
       />
       <div className="w-full px-5 flex flex-col justify-start items-start flex-grow">
         <label htmlFor="ingredientQuantity" className="text-[1rem] font-semibold">
@@ -97,7 +123,7 @@ function NewRecipeFormTwo({ setFormNumber, ingredientList, setIngredientList, re
         </p>
       </div>
       <div className="w-full px-5 flex justify-center items-end gap-2">
-        <WideLink label="Back" color="bg-white" outline={true} clickAction={onBackClick}/>
+        <WideLink label="Back" color="bg-white" outline={true} clickAction={onBackClick} />
         <WideLink label="Next" color="bg-content-color" clickAction={onNextClick} />
       </div>
     </div>

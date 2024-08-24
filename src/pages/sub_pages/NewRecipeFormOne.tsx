@@ -14,12 +14,12 @@ interface NewRecipeFormOneProps {
   setImages: React.Dispatch<React.SetStateAction<string[]>>;
   description: string;
   setDescription: React.Dispatch<React.SetStateAction<string>>;
-  mealTime: any;
+  mealTime: EPreferredMealTime[];
   setMealTime: any;
   difficulty: any;
   setDifficulty: any;
-  time: string;
-  setTime: React.Dispatch<React.SetStateAction<string>>;
+  time: number;
+  setTime: React.Dispatch<React.SetStateAction<number>>;
   register: any;
   setValue: any;
   errors: any;
@@ -48,9 +48,9 @@ function NewRecipeFormOne({
   const onDescriptionChange = (e: React.ChangeEvent<HTMLTextAreaElement>) =>
     setDescription(e.target.value);
   const onTimeChange = (e: React.ChangeEvent<HTMLInputElement>) =>
-    setTime(e.target.value);
+    setTime(Number.parseInt(e.target.value));
 
-  const onNextClick = () => {setFormNumber(2)};
+  const onNextClick = () => { setFormNumber(2) };
 
   const errorStyle = "text-[.8rem] text-red-400";
 
@@ -91,6 +91,7 @@ function NewRecipeFormOne({
         multiSelect={false}
       />
       <Input
+        type="number"
         label="Cooking Time"
         placeholder="cookingTime"
         value={time}

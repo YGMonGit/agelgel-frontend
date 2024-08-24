@@ -4,21 +4,22 @@ import google_logo from "../assets/icons/google-logo.png";
 interface InputProps {
   label: string;
   placeholder: string;
-  value: string;
+  value: string | number;
   isPassword?: boolean;
   showPassword?: boolean;
   onChange?: (event: React.ChangeEvent<HTMLInputElement>) => void;
   instruction?: string;
   children?: React.ReactNode;
-  register?:any
-  errors?:any
+  register?: any
+  errors?: any
+  type?: "text" | "password" | "email" | "number";
 }
 
 interface UseGoogleProps {
   clickAction?: () => void;
 }
 
-function Input({ label, placeholder, value, isPassword, showPassword, onChange, instruction, children, register = (placeholder:string)=> {}, errors }: InputProps) {
+function Input({ label, placeholder, value, isPassword, showPassword, onChange, instruction, children, register = (placeholder: string) => { }, errors, type = "text" }: InputProps) {
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     if (onChange) {
@@ -36,12 +37,13 @@ function Input({ label, placeholder, value, isPassword, showPassword, onChange, 
       <div className="relative w-full">
         <input
           {...register(placeholder)}
-          type={isPassword ? showPassword ? "text" : "password" : "text"}
+          type={isPassword ? showPassword ? "text" : "password" : type}
           placeholder={placeholder}
           id={placeholder}
           name={placeholder}
           value={value}
           onChange={handleChange}
+          valueAsNumber={type === "number"}
 
           className={`w-full py-[10px] bg-[#F9FAFB] leading-none text-[1rem] px-4 border outline-none rounded-lg border-[#D1D5DB]`}
         />
