@@ -85,10 +85,16 @@ const DropdownInput: React.FC<DropdownInputProps> = ({
   const errorStyle = "text-[.8rem] text-red-400";
 
   return (
-    <div className={`relative bg-red-30 w-[91%] ${wFull ? "" : "md:w-[30%]"}`} ref={dropdownRef}>
+    <div className="relative flex flex-col justify-center items-start w-full px-5" ref={dropdownRef}>
+      <label
+        className="flex justify-start items-center leading-none font-semibold mb-3 text-[1.2rem]"
+        htmlFor={usedFor}
+        style={{ background: "white" }}
+      >
+        Ingredients
+      </label>
       <input
-        className={`peer w-full h-[35px] text-[.8rem] py-1 px-4 ${isFocused ? "rounded-t-sm border-t border-l border-r" : "rounded-sm border"} ${filteredOptions.length === 0 && "rounded-xl bg-red-200"} outline-none ${borderColor} ${!isFocused && isNotEmpty ? validationClass : ""
-          }`}
+        className={`w-full py-[10px] bg-[#F9FAFB] leading-none text-[1rem] px-4 border outline-none rounded-lg border-[#D1D5DB]`}
         {...register(usedFor)}
         type="text"
         id={usedFor}
@@ -100,31 +106,26 @@ const DropdownInput: React.FC<DropdownInputProps> = ({
         autoComplete='off'
       />
       {errors && <p className={errorStyle}>{errors.message}</p>}
-      <label
-        className="absolute flex justify-start items-center leading-none top-1/2 left-4 -translate-y-1/2 text-base pointer-events-none transition-all duration-300 peer-focus:top-0 peer-focus:text-sm peer-focus:px-2 peer-focus:bg-white peer-valid:top-0 peer-valid:text-sm peer-valid:px-2 peer-valid:bg-white text-neutral-400"
-        htmlFor={usedFor}
-        style={{ background: "white" }}
-      >
-        {boxLabel}<span className="text-red-500 text-[.3rem] ml-1">{mustFill && <FaStarOfLife />}</span>
-      </label>
       {isOpen && (
-        <ul className="absolute top-full left-0 w-full bg-white border border-gray-500 border-t-neutral-300 rounded-b-sm max-h-40 overflow-y-auto z-10">
-          {filteredOptions.map((option, index) => (
+        <div className='w-full px-8 relative'>
+          <ul className="absolute top-full rounded-b-lg left-0 w-full px-5 bg-[#F9FAFB] border border-gray-200 shadow-lg border-t-transparent max-h-40 overflow-y-auto z-10">
+            {filteredOptions.map((option, index) => (
+              <li
+                key={index}
+                id={option.id}
+                className="px-4 py-2 hover:bg-gray-100 cursor-pointer"
+                onClick={() => handleOptionClick(option)}
+              >
+                {option.name}
+              </li>
+            ))}
             <li
-              key={index}
-              id={option.id}
-              className="px-4 py-2 hover:bg-gray-100 cursor-pointer"
-              onClick={() => handleOptionClick(option)}
+              className={`${filteredOptions.length && "hidden"} px-4 py-1 bg-gray-50 cursor-default text-[.9rem] text-neutral-300`}
             >
-              {option.name}
+              No result
             </li>
-          ))}
-          <li
-            className={`${filteredOptions.length && "hidden"} px-4 py-1 bg-gray-50 cursor-default text-[.9rem] text-neutral-300`}
-          >
-            No result
-          </li>
-        </ul>
+          </ul>
+        </div>
       )}
     </div>
   );

@@ -11,6 +11,7 @@ import * as Bytescale from "@bytescale/sdk";
 import { useNavigate } from "react-router-dom";
 import { useCreateRecipeMutation } from "../api/slices/recipe.slices";
 import { EAllergies, EDietaryPreferences, EChronicDisease } from "../api/types/user.type";
+import HealthConditions from "./sub_pages/HealthConditions";
 
 
 function NewRecipeForm() {
@@ -112,7 +113,7 @@ function NewRecipeForm() {
         detail="Thanks for contributing to our database of recipes!"
       />
       {formNumber !== 1 ? (
-        formNumber === 2 ? (
+        formNumber === 3 ? (
           <>
             <NewRecipeFormTwo
               setFormNumber={setFormNumber}
@@ -125,7 +126,7 @@ function NewRecipeForm() {
             />
             <button type="submit" className="btn-primary mt-4">Submit</button>
           </>
-        ) : (
+        ) : formNumber === 4 ? (
           <>
             <NewRecipeFormThree
               setFormNumber={setFormNumber}
@@ -139,6 +140,17 @@ function NewRecipeForm() {
               errors={errors}
             />
           </>
+        ):(
+          <HealthConditions
+            setFormNumber={setFormNumber}
+            healthCondition={healthCondition}
+            setHealthCondition={setHealthCondition}
+            allergy={allergy}
+            setAllergy={setAllergy}
+            mealPreference={mealPreference}
+            setMealPreference={setMealPreference}
+            finish={false}
+          />
         )
       ) : (
         <>
