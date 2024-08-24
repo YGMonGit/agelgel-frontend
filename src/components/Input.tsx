@@ -11,19 +11,22 @@ interface InputProps {
   instruction?: string;
   children?: React.ReactNode;
   register?:any
+  errors?:any
 }
 
 interface UseGoogleProps {
   clickAction?: () => void;
 }
 
-function Input({ label, placeholder, value, isPassword, showPassword, onChange, instruction, children, register = (placeholder:string)=> {} }: InputProps) {
+function Input({ label, placeholder, value, isPassword, showPassword, onChange, instruction, children, register = (placeholder:string)=> {}, errors }: InputProps) {
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     if (onChange) {
       onChange(e);
     }
   };
+
+  const errorStyle = "text-[.8rem] text-red-400";
 
   return (
     <div className="w-full px-5 flex flex-col justify-start items-start gap-1 mb-6 relative">
@@ -43,6 +46,7 @@ function Input({ label, placeholder, value, isPassword, showPassword, onChange, 
           className={`w-full py-[10px] bg-[#F9FAFB] leading-none text-[1rem] px-4 border outline-none rounded-lg border-[#D1D5DB]`}
         />
         {children}
+        {errors && <p className={errorStyle}>{errors.message}</p>}
       </div>
       <p className="text-[.9rem] text-slate-400">
         {instruction}

@@ -5,10 +5,11 @@ interface ProfileImageInputProps {
   defaultImage?: string;
   register?: any
   setValue: any
+  image: string | null;
+  setImage: React.Dispatch<React.SetStateAction<string|null>>;
 }
 
-const ProfileImageInput: React.FC<ProfileImageInputProps> = ({ defaultImage, register = (placeholder: string) => { }, setValue }) => {
-  const [image, setImage] = useState<string | null>(defaultImage || null);
+const ProfileImageInput: React.FC<ProfileImageInputProps> = ({ register = (placeholder: string) => { }, setValue, image, setImage }) => {
 
   const handleFileInput = useCallback((e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
@@ -26,7 +27,7 @@ const ProfileImageInput: React.FC<ProfileImageInputProps> = ({ defaultImage, reg
           <img
             src={image}
             alt="User profile"
-            className="w-32 h-full object-cover rounded-full"
+            className="w-32 h-full object-cover rounded-full bg-content-color"
           />
         ) : (
           <div className="w-32 h-full bg-gray-200 rounded-full flex items-center justify-center">

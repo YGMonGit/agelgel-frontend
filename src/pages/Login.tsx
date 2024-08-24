@@ -65,16 +65,14 @@ function Login() {
       <PageHeader header="Hey! Welcome Back." detail="Log in to your account." />
       <UseGoogle clickAction={handleWithGoogleClick} />
       <form className="w-full flex flex-col justify-start items-center flex-grow" onSubmit={handleSubmit(login)}>
-        <Input label="Your email" placeholder="email" value={email} onChange={onEmailChange} register={register} />
-        {errors.email && <p>{errors.email.message}</p>}
-        <Input label="Password" placeholder="password" value={password} isPassword={true} showPassword={showPassword} onChange={onPasswordChange} register={register}>
+        <Input label="Your email" placeholder="email" value={email} onChange={onEmailChange} register={register} errors={errors.email} />
+        <Input label="Password" placeholder="password" value={password} isPassword={true} showPassword={showPassword} onChange={onPasswordChange} register={register} errors={errors.password}>
           <div
             className="text-[#6B7280] text-[1.3rem] absolute top-0 right-2 h-full flex justify-end items-center cursor-pointer border-0 bg-transparent"
             onClick={() => setShowPassword(!showPassword)}
           >
             {showPassword ? <RiEyeLine /> : <RiEyeCloseLine />}
           </div>
-          {errors.password && <p>{errors.password.message}</p>}
         </Input>
         <div className="w-full px-5 flex justify-between items-center">
           <label

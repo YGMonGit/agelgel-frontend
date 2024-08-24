@@ -3,17 +3,16 @@ import PageHeader from "../../components/PageHeader";
 import ChipsBox from "../../components/ChipsBox";
 import { allergies, mealPreferences } from "../../assets/data";
 import WideButton from "../../components/WideButton";
-import { EAllergies, EChronicDisease, EDietaryPreferences } from "@/src/api/types/user.type";
+import { EAllergies, EChronicDisease, EDietaryPreferences } from "../../api/types/user.type";
 
 interface HealthConditionProps {
   healthCondition: string[];
-  setHealthCondition: React.Dispatch<React.SetStateAction<string[]>>;
+  setHealthCondition: any;
   allergy: string[];
-  setAllergy: React.Dispatch<React.SetStateAction<string[]>>;
+  setAllergy: any;
   mealPreference: string[];
-  setMealPreference: React.Dispatch<React.SetStateAction<string[]>>;
+  setMealPreference: any;
   handleSubmit: (e: React.FormEvent<HTMLButtonElement>) => Promise<void>;
-  register: any;
 }
 
 function HealthConditions({
@@ -24,7 +23,6 @@ function HealthConditions({
   mealPreference,
   setMealPreference,
   handleSubmit,
-  register
 }: HealthConditionProps) {
 
   return (
@@ -60,8 +58,8 @@ function HealthConditions({
         <WideButton
           label="Get Started"
           color="bg-content-color"
-          clickEvent={handleSubmit}
         />
+        {/* <button>submit</button> */}
       </div>
     </div>
   );

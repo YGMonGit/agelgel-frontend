@@ -11,6 +11,7 @@ export const signUpSchema = z.object({
     password: z.string()
         .min(8, { message: "Password must be at least 8 characters long." })
         .min(1, { message: "Password is required." }),
+    confirm_password: z.string().min(1, { message: "Confirm password is required." }),
     first_name: z.string().min(1, { message: "first Name is required." }),
     last_name: z.string().min(1, { message: "last Name is required." }),
     phone_number: z.string().min(1, { message: "phone Number is required." }),
@@ -21,12 +22,13 @@ export const signUpSchema = z.object({
             (file) => ACCEPTED_IMAGE_TYPES.includes(file?.type),
             "Only .jpg, .jpeg, .png and .webp formats are supported."
         ),
-    medical_condition: z.object({
-        chronicDiseases: z.array(z.nativeEnum(EChronicDisease)),
-        allergy: z.array(z.nativeEnum(EAllergies)),
-        dietary_preferences: z.array(z.nativeEnum(EDietaryPreferences)),
-    }),
-});
+}).refine((data) => data.password === data.confirm_password, {
+  path: ['confirm_password'],
+  message: "Passwords do not match.",
+}).transform((obj) => ({
+    ...obj,
+    confirm_password: undefined,
+}));
 
 export const logInSchema = z.object({
     email: z.string()
