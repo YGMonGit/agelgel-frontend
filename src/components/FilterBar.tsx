@@ -16,7 +16,7 @@ function FilterBar({ data }: FilterBarProps) {
   };
 
   return (
-    <div className="w-full my-3 px-5">
+    <div className="w-full my-3">
       <div
         className="flex items-center overflow-x-auto w-full"
         style={{ scrollbarWidth: "none", msOverflowStyle: "none" }}

@@ -1,35 +1,59 @@
-import React from 'react';
+import React,{useEffect} from 'react';
 
 interface ChoiceProps {
   label: string;
   data: string[];
-  value: string;
-  setValue: React.Dispatch<React.SetStateAction<string>>;
+  value: string | string[];
+  setValues: any;
+  multiSelect: boolean;
 }
 
-function Choice({ label, data, value, setValue }: ChoiceProps) {
+function Choice({ label, data, value, setValues, multiSelect }: ChoiceProps) {
   const handleClick = (item: string) => {
-    setValue(item);
+    if (multiSelect) {
+      setValues((prevValue: any) => {
+        const lowercasePrevValue = Array.isArray(prevValue) 
+          ? prevValue.map(v => v.toLowerCase())
+          : [];
+        const lowercaseItem = item.toLowerCase();
+        
+        if (lowercasePrevValue.includes(lowercaseItem)) {
+          return prevValue.filter((v: string) => v.toLowerCase() !== lowercaseItem);
+        } else {
+          return [...prevValue, item];
+        }
+      });
+    } else {
+      setValues(item);
+    }
+  };
+
+  const isSelected = (item: string) => {
+    if (multiSelect) {
+      return Array.isArray(value) && value.some(v => v.toLowerCase() === item.toLowerCase());
+    } else {
+      return value.includes(item);
+    }
   };
 
   return (
-    <div className="w-full px-5 flex flex-col justify-start items-start gap-1 mb-6 relative">
+    <div className="w-full px-5 flex flex-col justify-start items-start gap-1 mb-6 relative select-none cursor-pointer">
       <label className="text-base font-semibold mb-2">{label}</label>
       <div className="flex flex-wrap gap-2">
         {data.map((item, index) => (
-          <button
+          <div
             key={index}
             onClick={() => handleClick(item)}
             className={`
               px-3 py-1 rounded-lg text-sm font-medium
-              ${item === value
+              ${isSelected(item)
                 ? 'bg-green-200 text-green-700'
                 : 'bg-[#F3F4F6] text-gray-700'}
               transition-colors duration-200 ease-in-out
             `}
           >
-            {item}
-          </button>
+            {item.charAt(0).toUpperCase() + item.slice(1)}
+          </div>
         ))}
       </div>
     </div>

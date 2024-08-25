@@ -1,100 +1,93 @@
 import React from "react";
 import PageHeader from "../../components/PageHeader";
-import { Checkbox } from "../../components/ui/checkbox";
 import ChipsBox from "../../components/ChipsBox";
-import { allergies, mealPreferences } from "../../assets/data";
 import WideButton from "../../components/WideButton";
+import { EAllergies, EChronicDisease, EDietaryPreferences } from "../../api/types/user.type";
+import WideLink from "../../components/WideLink";
 
 interface HealthConditionProps {
-  rememberDiabetes: boolean;
-  setRememberDiabetes: React.Dispatch<React.SetStateAction<boolean>>;
-  rememberLI: boolean;
-  setRememberLI: React.Dispatch<React.SetStateAction<boolean>>;
-  allergy: string[];
-  setAllergy: React.Dispatch<React.SetStateAction<string[]>>;
+  setFormNumber: React.Dispatch<React.SetStateAction<number>>;
+  healthCondition: string[];
+  setHealthCondition: any;
+  allergies: string[];
+  setAllergies: any;
   mealPreference: string[];
-  setMealPreference: React.Dispatch<React.SetStateAction<string[]>>;
-  handleSubmit: (e: React.FormEvent<HTMLButtonElement>) => Promise<void>;
+  setMealPreference: any;
+  finish?: boolean;
+  register?: any;
+  errors?: any;
 }
 
 function HealthConditions({
-  rememberDiabetes,
-  setRememberDiabetes,
-  rememberLI,
-  setRememberLI,
-  allergy,
-  setAllergy,
+  setFormNumber,
+  healthCondition,
+  setHealthCondition,
+  allergies,
+  setAllergies,
   mealPreference,
   setMealPreference,
-  handleSubmit,
+  finish = true,
+  register,
+  errors,
 }: HealthConditionProps) {
-  const handleLIToggle = () => setRememberLI(!rememberLI);
-  const handleDiabetesToggle = () => setRememberDiabetes(!rememberDiabetes);
+
+  const onBackClick = () => { setFormNumber(1) };
+  const onNextClick = () => { setFormNumber(3) };
 
   return (
     <div className="w-full flex flex-col flex-grow justify-start items-center pb-8">
       <PageHeader
-        header="Health conditions & Preferences"
+        header="Chronic Diseases,Allergies & Preferences"
         detail="Helps with our suggestions."
       />
-      <div className="w-full px-5 flex flex-col justify-start items-start select-none mb-2">
-        <p className="select-none font-[500] text-[1.1rem] mt-3">
-          Please enter your health condition(s)
-        </p>
-        <label
-          htmlFor="terms"
-          className="flex justify-start flex-wrap py-3 items-center gap-1 text-[1rem] leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70 text-neutral-700 font-[500]"
-        >
-          <Checkbox
-            id="terms"
-            className="border-0 bg-[#F9FAFB] mr-1"
-            onClick={handleDiabetesToggle}
-          />
-          <span className="select-none">Diabetes</span>
-          <p className="w-full pl-7 text-slate-500 text-[.9rem] font-normal leading-5">
-            You could either be Type I or Type II, we've got you covered.
-          </p>
-        </label>
-        <label
-          htmlFor="LI"
-          className="flex justify-start flex-wrap py-3 items-center gap-1 text-[1rem] leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70 text-neutral-700 font-[500]"
-        >
-          <Checkbox
-            id="LI"
-            className="border-0 bg-[#F9FAFB] mr-1"
-            onClick={handleLIToggle}
-          />
-          <span className="select-none">Lactose Intolerance</span>
-          <p className="w-full pl-7 text-slate-500 text-[.9rem] font-normal leading-5">
-            Inability to digest lactose, which may result in abdominal pain,
-            bloating and diarrhoea after consuming milk and other dairy
-            products. Affects 65% of the human population.
-          </p>
-        </label>
-      </div>
       <div className="w-full flex flex-col justify-start items-center flex-grow">
         <ChipsBox
-          label="Allergies"
-          options={allergies}
-          detail="Food groups or ingredients you're allergic to."
-          selectedConditions={allergy}
-          setSelectedConditions={setAllergy}
+          name="medical_condition.chronicDisease"
+          label="Chronic Diseases"
+          options={Object.values(EChronicDisease)}
+          detail="Select all the condition(s) you have"
+          selectedConditions={healthCondition}
+          setSelectedConditions={setHealthCondition}
+          register={register}
+          errors={errors && errors.medical_condition && errors.medical_condition?.chronicDiseases}
         />
+
         <ChipsBox
+          name="medical_condition.dietaryPreferences"
           label="Please enter your meal preference(s)"
-          options={mealPreferences}
+          options={Object.values(EDietaryPreferences)}
           detail="This is here to make sure you end up loving the recipes we suggest."
           selectedConditions={mealPreference}
           setSelectedConditions={setMealPreference}
+          register={register}
+          errors={errors && errors.medical_condition && errors.medical_condition?.dietary_preferences}
+        />
+
+        <ChipsBox
+          name="medical_condition.allergie"
+          label="Allergies"
+          options={Object.values(EAllergies)}
+          detail="Food groups or ingredients you're allergies to."
+          selectedConditions={allergies}
+          setSelectedConditions={setAllergies}
+          register={register}
+          errors={errors && errors.medical_condition && errors.medical_condition?.allergies}
         />
       </div>
-      <div className="w-full px-5">
-        <WideButton
-          label="Get Started"
-          color="bg-content-color"
-          clickEvent={handleSubmit}
-        />
-      </div>
+      {finish ? (
+        <div className="w-full px-5">
+          <WideButton
+            label="Get Started"
+            color="bg-content-color"
+          />
+        </div>
+      ) : (
+        <div className="w-full px-5 flex justify-center items-end gap-2">
+          <WideLink label="Back" color="bg-white" outline={true} clickAction={onBackClick} />
+          <WideLink label="Next" color="bg-content-color" clickAction={onNextClick} />
+        </div>
+      )}
+      {/* <button>submit</button> */}
     </div>
   );
 }
