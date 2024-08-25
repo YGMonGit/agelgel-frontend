@@ -91,7 +91,6 @@ function RecipeDetail() {
   };
 
   const { data: recipe, isLoading: recipesLoading } = useGetRecipeByIdQuery(String(rID.id));
-  const { data: macroNutrients, isLoading: macroNutrientsIsLoading } = useGetRecipeCarbsQuery(String(rID.id));
 
   const onNewCommentChange = (e: React.ChangeEvent<HTMLInputElement>) => setNewComment(e.target.value);
 
@@ -151,13 +150,13 @@ function RecipeDetail() {
         </div>
         <div className="w-full flex justify-between items-center leading-none">
           <div className="flex items-center gap-2">
-            <img src={User} className="min-w-8 w-8" alt="pic" />
-            <p className="text-[1.3rem] font-semibold">Name</p>
+            <img src={recipe.user.profile_img} className="min-w-8 w-8" alt="pic" />
+            <p className="text-[1.3rem] font-semibold">{recipe.user.full_name}</p>
           </div>
           <BsFillPersonCheckFill className="text-content-color text-[1.5rem]" />
         </div>
         <div className="w-full flex justify-between items-center mt-6">
-          <h2 className="text-[1.3rem] font-bold">{recipe.description}</h2>
+          <h2 className="text-[1.3rem] font-bold">{recipe.name}</h2>
           <HiOutlineBookmark className="text-content-color text-[1.5rem]" />
         </div>
         <div className="w-full flex justify-start items-center gap-1 my-2">
@@ -220,11 +219,28 @@ function RecipeDetail() {
 
         <div className="w-full flex flex-col justify-start items-start mt-5">
           <h3 className="font-semibold mb-1">Macro-nutrients</h3>
-          {/* {recipe.macroNutrients.map((macroNutrient, index) => (
-            <div key={index} className="flex justify-start items-center gap-1 text-slate-400">
-              <GoDotFill className="text-[.7rem] ml-[6px] mr-1 text-slate-500" /> {macroNutrient}
-            </div>
-          ))} */}
+
+          <div className="flex justify-start items-center gap-1 text-slate-400">
+            <GoDotFill className="text-[.7rem] ml-[6px] mr-1 text-slate-500" /> {recipe.nutrition.calories} Kcal
+          </div>
+
+          <div className="flex justify-start items-center gap-1 text-slate-400">
+            <GoDotFill className="text-[.7rem] ml-[6px] mr-1 text-slate-500" /> {recipe.nutrition.protein_g} g Protein
+          </div>
+
+          <div className="flex justify-start items-center gap-1 text-slate-400">
+            <GoDotFill className="text-[.7rem] ml-[6px] mr-1 text-slate-500" /> {recipe.nutrition.fat_total_g} g Fat
+          </div>
+
+          <div className="flex justify-start items-center gap-1 text-slate-400">
+            <GoDotFill className="text-[.7rem] ml-[6px] mr-1 text-slate-500" /> {recipe.nutrition.carbohydrates_total_g} g Carbs
+          </div>
+
+          <div className="flex justify-start items-center gap-1 text-slate-400">
+            <GoDotFill className="text-[.7rem] ml-[6px] mr-1 text-slate-500" /> {recipe.nutrition.fiber_g} g Fiber
+          </div>
+
+
         </div>
         <div className="w-full flex flex-col justify-start items-start mt-5">
           <h3 className="font-semibold mb-1">Ingredients</h3>
