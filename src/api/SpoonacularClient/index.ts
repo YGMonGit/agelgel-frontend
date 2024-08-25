@@ -29,7 +29,7 @@ export default class SpoonacularClient {
         }
     }
 
-    async getIngredientImage(name: string): Promise<string> {
+    async getIngredientImage(name: string): Promise<any> {
         try {
             const ingredients = await this.searchIngredients({
                 query: name,
@@ -43,7 +43,7 @@ export default class SpoonacularClient {
             return `https://spoonacular.com/cdn/ingredients_100x100/${ingredients.results[0].image}`;
         } catch (error) {
             console.error(`Failed to get ingredient image: ${error}`);
-            throw error;
+            // throw error;
         }
     }
 

@@ -21,6 +21,7 @@ import User from "../assets/images/post/user_1.png";
 import { Skeleton } from "../components/ui/skeleton";
 import WideButton from "../components/WideButton";
 import SpoonacularClient from "../api/SpoonacularClient";
+import FilterBar from "../components/FilterBar";
 
 const StyledRating = styled(Rating)({
   fontSize: '1rem',
@@ -29,23 +30,8 @@ const StyledRating = styled(Rating)({
 function RecipeDetail() {
   const rID = useParams();
   const [newComment, setNewComment] = useState("");
-  const [windowWidth, setWindowWidth] = useState(window.innerWidth);
   const [value, setValue] = React.useState<number | null>(0);
-  const [inputFocused, setInputFocused] = useState(false);
-
-  const isButtonVisible = value || inputFocused || newComment.length > 0;
-
-  useEffect(() => {
-    const handleResizeWithReset = () => {
-      setWindowWidth(window.innerWidth);
-    };
-
-    window.addEventListener("resize", handleResizeWithReset);
-
-    return () => {
-      window.removeEventListener("resize", handleResizeWithReset);
-    };
-  }, []);
+  const showCommentButton = value !== 0 && newComment.trim() !== "";
 
   async function addComment(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault();
@@ -140,7 +126,6 @@ function RecipeDetail() {
             <Slide
               duration={9000}
               transitionDuration={100}
-              arrows={windowWidth <= 640 ? false : true}
               autoplay
               pauseOnHover
               {...properties}
@@ -182,55 +167,21 @@ function RecipeDetail() {
           <StyledRating name="read-only" defaultValue={recipe.rating} precision={0.5} size="small" readOnly />
           <p className="leading-3 px-1 rounded-md text-content-color text-[.8rem] bg-[#EBFFF8]">{recipe.rating.toFixed(1)}</p>
         </div>
-        <div className="w-full flex justify-start items-center gap-2">
+        <div className="w-full flex flex-col justify-start items-center gap-2">
 
-          <Chip label={recipe.cookingTime}
-            sx={{ margin: "8px 4px", borderRadius: "8px", backgroundColor: "#F3F4F6", height: "25px", fontWeight: "500" }}
-          />
-          <Chip label={recipe.preparationDifficulty}
-            sx={{ margin: "8px 4px", borderRadius: "8px", backgroundColor: "#F3F4F6", height: "25px", fontWeight: "500" }}
-          />
+          <div className="w-full">
+            <Chip label={recipe.cookingTime}
+              sx={{ margin: "8px 4px", borderRadius: "8px", backgroundColor: "#F3F4F6", height: "25px", fontWeight: "500" }}
+            />
+            <Chip label={recipe.preparationDifficulty}
+              sx={{ margin: "8px 4px", borderRadius: "8px", backgroundColor: "#F3F4F6", height: "25px", fontWeight: "500" }}
+            />
+          </div>
+          <FilterBar data={recipe.preferredMealTime} />
+          <FilterBar data={recipe.medical_condition.chronicDiseases} />
+          <FilterBar data={recipe.medical_condition.dietary_preferences} />
+          <FilterBar data={recipe.medical_condition.allergies} />
 
-          {
-            recipe.preferredMealTime.map((mealTime, index) => (
-              <Chip
-                label={mealTime}
-                sx={{ margin: "8px 4px", borderRadius: "8px", backgroundColor: "#F3F4F6", height: "25px", fontWeight: "500" }}
-                className="font-[500]"
-                key={index}
-              />
-            ))
-          }
-          {
-            recipe.medical_condition && recipe.medical_condition.chronicDiseases?.map((chronicDisease, index) => (
-              <Chip
-                label={chronicDisease}
-                sx={{ margin: "8px 4px", borderRadius: "8px", backgroundColor: "#F3F4F6", height: "25px", fontWeight: "500" }}
-                className="font-[500]"
-                key={index}
-              />
-            ))
-          }
-          {
-            recipe.medical_condition && recipe.medical_condition.dietary_preferences?.map((dietary_preference, index) => (
-              <Chip
-                label={dietary_preference}
-                sx={{ margin: "8px 4px", borderRadius: "8px", backgroundColor: "#F3F4F6", height: "25px", fontWeight: "500" }}
-                className="font-[500]"
-                key={index}
-              />
-            ))
-          }
-          {
-            recipe.medical_condition && recipe.medical_condition.allergies?.map((allergies, index) => (
-              <Chip
-                label={allergies}
-                sx={{ margin: "8px 4px", borderRadius: "8px", backgroundColor: "#F3F4F6", height: "25px", fontWeight: "500" }}
-                className="font-[500]"
-                key={index}
-              />
-            ))
-          }
 
 
         </div>
@@ -287,27 +238,33 @@ function RecipeDetail() {
             ))
           }
         </div>
-        <form className="group w-full flex flex-col justify-start items-start gap-3" onSubmit={addComment}>
-          <Rating
-            name="simple-controlled"
-            size="small"
-            value={value}
-            onChange={(event, newValue) => {
-              setValue(newValue);
-            }}
-          />
-          <input
-            type="text"
-            placeholder="Add a comment ..."
-            value={newComment}
-            onChange={onNewCommentChange}
-            autoComplete="off"
-            required
-            className={`w-full py-[10px] bg-[#F9FAFB] leading-none text-[1rem] px-4 border outline-none rounded-lg border-[#D1D5DB] mb-5 group-hover:mb-0`}
-          />
-          {/* <WideButton label="Comment" color="bg-content-color" /> */}
-          <button className="hidden group-hover:block w-full py-[10px] bg-content-color mb-5 text-white rounded-lg">Comment</button>
-        </form>
+        <form className="w-full flex flex-col justify-start items-start gap-3" onSubmit={addComment}>
+      <Rating
+        name="simple-controlled"
+        size="small"
+        value={value}
+        onChange={(event: React.SyntheticEvent<Element, Event>, newValue: number | null) => {
+          setValue(newValue);
+        }}
+      />
+      <input
+        type="text"
+        placeholder="Add a comment ..."
+        value={newComment}
+        onChange={onNewCommentChange}
+        autoComplete="off"
+        required
+        className={`w-full py-[10px] bg-[#F9FAFB] leading-none text-[1rem] px-4 border outline-none rounded-lg border-[#D1D5DB]`}
+      />
+      {!showCommentButton && (<p className="text-yellow-300 text-[.8rem] leading-none mb-3 -mt-2">{value === 0 && newComment.trim() !== "" && "Please fill retting"}{newComment.trim() === "" && value !== 0 && "Please fill comment"}{newComment.trim() === "" && value === 0 && "Please fill retting and comment"}</p>)}
+      <button 
+        type="submit" 
+        className={`${showCommentButton ? "w-full py-[10px] bg-content-color mb-5 text-white rounded-lg" : "w-full py-[8px] bg-neutral-300 text-neutral-500 mb-5"}`}
+        disabled={!showCommentButton}
+      >
+        Comment
+      </button>
+    </form>
       </div>
     );
   }

@@ -17,6 +17,7 @@ export const recipeDetailUrl = "/recipe-detail";
 export const postUrl = "/post";
 export const editPostUrl = "/edit-post";
 export const mySpaceUrl = "/my-space";
+export const loadingUrl = "/loading";
 
 export const allergies = [
   "Peanuts",
