@@ -1,11 +1,11 @@
 import React from "react";
-import { useLocation, useNavigate } from "react-router-dom";
+import { useLocation, useNavigate, useParams } from "react-router-dom";
 import logo from "../assets/images/agelgel-logo.png";
 import ArrowUpRight from "../assets/icons/arrow-up-right.png";
 import HelpIcon from "../assets/icons/help-icon.png";
 import CircleDropdown from "./CircleDropdown";
 import DetailNavDropdown from "./DetailNavDropdown";
-import { editPostUrl, editUserUrl, homeUrl, loginUrl, mySpaceUrl, postUrl, recipeDetailUrl, signUpUrl } from "../assets/data";
+import { editPostUrl, editUserUrl, homeUrl, loadingUrl, loginUrl, mySpaceUrl, postUrl, recipeDetailUrl, signUpUrl } from "../assets/data";
 
 import { SlClose, SlArrowLeft } from "react-icons/sl";
 
@@ -88,7 +88,7 @@ function Navbar() {
   };
 
   return (
-    <div className="w-full h-[56px] py-[14px] px-5 border-b fixed top-0 left-0 right-0 bg-white flex justify-between items-center z-50">
+    <div className={`w-full h-[56px] py-[14px] px-5 ${location.pathname !== loadingUrl && "border-b"} fixed top-0 left-0 right-0 bg-white flex justify-between items-center z-50`}>
       <div className="flex items-end">{getLeftContent()}</div>
       <div className="flex items-end">{getRightContent()}</div>
     </div>

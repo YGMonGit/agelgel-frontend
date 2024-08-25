@@ -9,7 +9,7 @@ import { Chip } from "@mui/material";
 
 import Rating from '@mui/material/Rating';
 import { styled } from '@mui/system';
-import Comment from "../components/Comment";
+import Comment, { ModeratorComment } from "../components/Comment";
 import { useGetRecipeByIdQuery, useGetRecipeCarbsQuery } from "../api/slices/recipe.slices";
 import { IIngredient } from "../api/types/ingredient.type";
 import { IReview } from "../api/types/review.type";
@@ -20,6 +20,10 @@ import User from "../assets/images/post/user_1.png";
 
 import { Skeleton } from "../components/ui/skeleton";
 import WideButton from "../components/WideButton";
+import SpoonacularClient from "../api/SpoonacularClient";
+import FilterBar from "../components/FilterBar";
+import { useCreateReviewMutation, useGetRecipeReviewsQuery } from "../api/slices/review.slices";
+import { set } from "react-hook-form";
 
 const StyledRating = styled(Rating)({
   fontSize: '1rem',
@@ -28,28 +32,8 @@ const StyledRating = styled(Rating)({
 function RecipeDetail() {
   const rID = useParams();
   const [newComment, setNewComment] = useState("");
-  const [windowWidth, setWindowWidth] = useState(window.innerWidth);
   const [value, setValue] = React.useState<number | null>(0);
-  const [inputFocused, setInputFocused] = useState(false);
-
-  const isButtonVisible = value || inputFocused || newComment.length > 0;
-
-  useEffect(() => {
-    const handleResizeWithReset = () => {
-      setWindowWidth(window.innerWidth);
-    };
-
-    window.addEventListener("resize", handleResizeWithReset);
-
-    return () => {
-      window.removeEventListener("resize", handleResizeWithReset);
-    };
-  }, []);
-
-  async function addComment(e: React.FormEvent<HTMLFormElement>) {
-    e.preventDefault();
-    console.log("Adding comment...");
-  }
+  const showCommentButton = value !== 0 && newComment.trim() !== "";
 
   const properties = {
     prevArrow: (
@@ -91,10 +75,50 @@ function RecipeDetail() {
   };
 
   const { data: recipe, isLoading: recipesLoading } = useGetRecipeByIdQuery(String(rID.id));
-  const { data: macroNutrients, isLoading: macroNutrientsIsLoading } = useGetRecipeCarbsQuery(String(rID.id));
+  const [reviewsPagination, setReviewsPagination] = useState({ skip: 0, limit: 10 });
+  const { data: reviews, isLoading: reviewsLoading } = useGetRecipeReviewsQuery({ recipeId: String(rID.id), skip: reviewsPagination.skip, limit: reviewsPagination.limit });
+  const [CreateReview] = useCreateReviewMutation();
+  const [ingredientImages, setIngredientImages] = useState<string[]>([]);
+
+  useEffect(() => {
+    if (recipe) {
+      const fetchIngredientImages = async () => {
+        const images = await Promise.all(
+          recipe.ingredients.map(async (ingredient) => {
+            const res = await new SpoonacularClient().getIngredientsImages([ingredient.name]);
+            return res;
+          }
+          ));
+        setIngredientImages(images as any);
+      };
+
+      fetchIngredientImages();
+    }
+  }, [recipe]);
+
+  async function addComment(e: React.FormEvent<HTMLFormElement>) {
+    e.preventDefault();
+    console.log("Adding comment...");
+    await CreateReview({
+      recipe: recipe?._id ?? "",
+      rating: value ?? 0,
+      comment: newComment,
+    }).unwrap();
+    setNewComment("");
+    setValue(0);
+  }
+
+  function convertToEmbedUrl(youtubeLink: string) {
+    const videoId = youtubeLink.split('v=')[1];
+    const ampersandPosition = videoId ? videoId.indexOf('&') : -1;
+    if (ampersandPosition !== -1) {
+      return `https://www.youtube.com/embed/${videoId.substring(0, ampersandPosition)}`;
+    }
+    return `https://www.youtube.com/embed/${videoId}`;
+  }
 
   const onNewCommentChange = (e: React.ChangeEvent<HTMLInputElement>) => setNewComment(e.target.value);
-  
+
   if (!recipe) {
     return (
       <div className="w-full h-full max-w-[800px] px-5 flex flex-col justify-start items-start gap-3">
@@ -122,7 +146,6 @@ function RecipeDetail() {
             <Slide
               duration={9000}
               transitionDuration={100}
-              arrows={windowWidth <= 640 ? false : true}
               autoplay
               pauseOnHover
               {...properties}
@@ -151,68 +174,34 @@ function RecipeDetail() {
         </div>
         <div className="w-full flex justify-between items-center leading-none">
           <div className="flex items-center gap-2">
-            <img src={User} className="min-w-8 w-8" alt="pic" />
-            <p className="text-[1.3rem] font-semibold">Name</p>
+            <img src={recipe.user.profile_img} className="w-8 h-8 rounded-full object-cover" alt="pic" />
+            <p className="text-[1.3rem] font-semibold">{recipe.user.full_name}</p>
           </div>
-          <BsFillPersonCheckFill className="text-content-color text-[1.5rem]"/>
+          <BsFillPersonCheckFill className="text-content-color text-[1.5rem]" />
         </div>
         <div className="w-full flex justify-between items-center mt-6">
-          <h2 className="text-[1.3rem] font-bold">{recipe.description}</h2>
+          <h2 className="text-[1.3rem] font-bold">{recipe.name}</h2>
           <HiOutlineBookmark className="text-content-color text-[1.5rem]" />
         </div>
         <div className="w-full flex justify-start items-center gap-1 my-2">
           <StyledRating name="read-only" defaultValue={recipe.rating} precision={0.5} size="small" readOnly />
           <p className="leading-3 px-1 rounded-md text-content-color text-[.8rem] bg-[#EBFFF8]">{recipe.rating.toFixed(1)}</p>
         </div>
-        <div className="w-full flex justify-start items-center gap-2">
+        <div className="w-full flex flex-col justify-start items-center gap-2">
 
-          <Chip label={recipe.cookingTime}
-            sx={{ margin: "8px 4px", borderRadius: "8px", backgroundColor: "#F3F4F6", height: "25px", fontWeight: "500" }}
-          />
-          <Chip label={recipe.preparationDifficulty}
-            sx={{ margin: "8px 4px", borderRadius: "8px", backgroundColor: "#F3F4F6", height: "25px", fontWeight: "500" }}
-          />
+          <div className="w-full">
+            <Chip label={recipe.cookingTime}
+              sx={{ margin: "8px 4px", borderRadius: "8px", backgroundColor: "#F3F4F6", height: "25px", fontWeight: "500" }}
+            />
+            <Chip label={recipe.preparationDifficulty}
+              sx={{ margin: "8px 4px", borderRadius: "8px", backgroundColor: "#F3F4F6", height: "25px", fontWeight: "500" }}
+            />
+          </div>
+          <FilterBar data={recipe.preferredMealTime} />
+          <FilterBar data={recipe.medical_condition.chronicDiseases} />
+          <FilterBar data={recipe.medical_condition.dietary_preferences} />
+          <FilterBar data={recipe.medical_condition.allergies} />
 
-          {
-            recipe.preferredMealTime.map((mealTime, index) => (
-              <Chip
-                label={mealTime}
-                sx={{ margin: "8px 4px", borderRadius: "8px", backgroundColor: "#F3F4F6", height: "25px", fontWeight: "500" }}
-                className="font-[500]"
-                key={index}
-              />
-            ))
-          }
-          {
-            recipe.medical_condition && recipe.medical_condition.chronicDiseases?.map((chronicDisease, index) => (
-              <Chip
-                label={chronicDisease}
-                sx={{ margin: "8px 4px", borderRadius: "8px", backgroundColor: "#F3F4F6", height: "25px", fontWeight: "500" }}
-                className="font-[500]"
-                key={index}
-              />
-            ))
-          }
-          {
-            recipe.medical_condition && recipe.medical_condition.dietary_preferences?.map((dietary_preference, index) => (
-              <Chip
-                label={dietary_preference}
-                sx={{ margin: "8px 4px", borderRadius: "8px", backgroundColor: "#F3F4F6", height: "25px", fontWeight: "500" }}
-                className="font-[500]"
-                key={index}
-              />
-            ))
-          }
-          {
-            recipe.medical_condition && recipe.medical_condition.allergies?.map((allergies, index) => (
-              <Chip
-                label={allergies}
-                sx={{ margin: "8px 4px", borderRadius: "8px", backgroundColor: "#F3F4F6", height: "25px", fontWeight: "500" }}
-                className="font-[500]"
-                key={index}
-              />
-            ))
-          }
 
 
         </div>
@@ -220,39 +209,75 @@ function RecipeDetail() {
 
         <div className="w-full flex flex-col justify-start items-start mt-5">
           <h3 className="font-semibold mb-1">Macro-nutrients</h3>
-          {/* {recipe.macroNutrients.map((macroNutrient, index) => (
-            <div key={index} className="flex justify-start items-center gap-1 text-slate-400">
-              <GoDotFill className="text-[.7rem] ml-[6px] mr-1 text-slate-500" /> {macroNutrient}
-            </div>
-          ))} */}
+
+          <div className="flex justify-start items-center gap-1 text-slate-400">
+            <GoDotFill className="text-[.7rem] ml-[6px] mr-1 text-slate-500" /> {recipe.nutrition.calories} Kcal
+          </div>
+
+          <div className="flex justify-start items-center gap-1 text-slate-400">
+            <GoDotFill className="text-[.7rem] ml-[6px] mr-1 text-slate-500" /> {recipe.nutrition.protein_g} g Protein
+          </div>
+
+          <div className="flex justify-start items-center gap-1 text-slate-400">
+            <GoDotFill className="text-[.7rem] ml-[6px] mr-1 text-slate-500" /> {recipe.nutrition.fat_total_g} g Fat
+          </div>
+
+          <div className="flex justify-start items-center gap-1 text-slate-400">
+            <GoDotFill className="text-[.7rem] ml-[6px] mr-1 text-slate-500" /> {recipe.nutrition.carbohydrates_total_g} g Carbs
+          </div>
+
+          <div className="flex justify-start items-center gap-1 text-slate-400">
+            <GoDotFill className="text-[.7rem] ml-[6px] mr-1 text-slate-500" /> {recipe.nutrition.fiber_g} g Fiber
+          </div>
+
+
         </div>
         <div className="w-full flex flex-col justify-start items-start mt-5">
           <h3 className="font-semibold mb-1">Ingredients</h3>
-          {/* {recipe.ingredients.map((ingredient, index) => (
-            <div key={index} className="flex justify-start items-center gap-1 text-slate-400">
-              <GoDotFill className="text-[.7rem] ml-[6px] mr-1 text-slate-500" />{(ingredient.ingredient as IIngredient).name} - {ingredient.amount}
-            </div>
-          ))} */}
+          {recipe.ingredients.map((ingredient, index) => {
+            return (
+              <div key={index} className="flex justify-start items-center gap-1 text-slate-400">
+                <img src={ingredientImages[index]} alt="pic" className="min-w-8 w-8" />
+                <GoDotFill className="text-[.7rem] ml-[6px] mr-1 text-slate-500" />{(ingredient.ingredient as IIngredient).name}( {(ingredient.ingredient as IIngredient).localName} )- {ingredient.amount} {(ingredient.ingredient as IIngredient).unit}
+              </div>
+            )
+          })}
         </div>
         <div className="w-full flex flex-col justify-start items-start mt-5">
           <h3 className="font-semibold mb-1">Instructions</h3>
           <div dangerouslySetInnerHTML={{ __html: recipe.instructions }} />
 
+          <div className="w-full mt-5">
+            {recipe.youtubeLink && (
+              <iframe
+                width="100%"
+                height="315"
+                src={convertToEmbedUrl(recipe.youtubeLink)}
+                title="YouTube video player"
+                frameBorder="0"
+                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                allowFullScreen
+              />
+            )}
+          </div>
+
         </div>
         <div className="w-full flex flex-col justify-start items-start mt-5">
           <h3 className="font-semibold mb-1">Comments {recipe.totalReviews}</h3>
-          {/* {
-            recipe.reviews.map((review, index) => (
+          <ModeratorComment moderator={recipe.moderator} />
+
+          {
+            reviews?.map((review, index) => (
               <Comment key={index} comments={review as IReview} />
             ))
-          } */}
+          }
         </div>
-        <form className="group w-full flex flex-col justify-start items-start gap-3" onSubmit={addComment}>
+        <form className="w-full flex flex-col justify-start items-start gap-3" onSubmit={addComment}>
           <Rating
             name="simple-controlled"
             size="small"
             value={value}
-            onChange={(event, newValue) => {
+            onChange={(event: React.SyntheticEvent<Element, Event>, newValue: number | null) => {
               setValue(newValue);
             }}
           />
@@ -263,10 +288,15 @@ function RecipeDetail() {
             onChange={onNewCommentChange}
             autoComplete="off"
             required
-            className={`w-full py-[10px] bg-[#F9FAFB] leading-none text-[1rem] px-4 border outline-none rounded-lg border-[#D1D5DB] mb-5 group-hover:mb-0`}
+            className={`w-full py-[10px] bg-[#F9FAFB] leading-none text-[1rem] px-4 border outline-none rounded-lg border-[#D1D5DB]`}
           />
-          {/* <WideButton label="Comment" color="bg-content-color" /> */}
-          <button className="hidden group-hover:block w-full py-[10px] bg-content-color mb-5 text-white rounded-lg">Comment</button>
+          {!showCommentButton && (<p className="text-yellow-300 text-[.8rem] leading-none mb-3 -mt-2">{value === 0 && newComment.trim() !== "" && "Please fill retting"}{newComment.trim() === "" && value !== 0 && "Please fill comment"}{newComment.trim() === "" && value === 0 && "Please fill retting and comment"}</p>)}
+          <button
+            type="submit"
+            className={`${showCommentButton ? "w-full py-[10px] bg-content-color mb-5 text-white rounded-lg" : "w-full py-[8px] bg-neutral-300 text-neutral-500 mb-5"}`}
+            disabled={!showCommentButton}>
+            Comment
+          </button>
         </form>
       </div>
     );

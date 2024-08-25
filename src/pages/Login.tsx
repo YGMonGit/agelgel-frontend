@@ -10,9 +10,11 @@ import { homeUrl, signUpUrl } from "../assets/data";
 import { useLogInMutation } from "../api/slices/user.slices";
 import { useForm } from "react-hook-form";
 import { IUserLogInFrom } from "../api/types/user.type";
-import { joiResolver } from "@hookform/resolvers/joi";
-import Joi from "joi";
+import { zodResolver } from '@hookform/resolvers/zod';
+import { z } from 'zod';
 import { useNavigate } from "react-router-dom";
+import ProfileImageInput from "../components/ProfileImageInput";
+import { logInSchema } from "../validation/user.validation";
 
 function Login() {
 
@@ -23,25 +25,30 @@ function Login() {
 
   const navigate = useNavigate();
 
-
   const [logIn] = useLogInMutation();
-  // const logInSchema = Joi.object<IUserLogInFrom>({
-  //   email: Joi.string().required(),
-  //   password: Joi.string().min(8).required(),
-  // });
-  // const { register, handleSubmit, formState: { errors }, trigger } = useForm({
-  //   resolver: joiResolver(logInSchema),
-  // });
 
-  async function login(e: React.FormEvent<HTMLFormElement>) {
-    e.preventDefault();
+  const { register, handleSubmit, formState: { errors }, setError } = useForm<IUserLogInFrom>({
+    resolver: zodResolver(logInSchema),
+  });
+
+  async function login(data: IUserLogInFrom) {
     console.log("Logging in...");
     try {
-      const data = await logIn({ data: { email, password } }).unwrap();
-      console.log(data);
+      await logIn({ data }).unwrap();
       navigate(homeUrl);
-    } catch (error) {
-      console.error("Failed to log in:", error);
+    } catch (error: any) {
+      if (!error.data.error) return;
+      const err = error.data.error;
+      if (err.type === "Validation")
+        if (err.attr === "")
+          setError("email", { message: err.msg });
+        else
+          setError(err.attr, { message: err.error });
+
+      // const [sreverError, setSreverError] = useState<string | null>(null);
+      //  setSreverError(err.msg);
+      // sreverError && { <p>{sreverError}</p>
+
     }
   }
 
@@ -57,9 +64,9 @@ function Login() {
     <div className="w-full flex-grow flex flex-col justify-start items-center">
       <PageHeader header="Hey! Welcome Back." detail="Log in to your account." />
       <UseGoogle clickAction={handleWithGoogleClick} />
-      <form className="w-full flex flex-col justify-start items-center flex-grow" onSubmit={login}>
-        <Input label="Your email" placeholder="email" value={email} onChange={onEmailChange} />
-        <Input label="Password" placeholder="password" value={password} isPassword={true} showPassword={showPassword} onChange={onPasswordChange}>
+      <form className="w-full flex flex-col justify-start items-center flex-grow" onSubmit={handleSubmit(login)}>
+        <Input label="Your email" placeholder="email" value={email} onChange={onEmailChange} register={register} errors={errors.email} />
+        <Input label="Password" placeholder="password" value={password} isPassword={true} showPassword={showPassword} onChange={onPasswordChange} register={register} errors={errors.password}>
           <div
             className="text-[#6B7280] text-[1.3rem] absolute top-0 right-2 h-full flex justify-end items-center cursor-pointer border-0 bg-transparent"
             onClick={() => setShowPassword(!showPassword)}

@@ -28,9 +28,17 @@ export enum ERecipeStatus {
     rejected = "rejected",
 }
 export type TRecipeStatus = "verified" | "pending" | "rejected";
-interface IngredientDetail {
+export interface IngredientDetail {
     ingredient: string | IIngredient;
+    name: string;
     amount: number;
+}
+
+export interface IngredientDetailWithUnit {
+    ingredient: string | IIngredient;
+    name: string;
+    amount: number;
+    unit: string;
 }
 
 export interface IRecipe {
@@ -55,10 +63,16 @@ export interface IRecipe {
 
     medical_condition: IMedicalCondition;
 
+    nutrition: INutritionData;
+
     shareableLink: string;
 
     moderator?: {
-        moderator: string | IModerator;
+        moderator: {
+            moderator: string;
+            full_name: string;
+            profile_img: string;
+        }
         Comment: string;
     };
 
@@ -88,9 +102,9 @@ export interface INewRecipeFrom {
     name: string;
     description?: string;
     imgs: string[];
-    preferredMealTime: TPreferredMealTime[];
+    preferredMealTime: EPreferredMealTime[];
     preparationDifficulty: TPreparationDifficulty;
-    cookingTime: number;
+    cookingTime: string;
     ingredients: IngredientDetail[];
     instructions: string;
     medical_condition: IMedicalCondition;

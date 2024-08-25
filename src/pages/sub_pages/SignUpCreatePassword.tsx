@@ -4,6 +4,7 @@ import { Input, UseGoogle } from "../../components/Input";
 import { RiEyeCloseLine, RiEyeLine } from "react-icons/ri";
 import WideButton from "../../components/WideButton";
 import { loginUrl } from "../../assets/data";
+import WideLink from "../../components/WideLink";
 
 interface SingUpCreatePasswordProps {
   setFormNumber: React.Dispatch<React.SetStateAction<number>>;
@@ -11,6 +12,8 @@ interface SingUpCreatePasswordProps {
   setPassword: React.Dispatch<React.SetStateAction<string>>;
   confirmPassword: string;
   setConfirmPassword: React.Dispatch<React.SetStateAction<string>>;
+  register: any;
+  errors: any;
   handleWithGoogleClick?: () => void;
 }
 
@@ -20,6 +23,8 @@ function SignUpCreatePassword({
   setPassword,
   confirmPassword,
   setConfirmPassword,
+  register,
+  errors,
   handleWithGoogleClick,
 }: SingUpCreatePasswordProps) {
   const [showPassword, setShowPassword] = useState(false);
@@ -52,6 +57,9 @@ function SignUpCreatePassword({
           isPassword={true}
           showPassword={showPassword}
           onChange={onPasswordChange}
+          register={register}
+          errors={errors.password}
+          // errors={errors.first_name}
         >
           <div
             className="text-[#6B7280] text-[1.3rem] absolute top-0 right-2 h-full flex justify-end items-center cursor-pointer border-0 bg-transparent"
@@ -62,11 +70,13 @@ function SignUpCreatePassword({
         </Input>
         <Input
           label="Confirm Password"
-          placeholder="rewrite password"
+          placeholder="confirm_password"
           value={confirmPassword}
           isPassword={true}
           showPassword={showCPassword}
           onChange={onConfirmPasswordChange}
+          register={register}
+          errors={errors.confirm_password}
         >
           <div
             className="text-[#6B7280] text-[1.3rem] absolute top-0 right-2 h-full flex justify-end items-center cursor-pointer border-0 bg-transparent"
@@ -77,18 +87,19 @@ function SignUpCreatePassword({
         </Input>
       </div>
       <div className="w-full px-5 flex justify-center items-end gap-2">
-        <WideButton
+        <WideLink
           label="Back"
           color="bg-white"
           outline={true}
           clickAction={onBackClick}
         />
-        <WideButton
+        <WideLink
           label="Finish"
           color="bg-content-color"
           clickAction={onNextClick}
         />
       </div>
+      <button>Submit</button>
       <div className="w-full px-5 text-slate-400 text-[1rem] mb-10">
         Already have an account?{" "}
         <a href={loginUrl} className="text-content-color font-[470]">
