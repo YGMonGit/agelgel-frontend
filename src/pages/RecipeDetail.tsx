@@ -10,7 +10,7 @@ import { Chip } from "@mui/material";
 import Rating from '@mui/material/Rating';
 import { styled } from '@mui/system';
 import Comment, { ModeratorComment } from "../components/Comment";
-import { useGetRecipeByIdQuery, useGetRecipeCarbsQuery } from "../api/slices/recipe.slices";
+import { useGetRecipeByIdQuery, useGetRecipeCarbsQuery, useGetRecipesQuery } from "../api/slices/recipe.slices";
 import { IIngredient } from "../api/types/ingredient.type";
 import { IReview } from "../api/types/review.type";
 import { Slide } from "react-slideshow-image";
@@ -30,6 +30,7 @@ import { useCreateReviewMutation, useGetRecipeReviewsQuery } from "../api/slices
 import { set } from "react-hook-form";
 import CircularProgress from "../components/CircularProgress";
 import { HiFire } from "react-icons/hi";
+import DisplayCard from "../components/DisplayCard";
 
 const StyledRating = styled(Rating)({
   fontSize: '1rem',
@@ -85,6 +86,18 @@ function RecipeDetail() {
   const { data: reviews, isLoading: reviewsLoading } = useGetRecipeReviewsQuery({ recipeId: String(rID.id), skip: reviewsPagination.skip, limit: reviewsPagination.limit });
   const [CreateReview] = useCreateReviewMutation();
   const [ingredientImages, setIngredientImages] = useState<string[]>([]);
+
+  const [pagination, setPagination] = useState({
+    skip: 0,
+    limit: 10,
+  });
+
+  const { data: recommendedRecipes, isLoading } =
+    useGetRecipesQuery(pagination);
+
+  const skeletonCount = isLoading
+  ? pagination.limit
+  : recommendedRecipes?.length || 0;
 
   useEffect(() => {
     if (recipe) {
@@ -256,6 +269,19 @@ function RecipeDetail() {
           </div>
 
         </div>
+        <div className="w-full flex flex-col justify-start items-start mt-5">
+          <h3 className="font-semibold mb-1">Similar recipes</h3>
+          <div className="grid grid-cols-2 sm:grid-cols-3 gap-4 w-full">
+            {isLoading
+              ? Array.from({ length: skeletonCount }).map((_, index) => (
+                <DisplayCard post={null} key={`skeleton-${index}`} />
+              ))
+              : recommendedRecipes?.map((post, index) => (
+                <DisplayCard post={post} key={index} />
+              ))}
+          </div>
+        </div>
+
         <div className="w-full flex flex-col justify-start items-start mt-5">
           <h3 className="font-semibold mb-1">Comments {recipe.totalReviews}</h3>
           <ModeratorComment moderator={recipe.moderator} />

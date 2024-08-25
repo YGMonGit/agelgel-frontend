@@ -57,7 +57,7 @@ function Navbar() {
             </AlertDialogHeader>
             <AlertDialogFooter>
               <AlertDialogCancel className="text-[1.2rem] h-[56px] rounded-xl">No, I've changed my mind</AlertDialogCancel>
-              <AlertDialogAction className="text-[1.2rem] h-[56px] bg-red-700 rounded-xl">
+              <AlertDialogAction className="text-[1.2rem] h-[56px] bg-red-700 rounded-xl" onClick={() => navigate(homeUrl)}>
                 Yes, delete it
               </AlertDialogAction>
             </AlertDialogFooter>

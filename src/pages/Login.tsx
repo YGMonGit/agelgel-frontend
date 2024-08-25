@@ -15,6 +15,7 @@ import { z } from 'zod';
 import { useNavigate } from "react-router-dom";
 import ProfileImageInput from "../components/ProfileImageInput";
 import { logInSchema } from "../validation/user.validation";
+import ClipLoader from "react-spinners/ClipLoader";
 
 function Login() {
 
@@ -25,7 +26,7 @@ function Login() {
 
   const navigate = useNavigate();
 
-  const [logIn] = useLogInMutation();
+  const [logIn, {isLoading}] = useLogInMutation();
 
   const { register, handleSubmit, formState: { errors }, setError } = useForm<IUserLogInFrom>({
     resolver: zodResolver(logInSchema),
@@ -85,7 +86,21 @@ function Login() {
           <a href="/" className="text-content-color font-[470]">Forgot Password?</a>
         </div>
         <div className="w-full px-5">
-          <WideButton label="Login" color="bg-content-color" />
+          {isLoading ? (
+            <WideButton label={
+              <div className="flex justify-center items-center w-full h-full gap-2">
+                <ClipLoader
+                  color= {"white"}
+                  size={15}
+                  aria-label="Loading Spinner"
+                  data-testid="loader"
+                />
+                <p className="text-white text-[1.1rem] italic">loading ...</p>
+              </div>
+            } color="bg-content-color" disable={true} />
+          ) : (
+            <WideButton label="Login" color="bg-content-color" />
+          )}
         </div>
       </form>
       <div className="w-full px-5 text-slate-400 text-[1rem] mb-10">Not Registered? <a href={signUpUrl} className="text-content-color font-[470]">Create Account</a></div>

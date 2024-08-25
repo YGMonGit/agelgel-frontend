@@ -4,6 +4,7 @@ import WideButton from "../../components/WideButton";
 import DetailInput from "../../components/DetailInput";
 import WideLink from "../../components/WideLink";
 import { IngredientDetail, IngredientDetailWithUnit } from "@/src/api/types/recipe.type";
+import ClipLoader from "react-spinners/ClipLoader";
 
 interface NewRecipeFormThreeProps {
   setFormNumber: React.Dispatch<React.SetStateAction<number>>;
@@ -15,9 +16,10 @@ interface NewRecipeFormThreeProps {
   setInstructions: React.Dispatch<React.SetStateAction<string>>;
   register: any;
   errors: any;
+  isLoading: any;
 }
 
-function NewRecipeFormThree({ setFormNumber, ingredientList, setIngredientList, instructions, setInstructions, register, errors }: NewRecipeFormThreeProps) {
+function NewRecipeFormThree({ setFormNumber, ingredientList, setIngredientList, instructions, setInstructions, register, errors, isLoading }: NewRecipeFormThreeProps) {
   const onInstructionChange = (e: React.ChangeEvent<HTMLTextAreaElement>) =>
     setInstructions(e.target.value);
 
@@ -43,7 +45,21 @@ function NewRecipeFormThree({ setFormNumber, ingredientList, setIngredientList, 
       </div>
       <div className="w-full px-5 flex justify-center items-end gap-2">
         <WideLink label="Back" color="bg-white" outline={true} clickAction={onBackClick} />
-        <WideButton label="Finish" color="bg-content-color" />
+        {isLoading ? (
+          <WideButton label={
+            <div className="flex justify-center items-center w-full h-full gap-2">
+                <ClipLoader
+                  color= {"white"}
+                  size={15}
+                  aria-label="Loading Spinner"
+                  data-testid="loader"
+                />
+                <p className="text-white text-[1.1rem] italic">loading ...</p>
+              </div>
+            } color="bg-content-color" disable={true} />
+          ) : (
+            <WideButton label="Finish" color="bg-content-color" />
+          )}
       </div>
     </div>
   );

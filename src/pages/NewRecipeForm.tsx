@@ -83,7 +83,7 @@ function NewRecipeForm() {
 
   console.log({ errors });
 
-  const [CreateRecipe] = useCreateRecipeMutation();
+  const [CreateRecipe, {isLoading}] = useCreateRecipeMutation();
 
   const navigate = useNavigate();
 
@@ -159,6 +159,7 @@ function NewRecipeForm() {
               setInstructions={setInstructions}
               register={register}
               errors={errors}
+              isLoading={isLoading}
             />
           </>
         ) : (

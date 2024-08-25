@@ -94,7 +94,7 @@ function SignUpCreatePassword({
           clickAction={onBackClick}
         />
         <WideLink
-          label="Finish"
+          label="Next"
           color="bg-content-color"
           clickAction={onNextClick}
         />
