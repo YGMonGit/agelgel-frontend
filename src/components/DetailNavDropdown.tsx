@@ -1,5 +1,6 @@
 import React, { useState, useRef, useEffect } from "react";
 import { PiDotsThreeOutlineVerticalLight } from "react-icons/pi";
+import QRCode from 'react-qr-code';
 
 import {
   AlertDialog,
@@ -34,6 +35,11 @@ function DetailNavDropdown() {
   const [isOpen, setIsOpen] = useState<boolean>(false);
   const dropdownRef = useRef<HTMLDivElement>(null);
 
+  const [value, setValue] = useState<string>('https://example.com');
+  const [back, setBack] = useState('#FFFFFF');
+  const [fore, setFore] = useState('#000000');
+  const [size, setSize] = useState(256);
+
   const toggleDropdown = () => {
     setIsOpen(!isOpen);
   };
@@ -54,9 +60,20 @@ function DetailNavDropdown() {
     };
   }, []);
 
-  const handleShare = () => {
-    console.log("Share");
+  // const handleShare = () => {
+  //   // Assuming you have a recipeId or recipeUrl
+  //   const recipeUrl = `https://yourwebsite.com/recipe/${/* recipeId */}`;
+  //   setValue(recipeUrl);
+  //   console.log("Share");
+  //   toggleDropdown();
+  // };
 
+  const handleShare = () => {
+    // Assuming you have a recipeId variable
+    const recipeId = '123'; // Replace this with your actual recipeId
+    const recipeUrl = `https://yourwebsite.com/recipe/${recipeId}`;
+    setValue(recipeUrl);
+    console.log("Share");
     toggleDropdown();
   };
 
@@ -74,12 +91,12 @@ function DetailNavDropdown() {
           className="absolute top-10 right-0 bg-white shadow-lg border border-gray-300 rounded-lg py-2 w-[110px]"
         >
           <ul className="space-y-1">
-            <li className="hover:bg-gray-100 text-slate-500 rounded-md p-1 px-3 cursor-pointer">
+            <li className="hover:bg-gray-100 text-slate-500 p-1 px-3 cursor-pointer">
               Edit
             </li>
             <Drawer>
-              <DrawerTrigger>
-                <li className="hover:bg-gray-100 text-slate-500 rounded-md p-1 px-3 cursor-pointer">
+              <DrawerTrigger className="w-full">
+                <li className="hover:bg-gray-100 text-slate-500 w-full text-start p-1 px-3 cursor-pointer">
                   Share
                 </li>
               </DrawerTrigger>
@@ -107,6 +124,15 @@ function DetailNavDropdown() {
                       <img src={shareLogo} alt="pic" className="w-[50px]" />
                     </button>
                   </div>
+                  
+                <div style={{ height: "auto", margin: "0 auto", maxWidth: 100, width: "100%" }}>
+                  <QRCode
+                    size={256}
+                    style={{ height: "auto", maxWidth: "100%", width: "100%" }}
+                    value={value}
+                    viewBox={`0 0 256 256`}
+                  />
+                </div>
                   <DrawerClose>
                     <Button variant="outline" className="w-[60%]">
                       Cancel
@@ -118,7 +144,7 @@ function DetailNavDropdown() {
 
             <AlertDialog>
               <AlertDialogTrigger asChild>
-                <li className="hover:bg-gray-100 rounded-md p-1 px-3 cursor-pointer text-red-700">
+                <li className="hover:bg-gray-100 p-1 px-3 cursor-pointer text-red-700">
                   Delete
                 </li>
               </AlertDialogTrigger>

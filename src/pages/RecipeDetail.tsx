@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useRef } from "react";
 import { useParams } from "react-router-dom";
 
 import { HiOutlineBookmark, HiMiniBookmark } from "react-icons/hi2";
@@ -30,9 +30,8 @@ function RecipeDetail() {
   const [newComment, setNewComment] = useState("");
   const [windowWidth, setWindowWidth] = useState(window.innerWidth);
   const [value, setValue] = React.useState<number | null>(0);
-  const [inputFocused, setInputFocused] = useState(false);
 
-  const isButtonVisible = value || inputFocused || newComment.length > 0;
+  const showCommentButton = value !== 0 && newComment.trim() !== "";
 
   useEffect(() => {
     const handleResizeWithReset = () => {
@@ -50,6 +49,7 @@ function RecipeDetail() {
     e.preventDefault();
     console.log("Adding comment...");
   }
+
 
   const properties = {
     prevArrow: (
@@ -247,27 +247,32 @@ function RecipeDetail() {
             ))
           }
         </div>
-        <form className="group w-full flex flex-col justify-start items-start gap-3" onSubmit={addComment}>
-          <Rating
-            name="simple-controlled"
-            size="small"
-            value={value}
-            onChange={(event, newValue) => {
-              setValue(newValue);
-            }}
-          />
-          <input
-            type="text"
-            placeholder="Add a comment ..."
-            value={newComment}
-            onChange={onNewCommentChange}
-            autoComplete="off"
-            required
-            className={`w-full py-[10px] bg-[#F9FAFB] leading-none text-[1rem] px-4 border outline-none rounded-lg border-[#D1D5DB] mb-5 group-hover:mb-0`}
-          />
-          {/* <WideButton label="Comment" color="bg-content-color" /> */}
-          <button className="hidden group-hover:block w-full py-[10px] bg-content-color mb-5 text-white rounded-lg">Comment</button>
-        </form>
+        <form className="w-full flex flex-col justify-start items-start gap-3" onSubmit={addComment}>
+      <Rating
+        name="simple-controlled"
+        size="small"
+        value={value}
+        onChange={(event: React.SyntheticEvent<Element, Event>, newValue: number | null) => {
+          setValue(newValue);
+        }}
+      />
+      <input
+        type="text"
+        placeholder="Add a comment ..."
+        value={newComment}
+        onChange={onNewCommentChange}
+        autoComplete="off"
+        required
+        className={`w-full py-[10px] bg-[#F9FAFB] leading-none text-[1rem] px-4 border outline-none rounded-lg border-[#D1D5DB]`}
+      />
+      {!showCommentButton && (<p className="text-yellow-300 text-[.8rem] leading-none mb-3 -mt-2">{value === 0 && newComment.trim() !== "" && "Please fill retting"}{newComment.trim() === "" && value !== 0 && "Please fill comment"}{newComment.trim() === "" && value === 0 && "Please fill retting and comment"}</p>)}
+      <button 
+        type="submit" 
+        className={`${showCommentButton ? "w-full py-[10px] bg-content-color mb-5 text-white rounded-lg" : "w-full py-[8px] bg-neutral-300 text-neutral-500 mb-5"}`}
+      >
+        Comment
+      </button>
+    </form>
       </div>
     );
   }
