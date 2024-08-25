@@ -22,6 +22,7 @@ function NewRecipeForm() {
   const [healthCondition, setHealthCondition] = useState<EChronicDisease[]>([]);
   const [allergies, setAllergies] = useState<EAllergies[]>([]);
   const [mealPreference, setMealPreference] = useState<EDietaryPreferences[]>([]);
+  const [youTubeLink, setYouTubeLink] = useState<string | undefined>(undefined);
 
 
   // For form one
@@ -59,6 +60,10 @@ function NewRecipeForm() {
   useEffect(() => {
     setValue("preferredMealTime", mealTime);
   }, [mealTime]);
+
+  useEffect(() => {
+    setValue("youtubeLink", youTubeLink);
+  }, [youTubeLink]);
 
   useEffect(() => {
     setValue("preparationDifficulty", difficulty);
@@ -178,6 +183,8 @@ function NewRecipeForm() {
       ) : (
         <>
           <NewRecipeFormOne
+            youTubeLink={youTubeLink}
+            setYouTubeLink={setYouTubeLink}
             setFormNumber={setFormNumber}
             recipeName={recipeName}
             images={images}
