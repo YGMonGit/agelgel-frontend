@@ -63,6 +63,8 @@ export interface IRecipe {
 
     medical_condition: IMedicalCondition;
 
+    nutrition: INutritionData;
+
     shareableLink: string;
 
     moderator?: {

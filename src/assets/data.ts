@@ -1,9 +1,9 @@
 // Temp imports
-import image1 from "./images/post/image_1.png"; 
-import image2 from "./images/post/image_2.png"; 
-import image3 from "./images/post/image_3.png"; 
-import image4 from "./images/post/image_4.png"; 
-import user1 from "./images/post/user_1.png"; 
+import image1 from "./images/post/image_1.png";
+import image2 from "./images/post/image_2.png";
+import image3 from "./images/post/image_3.png";
+import image4 from "./images/post/image_4.png";
+import user1 from "./images/post/user_1.png";
 
 // Url prefix
 export const domainUrl = "http://localhost:3000";
@@ -76,7 +76,7 @@ export const posts = [
     time: "32 min",
     difficulty: "Medium",
     macroNutrients: ["350Kcal", "25g of Protein", "15g of Carbs", "8g of Fat"],
-    ingredients: ["Injera, 120gm","Wine, 200ml", "Dulet, 250gm" ]
+    ingredients: ["Injera, 120gm", "Wine, 200ml", "Dulet, 250gm"]
   },
   {
     id: 2,
@@ -89,7 +89,7 @@ export const posts = [
     time: "20 min",
     difficulty: "Easy",
     macroNutrients: ["350Kcal", "25g of Protein", "15g of Carbs", "8g of Fat"],
-    ingredients: ["Injera, 120gm","Wine, 200ml", "Dulet, 250gm" ]
+    ingredients: ["Injera, 120gm", "Wine, 200ml", "Dulet, 250gm"]
   },
   {
     id: 3,
@@ -102,7 +102,7 @@ export const posts = [
     time: "45 min",
     difficulty: "Hard",
     macroNutrients: ["350Kcal", "25g of Protein", "15g of Carbs", "8g of Fat"],
-    ingredients: ["Injera, 120gm","Wine, 200ml", "Dulet, 250gm" ]
+    ingredients: ["Injera, 120gm", "Wine, 200ml", "Dulet, 250gm"]
   },
   {
     id: 4,
@@ -115,7 +115,7 @@ export const posts = [
     time: "10 min",
     difficulty: "Easy",
     macroNutrients: ["350Kcal", "25g of Protein", "15g of Carbs", "8g of Fat"],
-    ingredients: ["Injera, 120gm","Wine, 200ml", "Dulet, 250gm" ]
+    ingredients: ["Injera, 120gm", "Wine, 200ml", "Dulet, 250gm"]
   },
   {
     id: 5,
@@ -128,7 +128,7 @@ export const posts = [
     time: "10 min",
     difficulty: "Easy",
     macroNutrients: ["350Kcal", "25g of Protein", "15g of Carbs", "8g of Fat"],
-    ingredients: ["Injera, 120gm","Wine, 200ml", "Dulet, 250gm"]
+    ingredients: ["Injera, 120gm", "Wine, 200ml", "Dulet, 250gm"]
   },
 ];
 

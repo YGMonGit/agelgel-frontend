@@ -1,5 +1,6 @@
 import { z } from "zod";
 import { EPreferredMealTime } from "../api/types/recipe.type";
+import { EAllergies, EChronicDisease, EDietaryPreferences } from "../api/types/user.type";
 
 const MAX_FILE_SIZE = 5 * 1024 * 1024; // 5MB
 const ACCEPTED_IMAGE_TYPES = ["image/jpeg", "image/png", "image/webp", "image/jpg"];
@@ -22,4 +23,12 @@ export const newRecipeSchema = z.object({
         amount: z.number().nonnegative().min(1, "Amount must be a positive number"),
     })).nonempty("At least one ingredient is required"),
     youtubeLink: z.string().url().optional(),
+    medical_condition: z.object({
+        chronicDiseases: z.array(z.nativeEnum(EChronicDisease)).nonempty("At least one chronic disease is required"),
+        dietary_preferences: z.array(z.nativeEnum(EDietaryPreferences)).nonempty("At least one dietary preference is required"),
+        allergies: z.array(z.nativeEnum(EAllergies)).nonempty("At least one allergy is required"),
+        // .refine((allergies) => !(allergies.length === 1 && allergies[0] === EAllergies.none), {
+        //     message: 'Selecting only "none" is not allowed.',
+        // }),
+    }),
 });

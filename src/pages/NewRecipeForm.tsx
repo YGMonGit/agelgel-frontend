@@ -12,6 +12,7 @@ import { useNavigate } from "react-router-dom";
 import { useCreateRecipeMutation } from "../api/slices/recipe.slices";
 import { EAllergies, EDietaryPreferences, EChronicDisease } from "../api/types/user.type";
 import HealthConditions from "./sub_pages/HealthConditions";
+import { homeUrl } from "../assets/data";
 
 
 function NewRecipeForm() {
@@ -19,7 +20,7 @@ function NewRecipeForm() {
   const [formNumber, setFormNumber] = useState(1);
 
   const [healthCondition, setHealthCondition] = useState<EChronicDisease[]>([]);
-  const [allergy, setAllergy] = useState<EAllergies[]>([]);
+  const [allergies, setAllergies] = useState<EAllergies[]>([]);
   const [mealPreference, setMealPreference] = useState<EDietaryPreferences[]>([]);
 
 
@@ -27,7 +28,7 @@ function NewRecipeForm() {
   const [recipeName, setRecipeName] = useState("");
   const [description, setDescription] = useState("");
   const [mealTime, setMealTime] = useState<EPreferredMealTime[]>([EPreferredMealTime.breakfast]);
-  const [difficulty, setDifficulty] = useState<EPreparationDifficulty[]>([EPreparationDifficulty.easy]);
+  const [difficulty, setDifficulty] = useState<EPreparationDifficulty>(EPreparationDifficulty.easy);
   const [time, setTime] = useState<number>(0);
   const [images, setImages] = useState<string[]>([]);
 
@@ -60,12 +61,27 @@ function NewRecipeForm() {
   }, [mealTime]);
 
   useEffect(() => {
-    setValue("preparationDifficulty", difficulty[0]);
+    setValue("preparationDifficulty", difficulty);
   }, [difficulty]);
+
+  useEffect(() => {
+    setValue("medical_condition.chronicDiseases", healthCondition);
+  }, [healthCondition]);
+
+  useEffect(() => {
+    setValue("medical_condition.allergies", allergies);
+  }, [allergies]);
+
+  useEffect(() => {
+    setValue("medical_condition.dietary_preferences", mealPreference);
+  }, [mealPreference]);
 
   console.log({ errors });
 
   const [CreateRecipe] = useCreateRecipeMutation();
+
+  const navigate = useNavigate();
+
 
 
   async function NewRecipe(recipe: INewRecipeFrom) {
@@ -87,15 +103,15 @@ function NewRecipeForm() {
       await CreateRecipe({
         ...recipe,
         imgs: fileUrls,
-        preparationDifficulty: difficulty.length == 0 ? EPreparationDifficulty.easy : difficulty[0],
+        preparationDifficulty: difficulty,
         preferredMealTime: mealTime,
         medical_condition: {
-          chronicDiseases: healthCondition.length == 0 ? [EChronicDisease.none] : healthCondition,
-          allergies: allergy.length == 0 ? [EAllergies.none] : allergy,
-          dietary_preferences: mealPreference.length == 0 ? [EDietaryPreferences.none] : mealPreference
+          chronicDiseases: healthCondition,
+          allergies: allergies,
+          dietary_preferences: mealPreference
         }
       }).unwrap();
-      // navigate(homeUrl);
+      navigate(homeUrl);
     } catch (error: any) {
       if (!error.data.error) return;
       const err = error.data.error;
@@ -140,17 +156,24 @@ function NewRecipeForm() {
               errors={errors}
             />
           </>
-        ):(
-          <HealthConditions
-            setFormNumber={setFormNumber}
-            healthCondition={healthCondition}
-            setHealthCondition={setHealthCondition}
-            allergy={allergy}
-            setAllergy={setAllergy}
-            mealPreference={mealPreference}
-            setMealPreference={setMealPreference}
-            finish={false}
-          />
+        ) : (
+          <>
+
+            <HealthConditions
+              setFormNumber={setFormNumber}
+              healthCondition={healthCondition}
+              setHealthCondition={setHealthCondition}
+              allergies={allergies}
+              setAllergies={setAllergies}
+              mealPreference={mealPreference}
+              setMealPreference={setMealPreference}
+              finish={false}
+
+              register={register}
+              errors={errors}
+            />
+            <button type="submit" className="btn-primary mt-4">Submit</button>
+          </>
         )
       ) : (
         <>
