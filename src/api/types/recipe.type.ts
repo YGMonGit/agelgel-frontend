@@ -68,7 +68,11 @@ export interface IRecipe {
     shareableLink: string;
 
     moderator?: {
-        moderator: string | IModerator;
+        moderator: {
+            moderator: string;
+            full_name: string;
+            profile_img: string;
+        }
         Comment: string;
     };
 

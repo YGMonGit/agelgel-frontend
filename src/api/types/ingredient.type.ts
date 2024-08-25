@@ -1,6 +1,7 @@
 export interface IIngredient {
     _id: string;
     name: string;
+    localName: string;
     type: string;
     unit: string;
 }
