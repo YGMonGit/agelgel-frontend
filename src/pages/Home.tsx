@@ -19,6 +19,7 @@ import {
   DrawerTrigger,
 } from "../components/ui/drawer";
 import { Button } from "../components/ui/button";
+import { useGetUserQuery } from "../api/slices/user.slices";
 
 function Home() {
   const navigate = useNavigate();
@@ -34,10 +35,13 @@ function Home() {
     ? pagination.limit
     : recommendedRecipes?.length || 0;
 
+  const { data: user } = useGetUserQuery();
+
+
   return (
     <div className="w-full flex-wrap flex flex-col justify-start items-center relative">
       <PageHeader
-        header="Good Morning, Yisehak!"
+        header={`Good Morning, ${user?.first_name}!`}
         detail="Browse through our suggestions."
       />
       <Search />
@@ -47,13 +51,13 @@ function Home() {
       <div className="w-full px-5 flex justify-evenly items-start gap-3 flex-wrap">
         {isLoading
           ? Array.from({ length: skeletonCount }).map((_, index) => (
-              <DisplayCard post={null} key={`skeleton-${index}`} />
-            ))
+            <DisplayCard post={null} key={`skeleton-${index}`} />
+          ))
           : recommendedRecipes?.map((post, index) => (
-              <DisplayCard post={post} key={index} />
-            ))}
+            <DisplayCard post={post} key={index} />
+          ))}
       </div>
-      
+
       <button
         className="w-14 h-14 bg-content-color flex justify-center items-center rounded-full text-[2rem] text-white fixed bottom-10 right-5"
         onClick={() => navigate(postUrl)}
