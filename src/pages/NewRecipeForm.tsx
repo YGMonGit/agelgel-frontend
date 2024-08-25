@@ -140,7 +140,7 @@ function NewRecipeForm() {
               register={register}
               errors={errors}
             />
-            <button type="submit" className="btn-primary mt-4">Submit</button>
+            {/* <button type="submit" className="btn-primary mt-4">Submit</button> */}
           </>
         ) : formNumber === 4 ? (
           <>
@@ -172,7 +172,7 @@ function NewRecipeForm() {
               register={register}
               errors={errors}
             />
-            <button type="submit" className="btn-primary mt-4">Submit</button>
+            {/* <button type="submit" className="btn-primary mt-4">Submit</button> */}
           </>
         )
       ) : (
@@ -195,7 +195,7 @@ function NewRecipeForm() {
             setValue={setValue}
             errors={errors}
           />
-          <button type="submit" className="btn-primary mt-4">Submit</button>
+          {/* <button type="submit" className="btn-primary mt-4">Submit</button> */}
         </>
       )}
 

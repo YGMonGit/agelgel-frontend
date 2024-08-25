@@ -22,6 +22,8 @@ import { Skeleton } from "../components/ui/skeleton";
 import WideButton from "../components/WideButton";
 import SpoonacularClient from "../api/SpoonacularClient";
 import FilterBar from "../components/FilterBar";
+import { useCreateReviewMutation, useGetRecipeReviewsQuery } from "../api/slices/review.slices";
+import { set } from "react-hook-form";
 
 const StyledRating = styled(Rating)({
   fontSize: '1rem',
@@ -32,11 +34,6 @@ function RecipeDetail() {
   const [newComment, setNewComment] = useState("");
   const [value, setValue] = React.useState<number | null>(0);
   const showCommentButton = value !== 0 && newComment.trim() !== "";
-
-  async function addComment(e: React.FormEvent<HTMLFormElement>) {
-    e.preventDefault();
-    console.log("Adding comment...");
-  }
 
   const properties = {
     prevArrow: (
@@ -78,6 +75,9 @@ function RecipeDetail() {
   };
 
   const { data: recipe, isLoading: recipesLoading } = useGetRecipeByIdQuery(String(rID.id));
+  const [reviewsPagination, setReviewsPagination] = useState({ skip: 0, limit: 10 });
+  const { data: reviews, isLoading: reviewsLoading } = useGetRecipeReviewsQuery({ recipeId: String(rID.id), skip: reviewsPagination.skip, limit: reviewsPagination.limit });
+  const [CreateReview] = useCreateReviewMutation();
   const [ingredientImages, setIngredientImages] = useState<string[]>([]);
 
   useEffect(() => {
@@ -89,13 +89,24 @@ function RecipeDetail() {
             return res;
           }
           ));
-        console.log({ images });
         setIngredientImages(images as any);
       };
 
       fetchIngredientImages();
     }
   }, [recipe]);
+
+  async function addComment(e: React.FormEvent<HTMLFormElement>) {
+    e.preventDefault();
+    console.log("Adding comment...");
+    await CreateReview({
+      recipe: recipe?._id ?? "",
+      rating: value ?? 0,
+      comment: newComment,
+    }).unwrap();
+    setNewComment("");
+    setValue(0);
+  }
 
   const onNewCommentChange = (e: React.ChangeEvent<HTMLInputElement>) => setNewComment(e.target.value);
 
@@ -233,38 +244,37 @@ function RecipeDetail() {
           <ModeratorComment moderator={recipe.moderator} />
 
           {
-            recipe.reviews.map((review, index) => (
+            reviews?.map((review, index) => (
               <Comment key={index} comments={review as IReview} />
             ))
           }
         </div>
         <form className="w-full flex flex-col justify-start items-start gap-3" onSubmit={addComment}>
-      <Rating
-        name="simple-controlled"
-        size="small"
-        value={value}
-        onChange={(event: React.SyntheticEvent<Element, Event>, newValue: number | null) => {
-          setValue(newValue);
-        }}
-      />
-      <input
-        type="text"
-        placeholder="Add a comment ..."
-        value={newComment}
-        onChange={onNewCommentChange}
-        autoComplete="off"
-        required
-        className={`w-full py-[10px] bg-[#F9FAFB] leading-none text-[1rem] px-4 border outline-none rounded-lg border-[#D1D5DB]`}
-      />
-      {!showCommentButton && (<p className="text-yellow-300 text-[.8rem] leading-none mb-3 -mt-2">{value === 0 && newComment.trim() !== "" && "Please fill retting"}{newComment.trim() === "" && value !== 0 && "Please fill comment"}{newComment.trim() === "" && value === 0 && "Please fill retting and comment"}</p>)}
-      <button 
-        type="submit" 
-        className={`${showCommentButton ? "w-full py-[10px] bg-content-color mb-5 text-white rounded-lg" : "w-full py-[8px] bg-neutral-300 text-neutral-500 mb-5"}`}
-        disabled={!showCommentButton}
-      >
-        Comment
-      </button>
-    </form>
+          <Rating
+            name="simple-controlled"
+            size="small"
+            value={value}
+            onChange={(event: React.SyntheticEvent<Element, Event>, newValue: number | null) => {
+              setValue(newValue);
+            }}
+          />
+          <input
+            type="text"
+            placeholder="Add a comment ..."
+            value={newComment}
+            onChange={onNewCommentChange}
+            autoComplete="off"
+            required
+            className={`w-full py-[10px] bg-[#F9FAFB] leading-none text-[1rem] px-4 border outline-none rounded-lg border-[#D1D5DB]`}
+          />
+          {!showCommentButton && (<p className="text-yellow-300 text-[.8rem] leading-none mb-3 -mt-2">{value === 0 && newComment.trim() !== "" && "Please fill retting"}{newComment.trim() === "" && value !== 0 && "Please fill comment"}{newComment.trim() === "" && value === 0 && "Please fill retting and comment"}</p>)}
+          <button
+            type="submit"
+            className={`${showCommentButton ? "w-full py-[10px] bg-content-color mb-5 text-white rounded-lg" : "w-full py-[8px] bg-neutral-300 text-neutral-500 mb-5"}`}
+            disabled={!showCommentButton}>
+            Comment
+          </button>
+        </form>
       </div>
     );
   }
