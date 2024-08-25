@@ -1,23 +1,30 @@
-import React, { useRef, useEffect } from "react";
+import React, { useRef, useEffect, useState } from "react";
 import { TextField, Chip, Autocomplete, IconButton } from "@mui/material";
 import { IoIosClose } from "react-icons/io";
 
 interface ChipsBoxProps {
   label: string;
+  name: string;
   options: string[];
   detail: string;
   selectedConditions: string[];
   setSelectedConditions: React.Dispatch<React.SetStateAction<string[]>>;
+  errors?: any;
+  register?: any;
 }
 
 const ChipsBox: React.FC<ChipsBoxProps> = ({
   label,
+  name,
   options,
   detail,
   selectedConditions,
   setSelectedConditions,
+  errors,
+  register = (placeholder: string) => { },
 }) => {
   const [inputValue, setInputValue] = React.useState("");
+  const [chipAdded, setChipAdded] = useState(false);
   const inputRef = useRef<HTMLInputElement>(null);
   const scrollableDivRef = useRef<HTMLDivElement>(null);
 
@@ -25,12 +32,14 @@ const ChipsBox: React.FC<ChipsBoxProps> = ({
     setSelectedConditions((conditions) =>
       conditions.filter((condition) => condition !== conditionToDelete)
     );
+    setChipAdded(false); // Indicate that a chip was not added
   };
 
   const handleAddCondition = () => {
-    if (inputValue && !selectedConditions.includes(inputValue)) {
+    if (inputValue && options.includes(inputValue) && !selectedConditions.includes(inputValue)) {
       setSelectedConditions([...selectedConditions, inputValue]);
       setInputValue("");
+      setChipAdded(true); // Indicate that a chip was added
     }
   };
 
@@ -48,6 +57,15 @@ const ChipsBox: React.FC<ChipsBoxProps> = ({
         : "10ch";
     }
   }, [inputValue]);
+
+  useEffect(() => {
+    if (scrollableDivRef.current && chipAdded) {
+      scrollableDivRef.current.scrollLeft = scrollableDivRef.current.scrollWidth;
+    }
+  }, [selectedConditions, chipAdded]);
+
+  const errorStyle = "text-[.8rem] text-red-400";
+
 
   return (
     <div className="w-full px-5 mb-6">
@@ -87,16 +105,19 @@ const ChipsBox: React.FC<ChipsBoxProps> = ({
             }
           }}
           onChange={(_, newValue) => {
-            if (newValue && !selectedConditions.includes(newValue)) {
+            if (typeof newValue === 'string' && options.includes(newValue) && !selectedConditions.includes(newValue)) {
               setSelectedConditions([...selectedConditions, newValue]);
               setInputValue("");
+              setChipAdded(true); // Indicate that a chip was added
             }
           }}
           renderInput={(params) => (
             <TextField
+              {...register(name)}
               {...params}
               inputRef={inputRef}
               placeholder="Add here..."
+              className="flex justify-start items-center w-[150px]"
               sx={{
                 margin: "0",
                 "& .MuiOutlinedInput-notchedOutline": {
@@ -109,16 +130,17 @@ const ChipsBox: React.FC<ChipsBoxProps> = ({
               }}
               InputProps={{
                 ...params.InputProps,
-                endAdornment: inputValue ? (
-                  <IconButton onClick={handleAddCondition} size="small">
+                endAdornment: inputValue && options.includes(inputValue) ? (
+                  <div onClick={handleAddCondition} className="hover:bg-gray-100 w-5 h-5 flex justify-center items-center rounded-full text-[1.1rem] leading-none cursor-pointer">
                     +
-                  </IconButton>
+                  </div>
                 ) : null,
               }}
             />
           )}
         />
       </div>
+      {errors && <p className={errorStyle}>{errors.message}</p>}
       <h2 className="text-[.9rem] font-normal text-slate-500 mt-1 leading-5">
         {detail}
       </h2>
