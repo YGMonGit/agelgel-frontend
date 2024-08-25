@@ -4,7 +4,7 @@ import google_logo from "../assets/icons/google-logo.png";
 interface InputProps {
   label: string;
   placeholder: string;
-  value: string | number;
+  value: string | number | undefined;
   isPassword?: boolean;
   showPassword?: boolean;
   onChange?: (event: React.ChangeEvent<HTMLInputElement>) => void;

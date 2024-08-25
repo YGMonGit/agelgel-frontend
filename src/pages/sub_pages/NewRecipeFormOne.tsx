@@ -23,6 +23,10 @@ interface NewRecipeFormOneProps {
   register: any;
   setValue: any;
   errors: any;
+
+  youTubeLink: string | undefined;
+  setYouTubeLink: any
+
 }
 
 function NewRecipeFormOne({
@@ -42,6 +46,8 @@ function NewRecipeFormOne({
   register,
   setValue,
   errors,
+  setYouTubeLink,
+  youTubeLink
 }: NewRecipeFormOneProps) {
   const onRecipeNameChange = (e: React.ChangeEvent<HTMLInputElement>) =>
     setRecipeName(e.target.value);
@@ -49,6 +55,9 @@ function NewRecipeFormOne({
     setDescription(e.target.value);
   const onTimeChange = (e: React.ChangeEvent<HTMLInputElement>) =>
     setTime(Number.parseInt(e.target.value));
+  const onYouTubeLinkChange = (e: React.ChangeEvent<HTMLInputElement>) =>
+    setYouTubeLink(e.target.value);
+
 
   const onNextClick = () => { setFormNumber(2) };
 
@@ -75,6 +84,14 @@ function NewRecipeFormOne({
         onChange={onDescriptionChange}
         register={register}
         errors={errors.description}
+      />
+      <Input
+        label="YouTube Link"
+        placeholder="youTubeLink"
+        value={youTubeLink}
+        onChange={onYouTubeLinkChange}
+        register={register}
+        errors={errors.youtubeLink}
       />
       <Choice
         label="Preferred Meal Time"

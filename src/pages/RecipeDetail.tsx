@@ -108,6 +108,15 @@ function RecipeDetail() {
     setValue(0);
   }
 
+  function convertToEmbedUrl(youtubeLink: string) {
+    const videoId = youtubeLink.split('v=')[1];
+    const ampersandPosition = videoId ? videoId.indexOf('&') : -1;
+    if (ampersandPosition !== -1) {
+      return `https://www.youtube.com/embed/${videoId.substring(0, ampersandPosition)}`;
+    }
+    return `https://www.youtube.com/embed/${videoId}`;
+  }
+
   const onNewCommentChange = (e: React.ChangeEvent<HTMLInputElement>) => setNewComment(e.target.value);
 
   if (!recipe) {
@@ -237,6 +246,20 @@ function RecipeDetail() {
         <div className="w-full flex flex-col justify-start items-start mt-5">
           <h3 className="font-semibold mb-1">Instructions</h3>
           <div dangerouslySetInnerHTML={{ __html: recipe.instructions }} />
+
+          <div className="w-full mt-5">
+            {recipe.youtubeLink && (
+              <iframe
+                width="100%"
+                height="315"
+                src={convertToEmbedUrl(recipe.youtubeLink)}
+                title="YouTube video player"
+                frameBorder="0"
+                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                allowFullScreen
+              />
+            )}
+          </div>
 
         </div>
         <div className="w-full flex flex-col justify-start items-start mt-5">
