@@ -41,7 +41,9 @@ function Home() {
         detail="Browse through our suggestions."
       />
       <Search />
-      <FilterBar data={filterData} />
+      <div className="w-full px-5">
+        <FilterBar data={filterData} />
+      </div>
       <div className="w-full px-5 flex justify-evenly items-start gap-3 flex-wrap">
         {isLoading
           ? Array.from({ length: skeletonCount }).map((_, index) => (

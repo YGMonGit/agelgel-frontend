@@ -1,5 +1,5 @@
 import React from "react";
-import { useLocation, useNavigate } from "react-router-dom";
+import { useLocation, useNavigate, useParams } from "react-router-dom";
 import logo from "../assets/images/agelgel-logo.png";
 import ArrowUpRight from "../assets/icons/arrow-up-right.png";
 import HelpIcon from "../assets/icons/help-icon.png";
