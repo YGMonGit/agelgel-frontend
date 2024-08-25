@@ -33,17 +33,21 @@ function MySpace() {
         <button className='px-4 py-1 rounded-lg bg-red-600 text-white outline-none border-none' onClick={() => setPostStatus(ERecipeStatus.rejected)}>rejected</button>
       </div>
       {spaceType ? (
-        <div className="w-full px-5 flex justify-evenly items-start gap-3 flex-wrap">
+        <div className="grid grid-cols-2 sm:grid-cols-3 gap-4 w-full px-5">
           {myRecipes?.map((post, index) => (
             <DisplayCard post={post} key={index} />
           ))}
         </div>
+        // <div className="w-full px-5 flex justify-evenly items-start gap-3 flex-wrap">
+        // </div>
       ) : (
-        <div className="w-full px-5 flex justify-evenly items-start gap-3 flex-wrap">
+        <div className="grid grid-cols-2 sm:grid-cols-3 gap-4 w-full px-5">
           {myBookedRecipes?.map((post, index) => (
             <DisplayCard post={post} key={index} />
           ))}
         </div>
+        // <div className="w-full px-5 flex justify-evenly items-start gap-3 flex-wrap">
+        // </div>
       )}
     </div>
   )
