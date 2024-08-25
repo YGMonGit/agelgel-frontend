@@ -1,7 +1,6 @@
 import React from "react";
 import PageHeader from "../../components/PageHeader";
 import ChipsBox from "../../components/ChipsBox";
-import { allergies, mealPreferences } from "../../assets/data";
 import WideButton from "../../components/WideButton";
 import { EAllergies, EChronicDisease, EDietaryPreferences } from "../../api/types/user.type";
 import WideLink from "../../components/WideLink";
@@ -10,22 +9,26 @@ interface HealthConditionProps {
   setFormNumber: React.Dispatch<React.SetStateAction<number>>;
   healthCondition: string[];
   setHealthCondition: any;
-  allergy: string[];
-  setAllergy: any;
+  allergies: string[];
+  setAllergies: any;
   mealPreference: string[];
   setMealPreference: any;
   finish?: boolean;
+  register?: any;
+  errors?: any;
 }
 
 function HealthConditions({
   setFormNumber,
   healthCondition,
   setHealthCondition,
-  allergy,
-  setAllergy,
+  allergies,
+  setAllergies,
   mealPreference,
   setMealPreference,
-  finish=true
+  finish = true,
+  register,
+  errors,
 }: HealthConditionProps) {
 
   const onBackClick = () => { setFormNumber(1) };
@@ -39,41 +42,52 @@ function HealthConditions({
       />
       <div className="w-full flex flex-col justify-start items-center flex-grow">
         <ChipsBox
+          name="medical_condition.chronicDisease"
           label="Chronic Diseases"
           options={Object.values(EChronicDisease)}
           detail="Select all the condition(s) you have"
           selectedConditions={healthCondition}
           setSelectedConditions={setHealthCondition}
+          register={register}
+          errors={errors && errors.medical_condition && errors.medical_condition?.chronicDiseases}
         />
+
         <ChipsBox
-          label="Allergies"
-          options={Object.values(EAllergies)}
-          detail="Food groups or ingredients you're allergic to."
-          selectedConditions={allergy}
-          setSelectedConditions={setAllergy}
-        />
-        <ChipsBox
+          name="medical_condition.dietaryPreferences"
           label="Please enter your meal preference(s)"
           options={Object.values(EDietaryPreferences)}
           detail="This is here to make sure you end up loving the recipes we suggest."
           selectedConditions={mealPreference}
           setSelectedConditions={setMealPreference}
+          register={register}
+          errors={errors && errors.medical_condition && errors.medical_condition?.dietary_preferences}
+        />
+
+        <ChipsBox
+          name="medical_condition.allergie"
+          label="Allergies"
+          options={Object.values(EAllergies)}
+          detail="Food groups or ingredients you're allergies to."
+          selectedConditions={allergies}
+          setSelectedConditions={setAllergies}
+          register={register}
+          errors={errors && errors.medical_condition && errors.medical_condition?.allergies}
         />
       </div>
-        {finish ? (
-      <div className="w-full px-5">
+      {finish ? (
+        <div className="w-full px-5">
           <WideButton
             label="Get Started"
             color="bg-content-color"
           />
-          </div>
-        ):(
-          <div className="w-full px-5 flex justify-center items-end gap-2">
-        <WideLink label="Back" color="bg-white" outline={true} clickAction={onBackClick} />
-        <WideLink label="Next" color="bg-content-color" clickAction={onNextClick} />
-      </div>
-        )}
-        {/* <button>submit</button> */}
+        </div>
+      ) : (
+        <div className="w-full px-5 flex justify-center items-end gap-2">
+          <WideLink label="Back" color="bg-white" outline={true} clickAction={onBackClick} />
+          <WideLink label="Next" color="bg-content-color" clickAction={onNextClick} />
+        </div>
+      )}
+      {/* <button>submit</button> */}
     </div>
   );
 }

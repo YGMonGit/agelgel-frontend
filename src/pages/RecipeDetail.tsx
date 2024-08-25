@@ -9,7 +9,7 @@ import { Chip } from "@mui/material";
 
 import Rating from '@mui/material/Rating';
 import { styled } from '@mui/system';
-import Comment from "../components/Comment";
+import Comment, { ModeratorComment } from "../components/Comment";
 import { useGetRecipeByIdQuery, useGetRecipeCarbsQuery } from "../api/slices/recipe.slices";
 import { IIngredient } from "../api/types/ingredient.type";
 import { IReview } from "../api/types/review.type";
@@ -20,6 +20,7 @@ import User from "../assets/images/post/user_1.png";
 
 import { Skeleton } from "../components/ui/skeleton";
 import WideButton from "../components/WideButton";
+import SpoonacularClient from "../api/SpoonacularClient";
 
 const StyledRating = styled(Rating)({
   fontSize: '1rem',
@@ -91,7 +92,24 @@ function RecipeDetail() {
   };
 
   const { data: recipe, isLoading: recipesLoading } = useGetRecipeByIdQuery(String(rID.id));
-  const { data: macroNutrients, isLoading: macroNutrientsIsLoading } = useGetRecipeCarbsQuery(String(rID.id));
+  const [ingredientImages, setIngredientImages] = useState<string[]>([]);
+
+  useEffect(() => {
+    if (recipe) {
+      const fetchIngredientImages = async () => {
+        const images = await Promise.all(
+          recipe.ingredients.map(async (ingredient) => {
+            const res = await new SpoonacularClient().getIngredientsImages([ingredient.name]);
+            return res;
+          }
+          ));
+        console.log({ images });
+        setIngredientImages(images as any);
+      };
+
+      fetchIngredientImages();
+    }
+  }, [recipe]);
 
   const onNewCommentChange = (e: React.ChangeEvent<HTMLInputElement>) => setNewComment(e.target.value);
 
@@ -151,13 +169,13 @@ function RecipeDetail() {
         </div>
         <div className="w-full flex justify-between items-center leading-none">
           <div className="flex items-center gap-2">
-            <img src={User} className="min-w-8 w-8" alt="pic" />
-            <p className="text-[1.3rem] font-semibold">Name</p>
+            <img src={recipe.user.profile_img} className="min-w-8 w-8" alt="pic" />
+            <p className="text-[1.3rem] font-semibold">{recipe.user.full_name}</p>
           </div>
           <BsFillPersonCheckFill className="text-content-color text-[1.5rem]" />
         </div>
         <div className="w-full flex justify-between items-center mt-6">
-          <h2 className="text-[1.3rem] font-bold">{recipe.description}</h2>
+          <h2 className="text-[1.3rem] font-bold">{recipe.name}</h2>
           <HiOutlineBookmark className="text-content-color text-[1.5rem]" />
         </div>
         <div className="w-full flex justify-start items-center gap-1 my-2">
@@ -220,19 +238,39 @@ function RecipeDetail() {
 
         <div className="w-full flex flex-col justify-start items-start mt-5">
           <h3 className="font-semibold mb-1">Macro-nutrients</h3>
-          {/* {recipe.macroNutrients.map((macroNutrient, index) => (
-            <div key={index} className="flex justify-start items-center gap-1 text-slate-400">
-              <GoDotFill className="text-[.7rem] ml-[6px] mr-1 text-slate-500" /> {macroNutrient}
-            </div>
-          ))} */}
+
+          <div className="flex justify-start items-center gap-1 text-slate-400">
+            <GoDotFill className="text-[.7rem] ml-[6px] mr-1 text-slate-500" /> {recipe.nutrition.calories} Kcal
+          </div>
+
+          <div className="flex justify-start items-center gap-1 text-slate-400">
+            <GoDotFill className="text-[.7rem] ml-[6px] mr-1 text-slate-500" /> {recipe.nutrition.protein_g} g Protein
+          </div>
+
+          <div className="flex justify-start items-center gap-1 text-slate-400">
+            <GoDotFill className="text-[.7rem] ml-[6px] mr-1 text-slate-500" /> {recipe.nutrition.fat_total_g} g Fat
+          </div>
+
+          <div className="flex justify-start items-center gap-1 text-slate-400">
+            <GoDotFill className="text-[.7rem] ml-[6px] mr-1 text-slate-500" /> {recipe.nutrition.carbohydrates_total_g} g Carbs
+          </div>
+
+          <div className="flex justify-start items-center gap-1 text-slate-400">
+            <GoDotFill className="text-[.7rem] ml-[6px] mr-1 text-slate-500" /> {recipe.nutrition.fiber_g} g Fiber
+          </div>
+
+
         </div>
         <div className="w-full flex flex-col justify-start items-start mt-5">
           <h3 className="font-semibold mb-1">Ingredients</h3>
-          {/* {recipe.ingredients.map((ingredient, index) => (
-            <div key={index} className="flex justify-start items-center gap-1 text-slate-400">
-              <GoDotFill className="text-[.7rem] ml-[6px] mr-1 text-slate-500" />{(ingredient.ingredient as IIngredient).name} - {ingredient.amount}
-            </div>
-          ))} */}
+          {recipe.ingredients.map((ingredient, index) => {
+            return (
+              <div key={index} className="flex justify-start items-center gap-1 text-slate-400">
+                <img src={ingredientImages[index]} alt="pic" className="min-w-8 w-8" />
+                <GoDotFill className="text-[.7rem] ml-[6px] mr-1 text-slate-500" />{(ingredient.ingredient as IIngredient).name}( {(ingredient.ingredient as IIngredient).localName} )- {ingredient.amount} {(ingredient.ingredient as IIngredient).unit}
+              </div>
+            )
+          })}
         </div>
         <div className="w-full flex flex-col justify-start items-start mt-5">
           <h3 className="font-semibold mb-1">Instructions</h3>
@@ -241,6 +279,8 @@ function RecipeDetail() {
         </div>
         <div className="w-full flex flex-col justify-start items-start mt-5">
           <h3 className="font-semibold mb-1">Comments {recipe.totalReviews}</h3>
+          <ModeratorComment moderator={recipe.moderator} />
+
           {
             recipe.reviews.map((review, index) => (
               <Comment key={index} comments={review as IReview} />

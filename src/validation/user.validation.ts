@@ -1,5 +1,4 @@
 import { z } from "zod";
-import { EAllergies, EChronicDisease, EDietaryPreferences } from "../api/types/user.type";
 
 const MAX_FILE_SIZE = 5000000;
 const ACCEPTED_IMAGE_TYPES = ["image/jpeg", "image/jpg", "image/png", "image/webp"];
@@ -23,8 +22,8 @@ export const signUpSchema = z.object({
             "Only .jpg, .jpeg, .png and .webp formats are supported."
         ),
 }).refine((data) => data.password === data.confirm_password, {
-  path: ['confirm_password'],
-  message: "Passwords do not match.",
+    path: ['confirm_password'],
+    message: "Passwords do not match.",
 }).transform((obj) => ({
     ...obj,
     confirm_password: undefined,

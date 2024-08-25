@@ -4,7 +4,7 @@ import SignUpCreatePassword from "./sub_pages/SignUpCreatePassword";
 import HealthConditions from "./sub_pages/HealthConditions";
 import { useForm } from "react-hook-form";
 import { zodResolver } from '@hookform/resolvers/zod';
-import { IUserSignUpFrom,EAllergies,EDietaryPreferences,EChronicDisease } from "../api/types/user.type";
+import { IUserSignUpFrom, EAllergies, EDietaryPreferences, EChronicDisease } from "../api/types/user.type";
 import { useSignUpMutation } from "../api/slices/user.slices";
 import * as Bytescale from "@bytescale/sdk";
 import { useNavigate } from "react-router-dom";
@@ -40,7 +40,7 @@ function SignUp() {
     resolver: zodResolver(signUpSchema),
   });
 
-  console.log({errors});
+  console.log({ errors });
 
 
   async function SignUp(user: IUserSignUpFrom) {
@@ -54,14 +54,17 @@ function SignUp() {
       const file = user.profile_img;
       const { fileUrl } = await uploadManager.upload({ data: file as any });
 
-      await signUp({ data: { ...user, 
+      await signUp({
+        data: {
+          ...user,
           profile_img: fileUrl,
           medical_condition: {
             chronicDiseases: healthCondition.length == 0 ? [EChronicDisease.none] : healthCondition,
             allergies: allergy.length == 0 ? [EAllergies.none] : allergy,
             dietary_preferences: mealPreference.length == 0 ? [EDietaryPreferences.none] : mealPreference
           }
-    } }).unwrap();
+        }
+      }).unwrap();
       navigate(homeUrl);
     } catch (error: any) {
       if (!error.data.error) return;
@@ -95,8 +98,8 @@ function SignUp() {
             setFormNumber={setFormNumber}
             healthCondition={healthCondition}
             setHealthCondition={setHealthCondition}
-            allergy={allergy}
-            setAllergy={setAllergy}
+            allergies={allergy}
+            setAllergies={setAllergy}
             mealPreference={mealPreference}
             setMealPreference={setMealPreference}
           />

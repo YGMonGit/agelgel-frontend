@@ -4,18 +4,24 @@ import { IoIosClose } from "react-icons/io";
 
 interface ChipsBoxProps {
   label: string;
+  name: string;
   options: string[];
   detail: string;
   selectedConditions: string[];
   setSelectedConditions: React.Dispatch<React.SetStateAction<string[]>>;
+  errors?: any;
+  register?: any;
 }
 
 const ChipsBox: React.FC<ChipsBoxProps> = ({
   label,
+  name,
   options,
   detail,
   selectedConditions,
   setSelectedConditions,
+  errors,
+  register = (placeholder: string) => { },
 }) => {
   const [inputValue, setInputValue] = React.useState("");
   const [chipAdded, setChipAdded] = useState(false);
@@ -57,6 +63,9 @@ const ChipsBox: React.FC<ChipsBoxProps> = ({
       scrollableDivRef.current.scrollLeft = scrollableDivRef.current.scrollWidth;
     }
   }, [selectedConditions, chipAdded]);
+
+  const errorStyle = "text-[.8rem] text-red-400";
+
 
   return (
     <div className="w-full px-5 mb-6">
@@ -104,6 +113,7 @@ const ChipsBox: React.FC<ChipsBoxProps> = ({
           }}
           renderInput={(params) => (
             <TextField
+              {...register(name)}
               {...params}
               inputRef={inputRef}
               placeholder="Add here..."
@@ -130,6 +140,7 @@ const ChipsBox: React.FC<ChipsBoxProps> = ({
           )}
         />
       </div>
+      {errors && <p className={errorStyle}>{errors.message}</p>}
       <h2 className="text-[.9rem] font-normal text-slate-500 mt-1 leading-5">
         {detail}
       </h2>
