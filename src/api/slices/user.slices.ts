@@ -69,8 +69,8 @@ const userApiSlice = agelgilAPI.injectEndpoints({
                     const authorizationToken = meta?.response?.headers.get("Authorization");
                     const refreshToken = meta?.response?.headers.get("RefreshToken");
                     if (authorizationToken && refreshToken) {
-                        localStorage.setItem('agelgilAuthorizationToken', authorizationToken);
-                        localStorage.setItem('agelgilRefreshToken', refreshToken);
+                        localStorage.setItem('agelgilAuthorizationToken', authorizationToken.split("Bearer ")[1].trim());
+                        localStorage.setItem('agelgilRefreshToken', refreshToken.split("Bearer ")[1].trim());
                     }
                 } catch (error) {
                     console.error('Failed to refresh token:', error);
@@ -91,8 +91,8 @@ const userApiSlice = agelgilAPI.injectEndpoints({
                     const authorizationToken = meta?.response?.headers.get("Authorization");
                     const refreshToken = meta?.response?.headers.get("RefreshToken");
                     if (authorizationToken && refreshToken) {
-                        localStorage.setItem('agelgilAuthorizationToken', authorizationToken.split("Bearer")[1].trim());
-                        localStorage.setItem('agelgilRefreshToken', refreshToken.split("Bearer")[1].trim());
+                        localStorage.setItem('agelgilAuthorizationToken', authorizationToken.split("Bearer ")[1].trim());
+                        localStorage.setItem('agelgilRefreshToken', refreshToken.split("Bearer ")[1].trim());
                     }
                 } catch (error) {
                     console.error('Failed to refresh token:', error);
