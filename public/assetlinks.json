@@ -1,0 +1,14 @@
+[
+  {
+    "relation": [
+      "delegate_permission/common.handle_all_urls"
+    ],
+    "target": {
+      "namespace": "android_app",
+      "package_name": "app.vercel.agelgel_frontend.twa",
+      "sha256_cert_fingerprints": [
+        "1A:51:F1:70:1C:1C:9E:83:C8:5D:4B:A2:58:2A:A2:43:BB:58:C3:07:47:E0:96:B1:5E:5D:65:15:7F:8B:10:20"
+      ]
+    }
+  }
+]
