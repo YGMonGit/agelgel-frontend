@@ -30,12 +30,23 @@ import telegramLogo from "../assets/icons/tg-logo.png";
 import facebookLogo from "../assets/icons/facebook.png";
 import whatsappLogo from "../assets/icons/whatsapp.png";
 import shareLogo from "../assets/icons/share.png";
+import { useGetRecipeByIdQuery } from "../api/slices/recipe.slices";
+import { useParams } from "react-router-dom";
 
 function DetailNavDropdown() {
+  const rID = useParams();
+  const { data: recipe, isLoading: recipesLoading } = useGetRecipeByIdQuery(String(rID["*"]).split("/")[1]);
   const [isOpen, setIsOpen] = useState<boolean>(false);
   const dropdownRef = useRef<HTMLDivElement>(null);
 
   const [value, setValue] = useState<string>('https://example.com');
+  console.log({recipe,rID,a: String(rID).split("/")[1]});
+  
+  useEffect(() => {
+    if(recipe) {
+      setValue(recipe.shareableLink);
+    }
+  }, [recipe])
   const [back, setBack] = useState('#FFFFFF');
   const [fore, setFore] = useState('#000000');
   const [size, setSize] = useState(256);
