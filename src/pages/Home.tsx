@@ -39,7 +39,7 @@ function Home() {
 
 
   return (
-    <div className="w-full flex-wrap flex flex-col justify-start items-center relative">
+    <div className="w-full flex-wrap flex flex-col justify-start items-center relative mb-5">
       <PageHeader
         header={`Good Morning, ${user?.first_name}!`}
         detail="Browse through our suggestions."
@@ -48,7 +48,8 @@ function Home() {
       <div className="w-full px-5">
         <FilterBar data={filterData} />
       </div>
-      <div className="w-full px-5 flex justify-evenly items-start gap-3 flex-wrap">
+
+      <div className="grid grid-cols-2 sm:grid-cols-3 gap-4 w-full px-5">
         {isLoading
           ? Array.from({ length: skeletonCount }).map((_, index) => (
             <DisplayCard post={null} key={`skeleton-${index}`} />

@@ -15,8 +15,12 @@ import { IIngredient } from "../api/types/ingredient.type";
 import { IReview } from "../api/types/review.type";
 import { Slide } from "react-slideshow-image";
 import "react-slideshow-image/dist/styles.css";
-
-import User from "../assets/images/post/user_1.png";
+import IngredientDefaultImage from "../assets/images/default_image_1.png";
+import FireIcon from "../assets/images/fire.png";
+import ProteinIcon from "../assets/images/protein.png";
+import FatIcon from "../assets/images/fat.png";
+import FiberIcon from "../assets/images/fiber.png";
+import CarbsIcon from "../assets/images/carbs.png";
 
 import { Skeleton } from "../components/ui/skeleton";
 import WideButton from "../components/WideButton";
@@ -24,6 +28,8 @@ import SpoonacularClient from "../api/SpoonacularClient";
 import FilterBar from "../components/FilterBar";
 import { useCreateReviewMutation, useGetRecipeReviewsQuery } from "../api/slices/review.slices";
 import { set } from "react-hook-form";
+import CircularProgress from "../components/CircularProgress";
+import { HiFire } from "react-icons/hi";
 
 const StyledRating = styled(Rating)({
   fontSize: '1rem',
@@ -83,12 +89,15 @@ function RecipeDetail() {
   useEffect(() => {
     if (recipe) {
       const fetchIngredientImages = async () => {
-        const images = await Promise.all(
+        let images = await Promise.all(
           recipe.ingredients.map(async (ingredient) => {
             const res = await new SpoonacularClient().getIngredientsImages([ingredient.name]);
             return res;
           }
           ));
+          if (images.every(arr => arr.length === 1 && arr[0] === undefined)) {
+            images = [];
+          }
         setIngredientImages(images as any);
       };
 
@@ -209,35 +218,20 @@ function RecipeDetail() {
 
         <div className="w-full flex flex-col justify-start items-start mt-5">
           <h3 className="font-semibold mb-1">Macro-nutrients</h3>
-
-          <div className="flex justify-start items-center gap-1 text-slate-400">
-            <GoDotFill className="text-[.7rem] ml-[6px] mr-1 text-slate-500" /> {recipe.nutrition.calories} Kcal
+          <div className="flex justify-start items-center gap-1 w-full">
+              <CircularProgress value={recipe.nutrition.calories} maxValue={1000} image={FireIcon} nutrient="Calorie" unit="Kcal"/>
+              <CircularProgress value={recipe.nutrition.protein_g} maxValue={50} image={ProteinIcon} nutrient="Protein" unit="g" />
+              <CircularProgress value={recipe.nutrition.fat_total_g} maxValue={100} image={FatIcon} nutrient="Fat" unit="g" />
+              <CircularProgress value={recipe.nutrition.carbohydrates_total_g} maxValue={100} image={CarbsIcon} nutrient="Carbs" unit="g" />
+              <CircularProgress value={recipe.nutrition.fiber_g} maxValue={100} image={FiberIcon} nutrient="Fiber" unit="g" />
           </div>
-
-          <div className="flex justify-start items-center gap-1 text-slate-400">
-            <GoDotFill className="text-[.7rem] ml-[6px] mr-1 text-slate-500" /> {recipe.nutrition.protein_g} g Protein
-          </div>
-
-          <div className="flex justify-start items-center gap-1 text-slate-400">
-            <GoDotFill className="text-[.7rem] ml-[6px] mr-1 text-slate-500" /> {recipe.nutrition.fat_total_g} g Fat
-          </div>
-
-          <div className="flex justify-start items-center gap-1 text-slate-400">
-            <GoDotFill className="text-[.7rem] ml-[6px] mr-1 text-slate-500" /> {recipe.nutrition.carbohydrates_total_g} g Carbs
-          </div>
-
-          <div className="flex justify-start items-center gap-1 text-slate-400">
-            <GoDotFill className="text-[.7rem] ml-[6px] mr-1 text-slate-500" /> {recipe.nutrition.fiber_g} g Fiber
-          </div>
-
-
         </div>
-        <div className="w-full flex flex-col justify-start items-start mt-5">
+        <div className="w-full flex flex-col justify-start items-start mt-5 gap-2">
           <h3 className="font-semibold mb-1">Ingredients</h3>
           {recipe.ingredients.map((ingredient, index) => {
             return (
-              <div key={index} className="flex justify-start items-center gap-1 text-slate-400">
-                <img src={ingredientImages[index]} alt="pic" className="min-w-8 w-8" />
+              <div key={index} className="flex justify-start items-center leading-none gap-1 text-slate-400">
+                <img src={ingredientImages[index] !== undefined ? ingredientImages[index] : IngredientDefaultImage} alt="pic" className={`min-w-8 w-8 ${ingredientImages[index] === undefined && "rounded-full p-[5px] shadow-md bg-neutral-200"}`} />
                 <GoDotFill className="text-[.7rem] ml-[6px] mr-1 text-slate-500" />{(ingredient.ingredient as IIngredient).name}( {(ingredient.ingredient as IIngredient).localName} )- {ingredient.amount} {(ingredient.ingredient as IIngredient).unit}
               </div>
             )

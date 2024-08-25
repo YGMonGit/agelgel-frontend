@@ -27,6 +27,7 @@
     "joi": "^17.13.3",
     "lucide-react": "^0.427.0",
     "react": "^18.3.1",
+    "react-circular-progressbar": "^2.1.0",
     "react-dom": "^18.3.1",
     "react-form-hook": "^0.0.1",
     "react-hook-form": "^7.52.2",
