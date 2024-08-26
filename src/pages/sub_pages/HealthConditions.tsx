@@ -4,6 +4,7 @@ import ChipsBox from "../../components/ChipsBox";
 import WideButton from "../../components/WideButton";
 import { EAllergies, EChronicDisease, EDietaryPreferences } from "../../api/types/user.type";
 import WideLink from "../../components/WideLink";
+import ClipLoader from "react-spinners/ClipLoader";
 
 interface HealthConditionProps {
   setFormNumber: React.Dispatch<React.SetStateAction<number>>;
@@ -16,6 +17,7 @@ interface HealthConditionProps {
   finish?: boolean;
   register?: any;
   errors?: any;
+  isLoading?: any;
 }
 
 function HealthConditions({
@@ -29,6 +31,7 @@ function HealthConditions({
   finish = true,
   register,
   errors,
+  isLoading,
 }: HealthConditionProps) {
 
   const onBackClick = () => { setFormNumber(1) };
@@ -75,11 +78,31 @@ function HealthConditions({
         />
       </div>
       {finish ? (
-        <div className="w-full px-5">
-          <WideButton
-            label="Get Started"
-            color="bg-content-color"
+        <div className="w-full px-5 flex justify-center items-end gap-2">
+          <WideLink
+            label="Back"
+            color="bg-white"
+            outline={true}
+            clickAction={onBackClick}
           />
+          {isLoading ? (
+            <WideButton label={
+              <div className="flex justify-center items-center w-full h-full gap-2">
+                <ClipLoader
+                  color= {"white"}
+                  size={15}
+                  aria-label="Loading Spinner"
+                  data-testid="loader"
+                />
+                <p className="text-white text-[1.1rem] italic">loading ...</p>
+              </div>
+            } color="bg-content-color" disable={true} />
+          ) : (
+            <WideButton
+              label="Get Started"
+              color="bg-content-color"
+            />
+          )}
         </div>
       ) : (
         <div className="w-full px-5 flex justify-center items-end gap-2">

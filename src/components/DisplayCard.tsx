@@ -38,22 +38,24 @@ function DisplayCard({ post }: DisplayCardProps) {
   }
 
   return (
-    <div className="flex flex-col justify-start items-start border border-[#6B728040] p-2 w-[42vw] sm:w-[30vw] rounded-md leading-4 select-none" onClick={goToDetailedPage}>
-      <img src={post.imgs[0]} className="w-full" alt="pic"/>
-      <h2 className="text-[.8rem] mt-3 font-bold">{post.name}</h2>
+    <div className="flex flex-col flex-grow justify-start items-start border border-[#6B728040] p-2 w-[42vw] sm:w-[30vw] rounded-md leading-4 select-none" onClick={goToDetailedPage}>
+      <img src={post.imgs[0]} className="w-full aspect-square" alt="pic"/>
+      <h2 className="text-[.8rem] mt-3 font-bold whitespace-pre-wrap overflow-hidden line-clamp-1">{post.name}</h2>
       <div className="flex justify-start items-center gap-1 my-2">
         <StyledRating name="read-only" defaultValue={post.rating} precision={0.5} size="small" readOnly />
         <p className="leading-3 px-1 rounded-md text-content-color text-[.6rem] bg-[#EBFFF8]">{post.rating.toFixed(1)}</p>
       </div>
       <p className="text-[.67rem] text-slate-500 whitespace-pre-wrap overflow-hidden line-clamp-2">{post.description}</p>
-      {post.preferredMealTime.map((mealTime, index) => (
-        <Chip
-          key={index}
-          label={mealTime}
-          sx={{ margin: "15px 4px 8px", borderRadius: "8px", backgroundColor: "#F3F4F6", height: "25px" }}
-          className="font-[500]"
-        />
-      ))}
+      <div className="flex justify-start items-center w-full">
+        {post.preferredMealTime.map((mealTime, index) => (
+          <Chip
+            key={index}
+            label={mealTime}
+            sx={{ margin: "15px 4px 8px", borderRadius: "8px", backgroundColor: "#F3F4F6", height: "25px" }}
+            className="font-[500]"
+          />
+        ))}
+      </div>
     </div>
   );
 }

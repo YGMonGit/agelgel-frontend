@@ -34,7 +34,7 @@ function SignUp() {
 
   const navigate = useNavigate();
 
-  const [signUp] = useSignUpMutation();
+  const [signUp, {isLoading}] = useSignUpMutation();
 
   const { register, handleSubmit, formState: { errors }, setError, setValue, getValues } = useForm<IUserSignUpFrom>({
     resolver: zodResolver(signUpSchema),
@@ -102,6 +102,7 @@ function SignUp() {
             setAllergies={setAllergy}
             mealPreference={mealPreference}
             setMealPreference={setMealPreference}
+            isLoading={isLoading}
           />
         )
       ) : (
