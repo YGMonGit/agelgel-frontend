@@ -18,8 +18,13 @@
       "sizes": "512x512"
     }
   ],
-  "start_url": ".",
+  "start_url": "/",
   "display": "standalone",
   "theme_color": "#000000",
-  "background_color": "#ffffff"
+  "background_color": "#ffffff",
+  "orientation": "portrait",
+  "scope": "/",
+  "description": "Agelgil primer healthy recipe hub is a user-friendly platform that enables people with a range of dietary demands to find, share, and access an extensive library of homemade offers with personalised recipe recommendations based on individual dietary needs and health conditions.",
+  "lang": "en",
+  "dir": "ltr"
 }
