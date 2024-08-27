@@ -130,6 +130,7 @@ const userApiSlice = agelgilAPI.injectEndpoints({
             invalidatesTags: ['User'],
             onQueryStarted: async (_, { queryFulfilled }) => {
                 try {
+                    await queryFulfilled;
                     localStorage.removeItem('agelgilAuthorizationToken');
                     localStorage.removeItem('agelgilRefreshToken');
                 } catch (error) {

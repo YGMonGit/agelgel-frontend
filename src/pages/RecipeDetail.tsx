@@ -10,7 +10,7 @@ import { Chip } from "@mui/material";
 import Rating from '@mui/material/Rating';
 import { styled } from '@mui/system';
 import Comment, { ModeratorComment } from "../components/Comment";
-import { useGetRecipeByIdQuery, useGetRecipeCarbsQuery, useGetRecipesQuery } from "../api/slices/recipe.slices";
+import { useGetRecipeByIdQuery, useGetRecipeCarbsQuery, useGetRecipesQuery, useSimilarQuery } from "../api/slices/recipe.slices";
 import { IIngredient } from "../api/types/ingredient.type";
 import { IReview } from "../api/types/review.type";
 import { Slide } from "react-slideshow-image";
@@ -87,17 +87,14 @@ function RecipeDetail() {
   const [CreateReview] = useCreateReviewMutation();
   const [ingredientImages, setIngredientImages] = useState<string[]>([]);
 
-  const [pagination, setPagination] = useState({
-    skip: 0,
-    limit: 10,
-  });
+  const [page, setPage] = useState(0);
 
   const { data: recommendedRecipes, isLoading } =
-    useGetRecipesQuery(pagination);
+    useSimilarQuery({ recipeId: String(rID.id), page: page });
 
   const skeletonCount = isLoading
-  ? pagination.limit
-  : recommendedRecipes?.length || 0;
+    ? 10
+    : recommendedRecipes?.length || 0;
 
   useEffect(() => {
     if (recipe) {
@@ -108,9 +105,9 @@ function RecipeDetail() {
             return res;
           }
           ));
-          if (images.every(arr => arr.length === 1 && arr[0] === undefined)) {
-            images = [];
-          }
+        if (images.every(arr => arr.length === 1 && arr[0] === undefined)) {
+          images = [];
+        }
         setIngredientImages(images as any);
       };
 
@@ -232,11 +229,11 @@ function RecipeDetail() {
         <div className="w-full flex flex-col justify-start items-start mt-5">
           <h3 className="font-semibold mb-1">Macro-nutrients</h3>
           <div className="flex justify-start items-center gap-1 w-full">
-              <CircularProgress value={recipe.nutrition.calories} maxValue={1000} image={FireIcon} nutrient="Calorie" unit="Kcal"/>
-              <CircularProgress value={recipe.nutrition.protein_g} maxValue={50} image={ProteinIcon} nutrient="Protein" unit="g" />
-              <CircularProgress value={recipe.nutrition.fat_total_g} maxValue={100} image={FatIcon} nutrient="Fat" unit="g" />
-              <CircularProgress value={recipe.nutrition.carbohydrates_total_g} maxValue={100} image={CarbsIcon} nutrient="Carbs" unit="g" />
-              <CircularProgress value={recipe.nutrition.fiber_g} maxValue={100} image={FiberIcon} nutrient="Fiber" unit="g" />
+            <CircularProgress value={recipe.nutrition.calories} maxValue={1000} image={FireIcon} nutrient="Calorie" unit="Kcal" />
+            <CircularProgress value={recipe.nutrition.protein_g} maxValue={50} image={ProteinIcon} nutrient="Protein" unit="g" />
+            <CircularProgress value={recipe.nutrition.fat_total_g} maxValue={100} image={FatIcon} nutrient="Fat" unit="g" />
+            <CircularProgress value={recipe.nutrition.carbohydrates_total_g} maxValue={100} image={CarbsIcon} nutrient="Carbs" unit="g" />
+            <CircularProgress value={recipe.nutrition.fiber_g} maxValue={100} image={FiberIcon} nutrient="Fiber" unit="g" />
           </div>
         </div>
         <div className="w-full flex flex-col justify-start items-start mt-5 gap-2">
