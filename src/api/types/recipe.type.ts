@@ -82,6 +82,9 @@ export interface IRecipe {
         profile_img: string;
     }
 
+    hasBookedRecipe: boolean;
+
+
     createdAt: Date;
     updatedAt: Date;
 }

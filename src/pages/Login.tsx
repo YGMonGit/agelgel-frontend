@@ -26,7 +26,7 @@ function Login() {
 
   const navigate = useNavigate();
 
-  const [logIn, {isLoading}] = useLogInMutation();
+  const [logIn, { isLoading }] = useLogInMutation();
 
   const { register, handleSubmit, formState: { errors }, setError } = useForm<IUserLogInFrom>({
     resolver: zodResolver(logInSchema),
@@ -90,7 +90,7 @@ function Login() {
             <WideButton label={
               <div className="flex justify-center items-center w-full h-full gap-2">
                 <ClipLoader
-                  color= {"white"}
+                  color={"white"}
                   size={15}
                   aria-label="Loading Spinner"
                   data-testid="loader"

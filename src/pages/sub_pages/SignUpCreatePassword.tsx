@@ -59,7 +59,7 @@ function SignUpCreatePassword({
           onChange={onPasswordChange}
           register={register}
           errors={errors.password}
-          // errors={errors.first_name}
+        // errors={errors.first_name}
         >
           <div
             className="text-[#6B7280] text-[1.3rem] absolute top-0 right-2 h-full flex justify-end items-center cursor-pointer border-0 bg-transparent"
@@ -99,7 +99,6 @@ function SignUpCreatePassword({
           clickAction={onNextClick}
         />
       </div>
-      <button>Submit</button>
       <div className="w-full px-5 text-slate-400 text-[1rem] mb-10">
         Already have an account?{" "}
         <a href={loginUrl} className="text-content-color font-[470]">

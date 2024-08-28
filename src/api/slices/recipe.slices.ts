@@ -8,6 +8,11 @@ const recipeApiSlice = agelgilAPI.injectEndpoints({
             transformResponse: (response: { body: IRecipe }) => response.body,
             providesTags: (result, error, recipeId) => [{ type: 'Recipe', id: recipeId }],
         }),
+        getPrivateRecipeById: builder.query<IRecipe, string>({
+            query: (recipeId) => `/private/recipe/${recipeId}`,
+            transformResponse: (response: { body: IRecipe }) => response.body,
+            providesTags: (result, error, recipeId) => [{ type: 'Recipe', id: recipeId }],
+        }),
         getRecipeCarbs: builder.query<INutritionData, string>({
             query: (recipeId) => `/public/recipe/carbs/${recipeId}`,
         }),
@@ -70,7 +75,7 @@ const recipeApiSlice = agelgilAPI.injectEndpoints({
             providesTags: (result) =>
                 result
                     ? [
-                        ...result.map((recipe) => ({ type: 'Recipe' as const, id: recipe._id })),
+                        ...result.map((recipe) => ({ type: 'Recipe' as const, id: (recipe as any).recipeId })),
                         { type: 'Recipe' as const, id: 'Recipe-LIST' },
                     ]
                     : [{ type: 'Recipe' as const, id: 'Recipe-LIST' }],
@@ -81,6 +86,7 @@ const recipeApiSlice = agelgilAPI.injectEndpoints({
 
 export const {
     useGetRecipeByIdQuery,
+    useGetPrivateRecipeByIdQuery,
     useGetRecipeCarbsQuery,
     useGetRecipesQuery,
     useSearchRecipesMutation,

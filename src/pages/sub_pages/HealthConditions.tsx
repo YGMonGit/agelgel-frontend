@@ -89,14 +89,14 @@ function HealthConditions({
             <WideButton label={
               <div className="flex justify-center items-center w-full h-full gap-2">
                 <ClipLoader
-                  color= {"white"}
+                  color={"white"}
                   size={15}
                   aria-label="Loading Spinner"
                   data-testid="loader"
                 />
                 <p className="text-white text-[1.1rem] italic">loading ...</p>
               </div>
-            } color="bg-content-color" disable={true} />
+            } color="bg-content-color" disable={isLoading} />
           ) : (
             <WideButton
               label="Get Started"

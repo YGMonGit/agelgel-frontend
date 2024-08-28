@@ -50,7 +50,7 @@ const userApiSlice = agelgilAPI.injectEndpoints({
                 url: `/private/user/bookedRecipes/toggle/${recipeId}`,
                 method: 'PATCH',
             }),
-            invalidatesTags: ['BookRecipe'],
+            invalidatesTags: (result, _, { recipeId }) => [{ type: 'Recipe', id: recipeId }],
             transformResponse: (response: { body: IRecipe[] }) => response.body,
 
         }),

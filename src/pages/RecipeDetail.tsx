@@ -10,7 +10,7 @@ import { Chip } from "@mui/material";
 import Rating from '@mui/material/Rating';
 import { styled } from '@mui/system';
 import Comment, { ModeratorComment } from "../components/Comment";
-import { useGetRecipeByIdQuery, useGetRecipeCarbsQuery, useGetRecipesQuery, useSimilarQuery } from "../api/slices/recipe.slices";
+import { useGetPrivateRecipeByIdQuery, useGetRecipeByIdQuery, useGetRecipeCarbsQuery, useGetRecipesQuery, useSimilarQuery } from "../api/slices/recipe.slices";
 import { IIngredient } from "../api/types/ingredient.type";
 import { IReview } from "../api/types/review.type";
 import { Slide } from "react-slideshow-image";
@@ -31,6 +31,7 @@ import { set } from "react-hook-form";
 import CircularProgress from "../components/CircularProgress";
 import { HiFire } from "react-icons/hi";
 import DisplayCard from "../components/DisplayCard";
+import { useToggleBookedRecipeMutation } from "../api/slices/user.slices";
 
 const StyledRating = styled(Rating)({
   fontSize: '1rem',
@@ -81,11 +82,12 @@ function RecipeDetail() {
     ),
   };
 
-  const { data: recipe, isLoading: recipesLoading } = useGetRecipeByIdQuery(String(rID.id));
+  const { data: recipe, isLoading: recipesLoading } = useGetPrivateRecipeByIdQuery(String(rID.id));
   const [reviewsPagination, setReviewsPagination] = useState({ skip: 0, limit: 10 });
   const { data: reviews, isLoading: reviewsLoading } = useGetRecipeReviewsQuery({ recipeId: String(rID.id), skip: reviewsPagination.skip, limit: reviewsPagination.limit });
   const [CreateReview] = useCreateReviewMutation();
   const [ingredientImages, setIngredientImages] = useState<string[]>([]);
+  const [ToggleBookedRecipe] = useToggleBookedRecipeMutation();
 
   const [page, setPage] = useState(0);
 
@@ -200,7 +202,15 @@ function RecipeDetail() {
         </div>
         <div className="w-full flex justify-between items-center mt-6">
           <h2 className="text-[1.3rem] font-bold">{recipe.name}</h2>
-          <HiOutlineBookmark className="text-content-color text-[1.5rem]" />
+          {
+            recipe.hasBookedRecipe ? <HiMiniBookmark fill="#0e9f6e" className="text-[1.5rem] text-highlight-color" onClick={async () => {
+              await ToggleBookedRecipe({ recipeId: recipe._id }).unwrap();
+            }
+            } /> : <HiOutlineBookmark className="text-[1.5rem] text-content-color" onClick={async () => {
+              await ToggleBookedRecipe({ recipeId: recipe._id }).unwrap();
+            }
+            } />
+          }
         </div>
         <div className="w-full flex justify-start items-center gap-1 my-2">
           <StyledRating name="read-only" defaultValue={recipe.rating} precision={0.5} size="small" readOnly />
