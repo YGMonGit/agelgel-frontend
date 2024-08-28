@@ -1,9 +1,12 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { useParams } from "react-router-dom";
 
 import { HiOutlineBookmark, HiMiniBookmark } from "react-icons/hi2";
 import { GoDotFill } from "react-icons/go";
 import { BsFillPersonCheckFill } from "react-icons/bs";
+
+import { LuClock9 } from "react-icons/lu";
+import { IoSpeedometerOutline } from "react-icons/io5";
 
 import { Chip } from "@mui/material";
 
@@ -32,6 +35,8 @@ import CircularProgress from "../components/CircularProgress";
 import { HiFire } from "react-icons/hi";
 import DisplayCard from "../components/DisplayCard";
 import { useToggleBookedRecipeMutation } from "../api/slices/user.slices";
+import ClipLoader from "react-spinners/ClipLoader";
+import FilterBarActive from "../components/FilterBarActive";
 
 const StyledRating = styled(Rating)({
   fontSize: '1rem',
@@ -42,6 +47,15 @@ function RecipeDetail() {
   const [newComment, setNewComment] = useState("");
   const [value, setValue] = React.useState<number | null>(0);
   const showCommentButton = value !== 0 && newComment.trim() !== "";
+
+  const scrollableDivRef = useRef<HTMLDivElement>(null);
+
+  const handleWheel = (event: React.WheelEvent<HTMLDivElement>) => {
+    const wheelDelta = Math.max(-1, Math.min(1, event.deltaY || -event.detail));
+    if (scrollableDivRef.current) {
+      scrollableDivRef.current.scrollLeft += wheelDelta * 30;
+    }
+  };
 
   const properties = {
     prevArrow: (
@@ -85,7 +99,7 @@ function RecipeDetail() {
   const { data: recipe, isLoading: recipesLoading } = useGetPrivateRecipeByIdQuery(String(rID.id));
   const [reviewsPagination, setReviewsPagination] = useState({ skip: 0, limit: 10 });
   const { data: reviews, isLoading: reviewsLoading } = useGetRecipeReviewsQuery({ recipeId: String(rID.id), skip: reviewsPagination.skip, limit: reviewsPagination.limit });
-  const [CreateReview] = useCreateReviewMutation();
+  const [CreateReview, { isLoading: createLoading }] = useCreateReviewMutation();
   const [ingredientImages, setIngredientImages] = useState<string[]>([]);
   const [ToggleBookedRecipe] = useToggleBookedRecipeMutation();
 
@@ -216,25 +230,30 @@ function RecipeDetail() {
           <StyledRating name="read-only" defaultValue={recipe.rating} precision={0.5} size="small" readOnly />
           <p className="leading-3 px-1 rounded-md text-content-color text-[.8rem] bg-[#EBFFF8]">{recipe.rating.toFixed(1)}</p>
         </div>
-        <div className="w-full flex flex-col justify-start items-center gap-2">
-
-          <div className="w-full">
-            <Chip label={recipe.cookingTime}
-              sx={{ margin: "8px 4px", borderRadius: "8px", backgroundColor: "#F3F4F6", height: "25px", fontWeight: "500" }}
-            />
-            <Chip label={recipe.preparationDifficulty}
-              sx={{ margin: "8px 4px", borderRadius: "8px", backgroundColor: "#F3F4F6", height: "25px", fontWeight: "500" }}
-            />
+        <div className="w-full flex flex-col justify-start items-start gap-2">
+          <div className="flex justify-start items-center gap-2 mb-3">
+            <div className="w-full flex justify-start items-center bg-[#F3F4F6] pl-[10px] rounded-[8px]">
+              <LuClock9 className="text-[.8rem] text-content-color -mr-[6px] z-20 italic" />
+              <Chip label={`${recipe.cookingTime} min`}
+                sx={{ borderRadius: "8px", backgroundColor: "#F3F4F6", height: "25px", fontWeight: "500" }}
+              />
+            </div>
+            <div className="w-full flex justify-start items-center bg-[#F3F4F6] pl-[10px] rounded-[8px]">
+              <IoSpeedometerOutline className="text-[.8rem] text-content-color -mr-[6px] z-20 italic" />
+              <Chip label={recipe.preparationDifficulty}
+                sx={{ borderRadius: "8px", backgroundColor: "#F3F4F6", height: "25px", fontWeight: "500" }}
+              />
+            </div>
           </div>
-          <FilterBar data={recipe.preferredMealTime} />
-          <FilterBar data={recipe.medical_condition.chronicDiseases} />
-          <FilterBar data={recipe.medical_condition.dietary_preferences} />
-          <FilterBar data={recipe.medical_condition.allergies} />
+          <FilterBar label="Preferred meal time" data={recipe.preferredMealTime} />
+          <FilterBar label="Health condition" data={recipe.medical_condition.chronicDiseases} />
+          <FilterBar label="Dietary preferences" data={recipe.medical_condition.dietary_preferences} />
+          <FilterBar label="Allergies" data={recipe.medical_condition.allergies} />
 
 
 
         </div>
-        <h3 className="w-full leading-5 text-slate-500 text-[.9rem]">{recipe.description}</h3>
+        <h3 className="w-full leading-5 text-slate-500 text-[.9rem] mt-3">{recipe.description}</h3>
 
         <div className="w-full flex flex-col justify-start items-start mt-5">
           <h3 className="font-semibold mb-1">Macro-nutrients</h3>
@@ -278,7 +297,11 @@ function RecipeDetail() {
         </div>
         <div className="w-full flex flex-col justify-start items-start mt-5">
           <h3 className="font-semibold mb-1">Similar recipes</h3>
-          <div className="grid grid-cols-2 sm:grid-cols-3 gap-4 w-full">
+          <div className="flex overflow-x-scroll justify-start items-center gap-4 w-full pb-8 px-3"
+            style={{ scrollbarWidth: "none", msOverflowStyle: "none" }}
+            ref={scrollableDivRef}
+            onWheel={handleWheel}
+          >
             {isLoading
               ? Array.from({ length: skeletonCount }).map((_, index) => (
                 <DisplayCard post={null} key={`skeleton-${index}`} />
@@ -318,12 +341,27 @@ function RecipeDetail() {
             className={`w-full py-[10px] bg-[#F9FAFB] leading-none text-[1rem] px-4 border outline-none rounded-lg border-[#D1D5DB]`}
           />
           {!showCommentButton && (<p className="text-yellow-300 text-[.8rem] leading-none mb-3 -mt-2">{value === 0 && newComment.trim() !== "" && "Please fill retting"}{newComment.trim() === "" && value !== 0 && "Please fill comment"}{newComment.trim() === "" && value === 0 && "Please fill retting and comment"}</p>)}
-          <button
-            type="submit"
-            className={`${showCommentButton ? "w-full py-[10px] bg-content-color mb-5 text-white rounded-lg" : "w-full py-[8px] bg-neutral-300 text-neutral-500 mb-5"}`}
-            disabled={!showCommentButton}>
-            Comment
-          </button>
+          {createLoading ? (
+            <button
+              type="submit"
+              className={`flex justify-center items-center gap-2 ${showCommentButton ? "w-full h-[52px] bg-content-color mb-5 text-white rounded-lg" : "w-full py-[8px] bg-neutral-300 text-neutral-500 mb-5"}`}
+              disabled={false}>
+              <ClipLoader
+                color={"white"}
+                size={15}
+                aria-label="Loading Spinner"
+                data-testid="loader"
+              />
+              <p className="text-white text-[1.1rem] italic">loading ...</p>
+            </button>
+          ) : (
+            <button
+              type="submit"
+              className={`${showCommentButton ? "w-full h-[52px] bg-content-color mb-5 text-white rounded-lg" : "w-full py-[8px] bg-neutral-300 text-neutral-500 mb-5"}`}
+              disabled={!showCommentButton}>
+              Comment
+            </button>
+          )}
         </form>
       </div>
     );

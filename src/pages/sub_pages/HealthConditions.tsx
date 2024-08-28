@@ -110,7 +110,7 @@ function HealthConditions({
           <WideLink label="Next" color="bg-content-color" clickAction={onNextClick} />
         </div>
       )}
-      {/* <button>submit</button> */}
+      <button>submit</button>
     </div>
   );
 }

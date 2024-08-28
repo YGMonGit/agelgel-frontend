@@ -1,9 +1,7 @@
 import React, { useState } from "react";
 import PageHeader from "../components/PageHeader";
 import { Input, UseGoogle } from "../components/Input";
-
 import { RiEyeCloseLine, RiEyeLine } from "react-icons/ri";
-
 import { Checkbox } from "../components/ui/checkbox";
 import WideButton from "../components/WideButton";
 import { homeUrl, signUpUrl } from "../assets/data";
@@ -16,13 +14,14 @@ import { useNavigate } from "react-router-dom";
 import ProfileImageInput from "../components/ProfileImageInput";
 import { logInSchema } from "../validation/user.validation";
 import ClipLoader from "react-spinners/ClipLoader";
+import ErrorPopup from "../components/ErrorPopup"; // Import the ErrorPopup component
 
 function Login() {
-
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [showPassword, setShowPassword] = useState(false);
   const [rememberMe, setRememberMe] = useState(false);
+  const [serverError, setServerError] = useState<string | null>(null); // State to track server errors
 
   const navigate = useNavigate();
 
@@ -40,22 +39,18 @@ function Login() {
     } catch (error: any) {
       if (!error.data.error) return;
       const err = error.data.error;
-      if (err.type === "Validation")
+      if (err.type === "Validation") {
         if (err.attr === "")
           setError("email", { message: err.msg });
         else
           setError(err.attr, { message: err.error });
-
-      // const [sreverError, setSreverError] = useState<string | null>(null);
-      //  setSreverError(err.msg);
-      // sreverError && { <p>{sreverError}</p>
-
+      } else {
+        setServerError(err.msg); // Set the server error message
+      }
     }
   }
 
-  const handleWithGoogleClick = () => {
-
-  };
+  const handleWithGoogleClick = () => {};
 
   const onEmailChange = (e: React.ChangeEvent<HTMLInputElement>) => setEmail(e.target.value);
   const onPasswordChange = (e: React.ChangeEvent<HTMLInputElement>) => setPassword(e.target.value);
@@ -104,9 +99,11 @@ function Login() {
         </div>
       </form>
       <div className="w-full px-5 text-slate-400 text-[1rem] mb-10">Not Registered? <a href={signUpUrl} className="text-content-color font-[470]">Create Account</a></div>
+
+      {/* Display the ErrorPopup component */}
+      <ErrorPopup error={serverError} />
     </div>
   );
 }
 
 export default Login;
-

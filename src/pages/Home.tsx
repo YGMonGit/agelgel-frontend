@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import PageHeader from "../components/PageHeader";
 import Search from "../components/Search";
 import FilterBar from "../components/FilterBar";
+import FilterBarActive from "../components/FilterBarActive";
 import { filterData, postUrl } from "../assets/data";
 import DisplayCard from "../components/DisplayCard";
 import { IoAdd } from "react-icons/io5";
@@ -46,7 +47,7 @@ function Home() {
       />
       <Search />
       <div className="w-full px-5">
-        <FilterBar data={filterData} />
+        <FilterBarActive data={filterData} />
       </div>
 
       <div className="grid grid-cols-2 sm:grid-cols-3 gap-4 w-full px-5">
