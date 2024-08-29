@@ -25,13 +25,13 @@ function Loading() {
         size={30}
         aria-label="Loading Spinner"
         data-testid="loader"
-      /> : <div>
-        <p className="text-[1rem] text-red-500">it seems your not login</p>
-        <button className="bg-red-500 text-white px-4 py-2 rounded-md" onClick={() => navigate(signUpUrl)}>Sign Up</button>
-        <button className="bg-red-500 text-white px-4 py-2 rounded-md" onClick={() => navigate(loginUrl)}>Log In</button>
+      /> : <div className='w-full flex flex-col justify-center items-center gap-2 px-5'>
+        <p className="w-full text-[1rem] text-slate-500 text-center">It seems your not login</p>
+        <button className="bg-content-color border border-content-color font-semibold text-white px-4 py-2 rounded-md w-full" onClick={() => navigate(signUpUrl)}>Sign Up</button>
+        <button className="bg-white border border-content-color font-semibold text-content-color px-4 py-2 rounded-md w-full" onClick={() => navigate(loginUrl)}>Log In</button>
       </div>}
     </div>
   )
 }
 
-export default Loading
+export default Loading;

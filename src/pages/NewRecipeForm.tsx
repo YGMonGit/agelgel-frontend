@@ -15,6 +15,7 @@ import HealthConditions from "./sub_pages/HealthConditions";
 import { homeUrl } from "../assets/data";
 import { useGetUserQuery } from "../api/slices/user.slices";
 import useFileUpload from "../hooks/useFileUpload";
+import ErrorPopup from "../components/ErrorPopup";
 
 
 function NewRecipeForm() {
@@ -209,7 +210,9 @@ function NewRecipeForm() {
           {/* <button type="submit" className="btn-primary mt-4">Submit</button> */}
         </>
       )}
-
+      <ErrorPopup error={errors.imgs?.message} />
+      <ErrorPopup error={errors.medical_condition?.allergies?.message} />
+      <ErrorPopup error={errors.medical_condition?.chronicDiseases?.message} />
     </form>
   );
 }

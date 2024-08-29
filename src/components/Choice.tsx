@@ -6,9 +6,10 @@ interface ChoiceProps {
   value: string | string[];
   setValues: any;
   multiSelect: boolean;
+  noPad?: boolean;
 }
 
-function Choice({ label, data, value, setValues, multiSelect }: ChoiceProps) {
+function Choice({ label, data, value, setValues, multiSelect, noPad }: ChoiceProps) {
   const handleClick = (item: string) => {
     if (multiSelect) {
       setValues((prevValue: any) => {
@@ -37,7 +38,7 @@ function Choice({ label, data, value, setValues, multiSelect }: ChoiceProps) {
   };
 
   return (
-    <div className="w-full px-5 flex flex-col justify-start items-start gap-1 mb-6 relative select-none cursor-pointer">
+    <div className={`w-full ${!noPad && "px-5"} flex flex-col justify-start items-start gap-1 mb-6 relative select-none cursor-pointer`}>
       <label className="text-base font-semibold mb-2">{label}</label>
       <div className="flex flex-wrap gap-2">
         {data.map((item, index) => (

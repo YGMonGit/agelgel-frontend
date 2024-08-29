@@ -2,7 +2,7 @@ import React from "react";
 import { Snackbar, Alert } from "@mui/material";
 
 interface ErrorPopupProps {
-  error: string | null;
+  error: any;
   autoHideDuration?: number;
 }
 

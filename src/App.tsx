@@ -3,7 +3,7 @@ import Navbar from './components/Navbar';
 import Home from './pages/Home';
 import Login from './pages/Login';
 import { Routes, Route } from "react-router-dom";
-import { signUpUrl, loginUrl, homeUrl, recipeDetailUrl, postUrl, mySpaceUrl, loadingUrl } from './assets/data';
+import { signUpUrl, loginUrl, homeUrl, recipeDetailUrl, postUrl, mySpaceUrl, loadingUrl, searchUrl } from './assets/data';
 import RecipeDetail from './pages/RecipeDetail';
 import NewRecipeForm from './pages/NewRecipeForm';
 import SignUp from './pages/SignUp';
@@ -15,6 +15,7 @@ import '@fontsource/roboto/500.css';
 import '@fontsource/roboto/700.css';
 import MySpace from './pages/MySpace';
 import Loading from './pages/Loading';
+import Search from './pages/Search';
 
 function App() {
 
@@ -29,6 +30,7 @@ function App() {
       <div className='mt-[56px]'></div>
       <Routes> 
         <Route path={homeUrl} element={<Home />} />
+        <Route path={searchUrl} element={<Search />} />
         <Route path={loginUrl} element={<Login />} />
         <Route path={signUpUrl} element={<SignUp />} />
         <Route path={`${recipeDetailUrl}/:id`} element={<RecipeDetail />} />

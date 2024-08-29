@@ -101,7 +101,7 @@ function Login() {
       <div className="w-full px-5 text-slate-400 text-[1rem] mb-10">Not Registered? <a href={signUpUrl} className="text-content-color font-[470]">Create Account</a></div>
 
       {/* Display the ErrorPopup component */}
-      <ErrorPopup error={serverError} />
+      <ErrorPopup error={errors.email?.message} />
     </div>
   );
 }

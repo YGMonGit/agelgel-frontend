@@ -5,7 +5,7 @@ import ArrowUpRight from "../assets/icons/arrow-up-right.png";
 import HelpIcon from "../assets/icons/help-icon.png";
 import CircleDropdown from "./CircleDropdown";
 import DetailNavDropdown from "./DetailNavDropdown";
-import { editPostUrl, editUserUrl, homeUrl, loadingUrl, loginUrl, mySpaceUrl, postUrl, recipeDetailUrl, signUpUrl } from "../assets/data";
+import { editPostUrl, editUserUrl, homeUrl, searchUrl, loadingUrl, loginUrl, mySpaceUrl, postUrl, recipeDetailUrl, signUpUrl } from "../assets/data";
 
 import { SlClose, SlArrowLeft } from "react-icons/sl";
 
@@ -20,6 +20,7 @@ import {
   AlertDialogTitle,
   AlertDialogTrigger,
 } from "./ui/alert-dialog";
+import { IoSearchOutline, IoCloseOutline } from "react-icons/io5";
 
 function Navbar() {
   const location = useLocation();
@@ -27,13 +28,22 @@ function Navbar() {
 
   const getRightContent = () => {
     if (location.pathname === homeUrl) {
-      return (<CircleDropdown />);
+      return (
+        <div className="flex justify-center items-center gap-2">
+          <div className="w-9 h-9 bg-content-color flex justify-center items-center rounded-full text-[2rem] text-white" onClick={() => navigate(searchUrl)}>
+            <IoSearchOutline className="text-[1.3rem]" />
+          </div>
+          <CircleDropdown />
+        </div>
+      );
     } else if (location.pathname === signUpUrl) {
       return (
         <button className="text-content-color text-[1.1rem] flex items-end font-[60l0] bg-red-30 leading-none gap-1">
           Need Help? <img src={HelpIcon} alt="arrow-up-right" className="w-[1.1rem] h-[1.1rem]" />
         </button>
       );
+    }else if (location.pathname === searchUrl) {
+      return (<CircleDropdown />);
     } else if (location.pathname === loginUrl) {
       return (
         <button className="text-content-color text-[1.1rem] flex items-end font-[60l0] bg-red-30 leading-none gap-1" onClick={() => navigate(signUpUrl)}>
@@ -70,7 +80,7 @@ function Navbar() {
   };
 
   const getLeftContent = () => {
-    if (location.pathname === homeUrl || location.pathname === loginUrl || location.pathname === signUpUrl || location.pathname === postUrl) {
+    if (location.pathname === homeUrl || location.pathname === searchUrl || location.pathname === loginUrl || location.pathname === signUpUrl || location.pathname === postUrl) {
       return (
         <div className="flex justify-start items-center gap-2 select-none" onClick={() => navigate(homeUrl)}>
           <img src={logo} alt="agelgel logo" className="w-[23.91px] h-[28px]" />

@@ -68,10 +68,10 @@ const ChipsBox: React.FC<ChipsBoxProps> = ({
 
 
   return (
-    <div className="w-full px-5 mb-6">
+    <div className="w-full mb-6">
       <h2 className="text-[1.1rem] mb-[6px] font-semibold">{label}</h2>
       <div
-        className="flex items-center leading-none overflow-x-auto w-full px-[6px] border rounded-xl border-neutral-300"
+        className="flex items-center leading-none overflow-x-auto w-full px-[6px] border rounded-xl border-neutral-400"
         style={{ scrollbarWidth: "none", msOverflowStyle: "none" }}
         ref={scrollableDivRef}
         onWheel={handleWheel}

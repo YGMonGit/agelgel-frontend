@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import PageHeader from "../components/PageHeader";
-import Search from "../components/Search";
+// import Search from "../components/Search";
 import FilterBar from "../components/FilterBar";
 import FilterBarActive from "../components/FilterBarActive";
 import { filterData, postUrl } from "../assets/data";
@@ -45,7 +45,7 @@ function Home() {
         header={`Good Morning, ${user?.first_name}!`}
         detail="Browse through our suggestions."
       />
-      <Search />
+      {/* <Search /> */}
       <div className="w-full px-5">
         <FilterBarActive data={filterData} />
       </div>
@@ -60,12 +60,12 @@ function Home() {
           ))}
       </div>
 
-      <button
+      <div
         className="w-14 h-14 bg-content-color flex justify-center items-center rounded-full text-[2rem] text-white fixed bottom-10 right-5"
         onClick={() => navigate(postUrl)}
       >
         <IoAdd />
-      </button>
+      </div>
     </div>
   );
 }

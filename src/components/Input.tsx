@@ -13,13 +13,14 @@ interface InputProps {
   register?: any
   errors?: any
   type?: "text" | "password" | "email" | "number";
+  noPad?: boolean;
 }
 
 interface UseGoogleProps {
   clickAction?: () => void;
 }
 
-function Input({ label, placeholder, value, isPassword, showPassword, onChange, instruction, children, register = (placeholder: string) => { }, errors, type = "text" }: InputProps) {
+function Input({ label, placeholder, value, isPassword, showPassword, onChange, instruction, children, register = (placeholder: string) => { }, errors, type = "text", noPad=false }: InputProps) {
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     if (onChange) {
@@ -30,7 +31,7 @@ function Input({ label, placeholder, value, isPassword, showPassword, onChange, 
   const errorStyle = "text-[.8rem] text-red-400";
 
   return (
-    <div className="w-full px-5 flex flex-col justify-start items-start gap-1 mb-6 relative">
+    <div className={`w-full ${!noPad && "px-5"} flex flex-col justify-start items-start gap-1 mb-6 relative`}>
       <label htmlFor={placeholder} className="text-[1rem] font-semibold">
         {label}
       </label>
