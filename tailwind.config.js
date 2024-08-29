@@ -83,6 +83,10 @@ module.exports = {
         "accordion-down": "accordion-down 0.2s ease-out",
         "accordion-up": "accordion-up 0.2s ease-out",
       },
+      boxShadow: {
+        'custom-shadow': '0 0 10px rgba(0, 0, 0, 0.3)',
+        'custom-inset-shadow': 'inset 0 0 5px rgba(0, 0, 0, 0.2)',
+      },
       height: {
         'full-minus-56': 'calc(100% - 56px)',
         'screen-minus-56': 'calc(100vh - 56px)',

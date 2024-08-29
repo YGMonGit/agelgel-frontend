@@ -13,15 +13,19 @@ import { useCreateRecipeMutation } from "../api/slices/recipe.slices";
 import { EAllergies, EDietaryPreferences, EChronicDisease } from "../api/types/user.type";
 import HealthConditions from "./sub_pages/HealthConditions";
 import { homeUrl } from "../assets/data";
+import { useGetUserQuery } from "../api/slices/user.slices";
+import useFileUpload from "../hooks/useFileUpload";
 
 
 function NewRecipeForm() {
   // Form navigator state
   const [formNumber, setFormNumber] = useState(1);
 
-  const [healthCondition, setHealthCondition] = useState<EChronicDisease[]>([]);
-  const [allergies, setAllergies] = useState<EAllergies[]>([]);
-  const [mealPreference, setMealPreference] = useState<EDietaryPreferences[]>([]);
+  const { data: user } = useGetUserQuery();
+
+  const [healthCondition, setHealthCondition] = useState<EChronicDisease[]>(user?.medical_condition?.chronicDiseases ?? []);
+  const [allergies, setAllergies] = useState<EAllergies[]>(user?.medical_condition?.allergies ?? []);
+  const [mealPreference, setMealPreference] = useState<EDietaryPreferences[]>(user?.medical_condition?.dietary_preferences ?? []);
   const [youTubeLink, setYouTubeLink] = useState<string | undefined>(undefined);
 
 
@@ -39,11 +43,15 @@ function NewRecipeForm() {
   const [ingredients, setIngredients] = useState<IngredientDetail[]>([]);
 
   const [instructions, setInstructions] = useState("");
+  const { uploadFile, loading } = useFileUpload();
+
+
 
   const { register, control, handleSubmit, formState: { errors }, setError, setValue } = useForm<INewRecipeFrom>({
     resolver: zodResolver(newRecipeSchema),
     defaultValues: {
       cookingTime: "0",
+      medical_condition: user?.medical_condition
     }
   });
 
@@ -83,7 +91,7 @@ function NewRecipeForm() {
 
   console.log({ errors });
 
-  const [CreateRecipe, {isLoading}] = useCreateRecipeMutation();
+  const [CreateRecipe, { isLoading }] = useCreateRecipeMutation();
 
   const navigate = useNavigate();
 
@@ -92,17 +100,13 @@ function NewRecipeForm() {
   async function NewRecipe(recipe: INewRecipeFrom) {
     console.log("Adding New Recipe....");
 
-    const uploadManager = new Bytescale.UploadManager({
-      apiKey: process.env.REACT_APP_BYTESCLE ?? ""
-    });
-
     try {
       const files = recipe.imgs;
       const fileUrls: string[] = [];
       for (let i = 0; i < files.length; i++) {
         const file = files[i];
-        const { fileUrl } = await uploadManager.upload({ data: file });
-        fileUrls.push(fileUrl);
+        let fileUrl = await uploadFile(file as any);
+        if (fileUrl) fileUrls.push(fileUrl);
       }
 
       await CreateRecipe({
@@ -159,7 +163,7 @@ function NewRecipeForm() {
               setInstructions={setInstructions}
               register={register}
               errors={errors}
-              isLoading={isLoading}
+              isLoading={isLoading || loading}
             />
           </>
         ) : (
@@ -174,7 +178,6 @@ function NewRecipeForm() {
               mealPreference={mealPreference}
               setMealPreference={setMealPreference}
               finish={false}
-
               register={register}
               errors={errors}
             />

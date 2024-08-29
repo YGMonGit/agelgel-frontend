@@ -8,6 +8,11 @@ const recipeApiSlice = agelgilAPI.injectEndpoints({
             transformResponse: (response: { body: IRecipe }) => response.body,
             providesTags: (result, error, recipeId) => [{ type: 'Recipe', id: recipeId }],
         }),
+        getPrivateRecipeById: builder.query<IRecipe, string>({
+            query: (recipeId) => `/private/recipe/${recipeId}`,
+            transformResponse: (response: { body: IRecipe }) => response.body,
+            providesTags: (result, error, recipeId) => [{ type: 'Recipe', id: recipeId }],
+        }),
         getRecipeCarbs: builder.query<INutritionData, string>({
             query: (recipeId) => `/public/recipe/carbs/${recipeId}`,
         }),
@@ -53,8 +58,8 @@ const recipeApiSlice = agelgilAPI.injectEndpoints({
             }),
             invalidatesTags: (result, _, { recipeId }) => result ? [{ type: 'Recipe', id: recipeId }] : [],
         }),
-        recommendation: builder.query<IRecipe[], { skip: number; limit: number }>({
-            query: ({ skip, limit }) => `/private/recipe/recommendation/${skip}/${limit}`,
+        recommendation: builder.query<IRecipe[], { page: number }>({
+            query: ({ page }) => `/private/recipe/recommendation/${page}`,
             transformResponse: (response: { body: IRecipe[] }) => response.body,
             providesTags: (result) =>
                 result
@@ -64,13 +69,13 @@ const recipeApiSlice = agelgilAPI.injectEndpoints({
                     ]
                     : [{ type: 'Recipe' as const, id: 'Recipe-LIST' }],
         }),
-        similar: builder.query<IRecipe[], { recipeId: string, skip: number; limit: number }>({
-            query: ({ skip, limit, recipeId }) => `/public/recipe/similar.${recipeId}/${skip}/${limit}`,
+        similar: builder.query<IRecipe[], { recipeId: string, page: number }>({
+            query: ({ page, recipeId }) => `/public/recipe/similar/${recipeId}/${page}`,
             transformResponse: (response: { body: IRecipe[] }) => response.body,
             providesTags: (result) =>
                 result
                     ? [
-                        ...result.map((recipe) => ({ type: 'Recipe' as const, id: recipe._id })),
+                        ...result.map((recipe) => ({ type: 'Recipe' as const, id: (recipe as any).recipeId })),
                         { type: 'Recipe' as const, id: 'Recipe-LIST' },
                     ]
                     : [{ type: 'Recipe' as const, id: 'Recipe-LIST' }],
@@ -81,6 +86,7 @@ const recipeApiSlice = agelgilAPI.injectEndpoints({
 
 export const {
     useGetRecipeByIdQuery,
+    useGetPrivateRecipeByIdQuery,
     useGetRecipeCarbsQuery,
     useGetRecipesQuery,
     useSearchRecipesMutation,

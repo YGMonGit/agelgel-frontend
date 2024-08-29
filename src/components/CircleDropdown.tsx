@@ -2,6 +2,8 @@ import React, { useState, useRef, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { mySpaceUrl } from "../assets/data";
 import { useGetUserQuery, useLogOutMutation } from "../api/slices/user.slices";
+import { loadingUrl } from "../assets/data";
+
 
 function CircleDropdown() {
   const navigate = useNavigate();
@@ -63,7 +65,7 @@ function CircleDropdown() {
             </li>
             <li className="hover:bg-gray-100 rounded-md p-1 px-3 cursor-pointer text-red-700" onClick={async () => {
               await logOut().unwrap();
-              navigate('/');
+              navigate(loadingUrl);
             }}>
               Logout
             </li>

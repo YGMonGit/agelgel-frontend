@@ -50,7 +50,7 @@ const userApiSlice = agelgilAPI.injectEndpoints({
                 url: `/private/user/bookedRecipes/toggle/${recipeId}`,
                 method: 'PATCH',
             }),
-            invalidatesTags: ['BookRecipe'],
+            invalidatesTags: (result, _, { recipeId }) => [{ type: 'Recipe', id: recipeId }],
             transformResponse: (response: { body: IRecipe[] }) => response.body,
 
         }),
@@ -130,6 +130,7 @@ const userApiSlice = agelgilAPI.injectEndpoints({
             invalidatesTags: ['User'],
             onQueryStarted: async (_, { queryFulfilled }) => {
                 try {
+                    await queryFulfilled;
                     localStorage.removeItem('agelgilAuthorizationToken');
                     localStorage.removeItem('agelgilRefreshToken');
                 } catch (error) {

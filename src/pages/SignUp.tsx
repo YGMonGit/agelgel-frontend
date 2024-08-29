@@ -10,6 +10,7 @@ import * as Bytescale from "@bytescale/sdk";
 import { useNavigate } from "react-router-dom";
 import { signUpSchema } from "../validation/user.validation";
 import { homeUrl } from "../assets/data";
+import useFileUpload from "../hooks/useFileUpload";
 
 
 function SignUp() {
@@ -34,7 +35,8 @@ function SignUp() {
 
   const navigate = useNavigate();
 
-  const [signUp, {isLoading}] = useSignUpMutation();
+  const [signUp, { isLoading }] = useSignUpMutation();
+  const { uploadFile, loading } = useFileUpload();
 
   const { register, handleSubmit, formState: { errors }, setError, setValue, getValues } = useForm<IUserSignUpFrom>({
     resolver: zodResolver(signUpSchema),
@@ -46,13 +48,9 @@ function SignUp() {
   async function SignUp(user: IUserSignUpFrom) {
     console.log("signing up in...");
 
-    const uploadManager = new Bytescale.UploadManager({
-      apiKey: process.env.REACT_APP_BYTESCLE ?? ""
-    });
-
     try {
       const file = user.profile_img;
-      const { fileUrl } = await uploadManager.upload({ data: file as any });
+      const fileUrl = await uploadFile(file as any);
 
       await signUp({
         data: {
@@ -74,7 +72,6 @@ function SignUp() {
     }
   }
 
-  async function _handleSubmit() { }
 
   const handleWithGoogleClick = () => { };
 
@@ -102,7 +99,7 @@ function SignUp() {
             setAllergies={setAllergy}
             mealPreference={mealPreference}
             setMealPreference={setMealPreference}
-            isLoading={isLoading}
+            isLoading={isLoading || loading}
           />
         )
       ) : (
