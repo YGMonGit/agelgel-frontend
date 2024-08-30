@@ -15,6 +15,9 @@ function Search() {
 
   const [page, setPage] = useState(1);
   const [Search, { data: searchedRecipes, isLoading: searchedLoading }] = useSearchRecipesMutation();
+  useEffect(() => {
+    Search({ page: page, form: {} });
+  }, []);
 
   const skeletonCount = searchedLoading
     ? 10
@@ -38,14 +41,16 @@ function Search() {
   const [allergy, setAllergy] = useState<EAllergies[] | undefined>(undefined);
   const [mealPreference, setMealPreference] = useState<EDietaryPreferences[] | undefined>(undefined);
 
+  const [useUserData, setUserData] = useState(false);
+
   useEffect(() => {
-    if (user) {
+    if (user && useUserData) {
       const { chronicDiseases, allergies, dietary_preferences } = user.medical_condition;
       setHealthCondition(chronicDiseases);
       setAllergy(allergies);
       setMealPreference(dietary_preferences);
     }
-  }, [user]);
+  }, [user, useUserData]);
 
 
   return (
