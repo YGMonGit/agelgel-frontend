@@ -34,12 +34,17 @@ function CircleDropdown() {
   return (
     <div className="relative">
       <div
-        className="bg-gray-100 rounded-full w-9 h-9 flex justify-center items-center cursor-pointer"
+        className="bg-gray-100 rounded-full flex justify-center items-center cursor-pointer"
         onClick={toggleDropdown}
       >
         {
           user?.profile_img ? (
-            <img src={user.profile_img} alt="profile" className="w-8 h-8 rounded-full" />
+            <img src={user.profile_img} alt="profile" style={{
+              objectFit: "cover",
+              objectPosition: "center",
+              height: "40px",
+              width: "40px",
+            }} className="w-8 h-8 rounded-full border border-[#15803d]" />
           ) : (
             <div className="w-8 h-8 rounded-full bg-gray-300 flex justify-center items-center text-white text-[1.6rem] font-semibold">
               {user?.first_name[0]} {user?.last_name[0]}

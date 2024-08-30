@@ -8,9 +8,10 @@ interface CircularProgressProps {
   image: any;
   nutrient: string;
   unit: string;
+  color?: string;
 }
 
-const CircularProgress: React.FC<CircularProgressProps> = ({ value, maxValue, image, nutrient, unit }) => {
+const CircularProgress: React.FC<CircularProgressProps> = ({ value, maxValue, image, nutrient, unit, color }) => {
   const percentage = (value / maxValue) * 100;
 
   return (
@@ -19,10 +20,11 @@ const CircularProgress: React.FC<CircularProgressProps> = ({ value, maxValue, im
         <CircularProgressbar
           value={percentage}
           // text={`${value} kcal`}
+
           styles={{
             root: {},
             path: {
-              stroke: `rgba(62, 152, 199, ${percentage / 100})`,
+              stroke: color ?? `rgba(62, 152, 199, ${percentage / 100})`,
               strokeWidth: '8',
             },
             text: {
@@ -49,8 +51,8 @@ const CircularProgress: React.FC<CircularProgressProps> = ({ value, maxValue, im
           }}
         />
       </div>
-        <p className="text-slate-400 leading-none -mt-[5px] italic text-[.9rem]">{nutrient}</p>
-        <p className="text-slate-500 text-[.9rem]">{parseFloat(value).toFixed(1)} {unit}</p>
+      <p className="text-slate-400 leading-none -mt-[5px] italic text-[.9rem] font-bold">{nutrient}</p>
+      <p className="text-black-500 text-[.9rem] font-bold">{parseFloat(value).toFixed(1)} {unit}</p>
     </div>
   );
 };

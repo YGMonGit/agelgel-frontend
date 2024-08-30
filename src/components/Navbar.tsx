@@ -48,7 +48,7 @@ function Navbar() {
               window.scrollTo({ top: 0 });
             }}
           >
-            <IoSearchOutline className="text-[1.3rem]" />
+            <IoSearchOutline width={25} height={25} className="text-[1.3rem]" />
           </NavLink>
           <CircleDropdown />
         </div>
@@ -175,9 +175,8 @@ function Navbar() {
 
   return (
     <nav
-      className={`w-full flex justify-center items-center bg-red-30 ${
-        location.pathname !== loadingUrl && "border-b shadow-md"
-      } fixed top-0 left-0 right-0 z-50 bg-white`}
+      className={`w-full flex justify-center items-center bg-red-30 ${location.pathname !== loadingUrl && "border-b shadow-md"
+        } fixed top-0 left-0 right-0 z-50 bg-white`}
     >
       <div
         className={`w-full max-w-[800px] h-[56px] py-[14px] px-5 bg-white flex justify-between items-center z-50`}

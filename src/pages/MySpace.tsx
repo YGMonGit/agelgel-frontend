@@ -9,6 +9,7 @@ import {
 import { ERecipeStatus } from "../api/types/recipe.type";
 
 import EmptyListIcon from "../assets/images/empty-list.png";
+import { Divider } from "@mui/material";
 
 function MySpace() {
   const [spaceType, setSpaceType] = useState(true);
@@ -45,38 +46,52 @@ function MySpace() {
     <div className="w-full flex-grow flex-wrap flex flex-col justify-start items-center relative mb-5">
       <MySpaceNav spaceType={spaceType} setSpaceType={setSpaceType} />
       <PageHeader header={mainHeader} detail={subHeader} />
-      <div className="w-full px-5 mb-5 flex justify-start items-center gap-2">
+
+      <div className="w-full px-5 flex justify-start items-center gap-2" style={{ display: spaceType ? "flex" : "none" }}>
         <button
-          className="px-4 py-1 rounded-lg bg-content-color text-white outline-none border-none"
+          className="px-4 py-1 rounded-lg text-white outline-none border-none"
+          style={{
+            backgroundColor: postStatus === ERecipeStatus.verified ? "#15803d" : "#F3F4F6",
+            color: postStatus === ERecipeStatus.verified ? "#fff" : "#15803d",
+          }}
           onClick={() => setPostStatus(ERecipeStatus.verified)}
         >
           verified
         </button>
         <button
-          className="px-4 py-1 rounded-lg bg-neutral-100 outline-none border-none"
+          className="px-4 py-1 rounded-lg outline-none border-none text-white"
+          style={{
+            backgroundColor: postStatus === ERecipeStatus.pending ? "#15803d" : "#F3F4F6",
+            color: postStatus === ERecipeStatus.pending ? "#fff" : "#15803d",
+          }}
           onClick={() => setPostStatus(ERecipeStatus.pending)}
         >
           pending
         </button>
         <button
-          className="px-4 py-1 rounded-lg bg-red-600 text-white outline-none border-none"
+          className="px-4 py-1 rounded-lg text-white outline-none border-none text-white"
+          style={{
+            backgroundColor: postStatus === ERecipeStatus.rejected ? "#15803d" : "#F3F4F6",
+            color: postStatus === ERecipeStatus.rejected ? "#fff" : "#15803d",
+          }}
           onClick={() => setPostStatus(ERecipeStatus.rejected)}
         >
           rejected
         </button>
       </div>
+
       {spaceType ? (
         myRecipes?.length !== 0 ? (
-          <div className="grid grid-cols-2 sm:grid-cols-3 gap-4 w-full px-5">
+          <div className="grid grid-cols-2 sm:grid-cols-3 gap-4 w-full px-5 mt-5">
             {myRecipesIsLoading
               ? Array.from({ length: skeletonMyRecipeCount }).map(
-                  (_, index) => (
-                    <DisplayCard post={null} key={`skeleton-${index}`} />
-                  )
+                (_, index) => (
+                  <DisplayCard post={null} key={`skeleton-${index}`} />
                 )
+              )
               : myRecipes?.map((post, index) => (
-                  <DisplayCard post={post} key={index} />
-                ))}
+                <DisplayCard post={post} key={index} />
+              ))}
           </div>
         ) : (
           <div className="w-full flex justify-center items-center flex-grow">
@@ -84,16 +99,16 @@ function MySpace() {
           </div>
         )
       ) : myBookedRecipes?.length !== 0 ? (
-        <div className="grid grid-cols-2 sm:grid-cols-3 gap-4 w-full px-5">
+        <div className="grid grid-cols-2 sm:grid-cols-3 gap-4 w-full px-5 mt-5">
           {myBookedRecipesIsLoading
             ? Array.from({ length: skeletonMyBookedRecipeCount }).map(
-                (_, index) => (
-                  <DisplayCard post={null} key={`skeleton-${index}`} />
-                )
+              (_, index) => (
+                <DisplayCard post={null} key={`skeleton-${index}`} />
               )
+            )
             : myBookedRecipes?.map((post, index) => (
-                <DisplayCard post={post} key={index} />
-              ))}
+              <DisplayCard post={post} key={index} />
+            ))}
         </div>
       ) : (
         <div className="w-full flex justify-center items-center flex-grow">

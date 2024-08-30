@@ -47,6 +47,7 @@ import DisplayCard from "../components/DisplayCard";
 import { useToggleBookedRecipeMutation } from "../api/slices/user.slices";
 import ClipLoader from "react-spinners/ClipLoader";
 import FilterBarActive from "../components/FilterBarActive";
+import { getCalorieColor, getCarbsColor, getFatColor, getFiberColor, getProteinColor } from "../assets/data";
 
 const StyledRating = styled(Rating)({
   fontSize: "1rem",
@@ -179,6 +180,7 @@ function RecipeDetail() {
     }
     return `https://www.youtube.com/embed/${videoId}`;
   }
+
 
   const onNewCommentChange = (e: React.ChangeEvent<HTMLInputElement>) =>
     setNewComment(e.target.value);
@@ -340,6 +342,7 @@ function RecipeDetail() {
           <h3 className="font-semibold mb-1">Macro-nutrients</h3>
           <div className="flex justify-start items-center gap-1 w-full">
             <CircularProgress
+              color={getCalorieColor(recipe.nutrition.calories)}
               value={recipe.nutrition.calories}
               maxValue={1000}
               image={FireIcon}
@@ -347,6 +350,7 @@ function RecipeDetail() {
               unit="Kcal"
             />
             <CircularProgress
+              color={getProteinColor(recipe.nutrition.protein_g)}
               value={recipe.nutrition.protein_g}
               maxValue={50}
               image={ProteinIcon}
@@ -354,6 +358,7 @@ function RecipeDetail() {
               unit="g"
             />
             <CircularProgress
+              color={getFatColor(recipe.nutrition.fat_total_g)}
               value={recipe.nutrition.fat_total_g}
               maxValue={100}
               image={FatIcon}
@@ -361,6 +366,8 @@ function RecipeDetail() {
               unit="g"
             />
             <CircularProgress
+              color={getCarbsColor(recipe.nutrition.fat_total_g)}
+
               value={recipe.nutrition.carbohydrates_total_g}
               maxValue={100}
               image={CarbsIcon}
@@ -368,6 +375,7 @@ function RecipeDetail() {
               unit="g"
             />
             <CircularProgress
+              color={getFiberColor(recipe.nutrition.fat_total_g)}
               value={recipe.nutrition.fiber_g}
               maxValue={100}
               image={FiberIcon}
@@ -391,10 +399,9 @@ function RecipeDetail() {
                       : IngredientDefaultImage
                   }
                   alt="pic"
-                  className={`min-w-8 w-8 ${
-                    ingredientImages[index] === undefined &&
+                  className={`min-w-8 w-8 ${ingredientImages[index] === undefined &&
                     "rounded-full p-[5px] shadow-md bg-neutral-200"
-                  }`}
+                    }`}
                 />
                 <GoDotFill className="text-[.7rem] ml-[6px] mr-1 text-slate-500" />
                 {(ingredient.ingredient as IIngredient).name}({" "}
@@ -434,11 +441,11 @@ function RecipeDetail() {
             >
               {isLoading
                 ? Array.from({ length: skeletonCount }).map((_, index) => (
-                    <DisplayCard post={null} key={`skeleton-${index}`} />
-                  ))
+                  <DisplayCard post={null} key={`skeleton-${index}`} />
+                ))
                 : recommendedRecipes?.map((post, index) => (
-                    <DisplayCard post={post} key={index} />
-                  ))}
+                  <DisplayCard post={post} key={index} />
+                ))}
             </div>
           ) : (
             <div className="w-full flex justify-center">
@@ -495,11 +502,10 @@ function RecipeDetail() {
           {createLoading ? (
             <button
               type="submit"
-              className={`flex justify-center items-center gap-2 ${
-                showCommentButton
-                  ? "w-full h-[52px] bg-content-color mb-5 text-white rounded-lg"
-                  : "w-full py-[8px] bg-neutral-300 text-neutral-500 mb-5"
-              }`}
+              className={`flex justify-center items-center gap-2 ${showCommentButton
+                ? "w-full h-[52px] bg-content-color mb-5 text-white rounded-lg"
+                : "w-full py-[8px] bg-neutral-300 text-neutral-500 mb-5"
+                }`}
               disabled={false}
             >
               <ClipLoader
@@ -513,11 +519,10 @@ function RecipeDetail() {
           ) : (
             <button
               type="submit"
-              className={`${
-                showCommentButton
-                  ? "w-full h-[52px] bg-content-color mb-5 text-white rounded-lg"
-                  : "w-full py-[8px] bg-neutral-300 text-neutral-500 mb-5"
-              }`}
+              className={`${showCommentButton
+                ? "w-full h-[52px] bg-content-color mb-5 text-white rounded-lg"
+                : "w-full py-[8px] bg-neutral-300 text-neutral-500 mb-5"
+                }`}
               disabled={!showCommentButton}
             >
               Comment
