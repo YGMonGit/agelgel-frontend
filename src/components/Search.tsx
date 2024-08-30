@@ -40,6 +40,7 @@ import Chip from "@mui/material/Chip";
 import Autocomplete from "@mui/material/Autocomplete";
 import TextField from "@mui/material/TextField";
 import Stack from "@mui/material/Stack";
+import { Checkbox } from "@mui/material";
 
 interface SearchProps {
   ingredient: string[] | undefined;
@@ -71,6 +72,8 @@ interface SearchProps {
   page: number;
   setAllergy: any;
   allergy: any;
+  useUserData: boolean;
+  setUserData: any;
 }
 
 function SearchC({
@@ -102,6 +105,8 @@ function SearchC({
   page,
   allergy,
   setAllergy,
+  setUserData,
+  useUserData
 }: SearchProps) {
   const {
     register,
@@ -149,6 +154,11 @@ function SearchC({
     if (mealTime?.length == 0) setValue("preferredMealTime", undefined);
     else setValue("preferredMealTime", mealTime);
   }, [mealTime]);
+
+  useEffect(() => {
+    if (ingredient?.length == 0) setValue("ingredients", undefined);
+    else setValue("ingredients", ingredient);
+  }, [ingredient]);
 
   useEffect(() => {
     if (difficulty == "") setValue("preparationDifficulty", undefined);
@@ -238,15 +248,15 @@ function SearchC({
           placeholder="Search"
           {...register("name")}
         />
-        <IoCloseOutline className="text-slate-500 text-[1.2rem] flex-shrink-0" />
+        <IoCloseOutline onClick={() => setName("")} className="text-slate-500 text-[1.2rem] flex-shrink-0" />
       </div>
 
-      <button
+      <div
         className="flex justify-center items-center w-[42px] h-[42px] bg-content-color leading-none text-[1rem] px-2 border outline-none rounded-lg border-content-color"
         onClick={openDrawer}
       >
         <MdOutlineFilterAlt className="text-white text-[1.6rem]" />
-      </button>
+      </div>
 
       <Drawer
         duration={250}
@@ -259,6 +269,7 @@ function SearchC({
           style={{ scrollbarWidth: "none", msOverflowStyle: "none" }}
         >
           <ChipsBox
+            control={control}
             loading={isLoading}
             name="ingredients"
             label="Ingredients"
@@ -268,8 +279,7 @@ function SearchC({
             register={register}
             errors={
               errors &&
-              errors.medical_condition &&
-              errors.medical_condition?.chronicDiseases
+              errors.ingredients
             }
           />
 
@@ -311,59 +321,88 @@ function SearchC({
             multiSelect={false}
             noPad={true}
           />
-          <ChipsBox
-            name="medical_condition.chronicDisease"
-            label="Chronic Diseases"
-            options={Object.values(EChronicDisease)}
-            detail="Select all the condition(s) you have"
-            selectedConditions={healthCondition}
-            setSelectedConditions={setHealthCondition}
-            register={register}
-            errors={
-              errors &&
-              errors.medical_condition &&
-              errors.medical_condition?.chronicDiseases
-            }
-          />
 
-          <ChipsBox
-            name="medical_condition.dietaryPreferences"
-            label="Dietary Preferences"
-            options={Object.values(EDietaryPreferences)}
-            detail="This is here to make sure you end up loving the recipes we suggest."
-            selectedConditions={mealPreference}
-            setSelectedConditions={setMealPreference}
-            register={register}
-            errors={
-              errors &&
-              errors.medical_condition &&
-              errors.medical_condition?.dietary_preferences
-            }
-          />
+          <div className="flex justify-start items-center gap-2 w-full">
+            <Checkbox
+              checked={useUserData}
+              onChange={(e) => setUserData(!useUserData)}
+              color="primary"
+            />
 
-          <ChipsBox
-            name="medical_condition.allergies"
-            label="Allergies"
-            options={Object.values(EAllergies)}
-            detail="This is here to make sure you end up loving the recipes we suggest."
-            selectedConditions={mealPreference}
-            setSelectedConditions={setMealPreference}
-            register={register}
-            errors={
-              errors &&
-              errors.medical_condition &&
-              errors.medical_condition?.dietary_preferences
-            }
-          />
+            <p className="text-[1rem] text-content-color">
+              Use your medical condition
+            </p>
+          </div>
+
+
+          <div style={{
+            display: useUserData ? "none" : "block"
+          }}>
+            <ChipsBox
+              control={control}
+              name="medical_condition.chronicDiseases"
+              label="Chronic Diseases"
+              options={Object.values(EChronicDisease)}
+              detail="Select all the condition(s) you have"
+              selectedConditions={healthCondition}
+              setSelectedConditions={setHealthCondition}
+              register={register}
+              errors={
+                errors &&
+                errors.medical_condition &&
+                errors.medical_condition?.chronicDiseases
+              }
+            />
+
+            <ChipsBox
+              control={control}
+              name="medical_condition.dietary_preferences"
+              label="Dietary Preferences"
+              options={Object.values(EDietaryPreferences)}
+              detail="This is here to make sure you end up loving the recipes we suggest."
+              selectedConditions={mealPreference}
+              setSelectedConditions={setMealPreference}
+              register={register}
+              errors={
+                errors &&
+                errors.medical_condition &&
+                errors.medical_condition?.dietary_preferences
+              }
+            />
+
+            <ChipsBox
+              control={control}
+              name="medical_condition.allergies"
+              label="Allergies"
+              options={Object.values(EAllergies)}
+              detail="This is here to make sure you end up loving the recipes we suggest."
+              selectedConditions={allergy}
+              setSelectedConditions={setAllergy}
+              register={register}
+              errors={
+                errors &&
+                errors.medical_condition &&
+                errors.medical_condition?.dietary_preferences
+              }
+            />
+          </div>
+
+
           <Button
             variant="outline"
             className="absolute top-4 left-2 border-none shadow-none"
-            onClick={closeDrawer}
+            onClick={(e) => {
+              e.preventDefault();
+              closeDrawer();
+            }}
           >
             <RiCloseLargeLine className="text-[1rem] text-content-color" />
           </Button>
           <button
             type="submit"
+            onClick={() => {
+              closeDrawer()
+            }}
             className="bg-content-color absolute top-5 right-6 text-white px-4 rounded-full"
           >
             Done
@@ -371,12 +410,12 @@ function SearchC({
         </div>
       </Drawer>
 
-      <button
+      <div
         className="flex justify-center items-center w-[42px] h-[42px] bg-content-color leading-none text-[1rem] px-2 border outline-none rounded-lg border-content-color"
         onClick={openDrawerTwo}
       >
         <HiArrowsUpDown className="text-white text-[1.6rem]" />
-      </button>
+      </div>
       <Drawer
         duration={250}
         hideScrollbars={true}
@@ -415,12 +454,18 @@ function SearchC({
           <Button
             variant="outline"
             className="absolute top-4 left-2 border-none shadow-none"
-            onClick={closeDrawerTwo}
+            onClick={(e) => {
+              e.preventDefault();
+              closeDrawerTwo();
+            }}
           >
             <RiCloseLargeLine className="text-[1rem] text-content-color" />
           </Button>
           <button
             type="submit"
+            onClick={() => {
+              closeDrawerTwo()
+            }}
             className="bg-content-color absolute top-5 right-6 text-white px-4 rounded-full"
           >
             Done

@@ -1,6 +1,7 @@
 import React, { useRef, useEffect, useState } from "react";
 import { TextField, Chip, Autocomplete, IconButton } from "@mui/material";
 import { IoIosClose } from "react-icons/io";
+import { Controller } from "react-hook-form";
 
 interface ChipsBoxProps {
   label: string;
@@ -12,6 +13,7 @@ interface ChipsBoxProps {
   errors?: any;
   register?: any;
   loading?: boolean;
+  control: any;
 }
 
 const ChipsBox: React.FC<ChipsBoxProps> = ({
@@ -23,7 +25,8 @@ const ChipsBox: React.FC<ChipsBoxProps> = ({
   setSelectedConditions,
   errors,
   register = (placeholder: string) => { },
-  loading
+  loading,
+  control
 }) => {
   const [inputValue, setInputValue] = React.useState("");
   const [chipAdded, setChipAdded] = useState(false);
@@ -136,32 +139,65 @@ const ChipsBox: React.FC<ChipsBoxProps> = ({
             }
           }}
           renderInput={(params) => (
-            <TextField
-              {...register(name)}
-              {...params}
-              inputRef={inputRef}
-              placeholder="Add here..."
-              className="flex justify-start items-center w-[150px]"
-              sx={{
-                margin: "0",
-                "& .MuiOutlinedInput-notchedOutline": {
-                  border: "none",
-                },
-                "& input": {
-                  width: "inherit",
-                  minWidth: "10ch",
-                },
-              }}
-              InputProps={{
-                ...params.InputProps,
-                endAdornment: inputValue && options.includes(inputValue) ? (
-                  <div style={{
-                    zIndex: 13000000
-                  }} onClick={handleAddCondition} className="hover:bg-gray-100 w-5 h-5 flex justify-center items-center rounded-full text-[1.1rem] leading-none cursor-pointer">
-                    +
-                  </div>
-                ) : null,
-              }}
+            <Controller
+              name={name}
+              control={control}
+              defaultValue={undefined}
+              render={({ field }) => (
+                <TextField
+                  {...field}
+                  {...params}
+                  inputRef={inputRef}
+                  placeholder="Add here..."
+                  className="flex justify-start items-center w-[150px]"
+                  sx={{
+                    margin: "0",
+                    "& .MuiOutlinedInput-notchedOutline": {
+                      border: "none",
+                    },
+                    "& input": {
+                      width: "inherit",
+                      minWidth: "10ch",
+                    },
+                  }}
+                  InputProps={{
+                    ...params.InputProps,
+                    endAdornment: inputValue && options.includes(inputValue) ? (
+                      <div style={{
+                        zIndex: 13000000
+                      }} onClick={handleAddCondition} className="hover:bg-gray-100 w-5 h-5 flex justify-center items-center rounded-full text-[1.1rem] leading-none cursor-pointer">
+                        +
+                      </div>
+                    ) : null,
+                  }}
+                />
+              )}
+            // <TextField
+            //   {...register(name)}
+            //   {...params}
+            //   inputRef={inputRef}
+            //   placeholder="Add here..."
+            //   className="flex justify-start items-center w-[150px]"
+            //   sx={{
+            //     margin: "0",
+            //     "& .MuiOutlinedInput-notchedOutline": {
+            //       border: "none",
+            //     },
+            //     "& input": {
+            //       width: "inherit",
+            //       minWidth: "10ch",
+            //     },
+            //   }}
+            //   InputProps={{
+            //     ...params.InputProps,
+            //     endAdornment: inputValue && options.includes(inputValue) ? (
+            //       <div style={{
+            //         zIndex: 13000000
+            //       }} onClick={handleAddCondition} className="hover:bg-gray-100 w-5 h-5 flex justify-center items-center rounded-full text-[1.1rem] leading-none cursor-pointer">
+            //         +
+            //       </div>
+            //     ) : null,
+            //   }}
             />
           )}
         />

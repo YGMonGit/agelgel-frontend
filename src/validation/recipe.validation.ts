@@ -43,10 +43,10 @@ export const searchRecipeSchema = z.object({
         field: z.string().min(1),
         order: z.enum(["asc", "desc"]),
     })).optional(),
-    // medical_condition: z.object({
-    //     chronicDiseases: z.array(z.nativeEnum(EChronicDisease)).optional(),
-    //     allergies: z.array(z.nativeEnum(EAllergies)).optional(),
-    //     dietary_preferences: z.array(z.nativeEnum(EDietaryPreferences)).optional()
-    // }).optional(),
+    medical_condition: z.object({
+        chronicDiseases: z.array(z.nativeEnum(EChronicDisease)).optional(),
+        allergies: z.array(z.nativeEnum(EAllergies)).optional(),
+        dietary_preferences: z.array(z.nativeEnum(EDietaryPreferences)).optional()
+    }).optional(),
     rating: z.number().int().min(0).max(5).positive().optional(),
 });
