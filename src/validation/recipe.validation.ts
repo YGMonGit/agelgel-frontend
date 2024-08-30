@@ -1,5 +1,5 @@
 import { z } from "zod";
-import { EPreferredMealTime } from "../api/types/recipe.type";
+import { EPreferredMealTime, EPreparationDifficulty } from "../api/types/recipe.type";
 import { EAllergies, EChronicDisease, EDietaryPreferences } from "../api/types/user.type";
 
 const MAX_FILE_SIZE = 5 * 1024 * 1024; // 5MB
@@ -31,4 +31,22 @@ export const newRecipeSchema = z.object({
         //     message: 'Selecting only "none" is not allowed.',
         // }),
     }),
+});
+
+export const searchRecipeSchema = z.object({
+    preferredMealTime: z.array(z.nativeEnum(EPreferredMealTime)).optional(),
+    name: z.string().optional(),
+    preparationDifficulty: z.nativeEnum(EPreparationDifficulty).optional(),
+    cookingTime: z.number().int().min(0).optional(),
+    ingredients: z.array(z.string().min(1)).optional(),
+    sort: z.array(z.object({
+        field: z.string().min(1),
+        order: z.enum(["asc", "desc"]),
+    })).optional(),
+    medical_condition: z.object({
+        chronicDiseases: z.array(z.nativeEnum(EChronicDisease)).optional(),
+        allergies: z.array(z.nativeEnum(EAllergies)).optional(),
+        dietary_preferences: z.array(z.nativeEnum(EDietaryPreferences)).optional()
+    }).optional(),
+    rating: z.number().int().min(0).max(5).positive().optional(),
 });

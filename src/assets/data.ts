@@ -10,6 +10,7 @@ export const domainUrl = "http://localhost:3000";
 
 // Page urls
 export const homeUrl = "/home";
+export const searchUrl = "/search";
 export const loginUrl = "/login";
 export const signUpUrl = "/sign-up";
 export const editUserUrl = "/edit-user";

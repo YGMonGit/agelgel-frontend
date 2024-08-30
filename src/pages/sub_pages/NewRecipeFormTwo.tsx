@@ -63,6 +63,9 @@ function NewRecipeFormTwo({ setFormNumber, ingredientList, setIngredientList, se
   const onBackClick = () => { setFormNumber(1) };
   const onNextClick = () => { setFormNumber(4) };
 
+  console.log(ingredientsQuery);
+  
+
   return (
     <div className="w-full flex-grow flex flex-col justify-start items-start mt-2">
       <ChipsList

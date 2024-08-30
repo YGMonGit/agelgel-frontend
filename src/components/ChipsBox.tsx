@@ -6,7 +6,7 @@ interface ChipsBoxProps {
   label: string;
   name: string;
   options: string[];
-  detail: string;
+  detail?: string;
   selectedConditions: string[];
   setSelectedConditions: React.Dispatch<React.SetStateAction<string[]>>;
   errors?: any;
@@ -141,9 +141,11 @@ const ChipsBox: React.FC<ChipsBoxProps> = ({
         />
       </div>
       {errors && <p className={errorStyle}>{errors.message}</p>}
-      <h2 className="text-[.9rem] font-normal text-slate-500 mt-1 leading-5">
-        {detail}
-      </h2>
+      {detail && (
+        <h2 className="text-[.9rem] font-normal text-slate-500 mt-1 leading-5">
+          {detail}
+        </h2>
+      )}
     </div>
   );
 };

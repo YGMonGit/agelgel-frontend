@@ -26,8 +26,8 @@ function DisplayCard({ post }: DisplayCardProps) {
 
   if (!post) {
     return (
-      <div className="flex flex-col justify-start items-start border border-[#6B728040] p-2 w-[42vw] sm:w-[30vw] rounded-md leading-4 select-none">
-        <Skeleton className="w-full h-[150px]" />
+      <div className="flex flex-col justify-start items-start border border-[#6B728040] p-2 w-[42vw] sm:w-[30vw] max-w-[245px] rounded-md leading-4 select-none">
+        <Skeleton className="w-full aspect-square" />
         <Skeleton className="h-3 w-[35%] mt-3" />
         <Skeleton className="h-3 w-[55%] mt-2" />
         <Skeleton className="h-2 w-[60%] mt-3" />
