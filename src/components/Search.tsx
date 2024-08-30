@@ -2,6 +2,7 @@ import React, { useEffect } from "react";
 import { IoSearchOutline, IoCloseOutline } from "react-icons/io5";
 import { MdOutlineFilterAlt } from "react-icons/md";
 import { HiArrowsUpDown } from "react-icons/hi2";
+import Drawer from "react-bottom-drawer";
 import {
   EAllergies,
   EChronicDisease,
@@ -14,7 +15,7 @@ import {
 } from "../api/types/recipe.type";
 
 import {
-  Drawer,
+  // Drawer,
   DrawerClose,
   DrawerContent,
   DrawerDescription,
@@ -34,6 +35,11 @@ import FilterButton from "./FilterButton";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { searchRecipeSchema } from "../validation/recipe.validation";
 import { Controller, useForm } from "react-hook-form";
+
+import Chip from "@mui/material/Chip";
+import Autocomplete from "@mui/material/Autocomplete";
+import TextField from "@mui/material/TextField";
+import Stack from "@mui/material/Stack";
 
 interface SearchProps {
   ingredient: string[] | undefined;
@@ -95,10 +101,17 @@ function SearchC({
   Search,
   page,
   allergy,
-  setAllergy
+  setAllergy,
 }: SearchProps) {
-
-  const { register, control, handleSubmit, formState: { errors }, setError, setValue, getValues } = useForm<IRecipeSearchFrom>({
+  const {
+    register,
+    control,
+    handleSubmit,
+    formState: { errors },
+    setError,
+    setValue,
+    getValues,
+  } = useForm<IRecipeSearchFrom>({
     resolver: zodResolver(searchRecipeSchema),
     reValidateMode: "onSubmit",
     defaultValues: {
@@ -111,21 +124,23 @@ function SearchC({
       medical_condition: {
         allergies: undefined,
         chronicDiseases: undefined,
-        dietary_preferences: undefined
-      }
-    }
+        dietary_preferences: undefined,
+      },
+    },
   });
 
-  const { data: ingredientsQuery, isLoading } = useGetIngredientsQuery({ skip: 0, limit: 10 });
-
+  const { data: ingredientsQuery, isLoading } = useGetIngredientsQuery({
+    skip: 0,
+    limit: 10,
+  });
 
   const onSubmit = async (data: IRecipeSearchFrom) => {
     console.log({ data });
     Search({
       form: data,
-      page
+      page,
     });
-  }
+  };
 
   console.log({ errors });
   console.log({ getValues: getValues() });
@@ -147,39 +162,57 @@ function SearchC({
 
   useEffect(() => {
     console.log({ ingredient });
-    if (ingredient?.length == 0) setValue("medical_condition.chronicDiseases", undefined);
+    if (ingredient?.length == 0)
+      setValue("medical_condition.chronicDiseases", undefined);
     else setValue("ingredients", ingredient as any);
   }, [ingredient]);
 
   useEffect(() => {
-    if (healthCondition?.length == 0) setValue("medical_condition.chronicDiseases", undefined);
+    if (healthCondition?.length == 0)
+      setValue("medical_condition.chronicDiseases", undefined);
     else setValue("medical_condition.chronicDiseases", healthCondition as any);
   }, [healthCondition]);
 
   useEffect(() => {
-    if (mealPreference?.length == 0) setValue("medical_condition.dietary_preferences", undefined);
-    else setValue("medical_condition.dietary_preferences", mealPreference as any);
+    if (mealPreference?.length == 0)
+      setValue("medical_condition.dietary_preferences", undefined);
+    else
+      setValue("medical_condition.dietary_preferences", mealPreference as any);
   }, [mealPreference]);
 
   useEffect(() => {
-    if (allergy?.length == 0) setValue("medical_condition.allergies", undefined);
+    if (allergy?.length == 0)
+      setValue("medical_condition.allergies", undefined);
     else setValue("medical_condition.allergies", allergy);
   }, [allergy]);
-
 
   const onTimeChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     e.preventDefault();
     const time = e.target.value;
     if (time == undefined) setValue("cookingTime", undefined);
     else if (time == "") setValue("cookingTime", undefined);
-    else if (Number.parseInt(time as any) <= 0) setValue("cookingTime", undefined);
-    else if (Number.parseInt(time as any) == Number.NaN) setValue("cookingTime", undefined);
-    else setValue("cookingTime", Number.parseInt(time as any), { shouldValidate: false });
-  }
+    else if (Number.parseInt(time as any) <= 0)
+      setValue("cookingTime", undefined);
+    else if (Number.parseInt(time as any) == Number.NaN)
+      setValue("cookingTime", undefined);
+    else
+      setValue("cookingTime", Number.parseInt(time as any), {
+        shouldValidate: false,
+      });
+  };
+
+  const [isVisible, setIsVisible] = React.useState(false);
+  const openDrawer = React.useCallback(() => setIsVisible(true), []);
+  const closeDrawer = React.useCallback(() => setIsVisible(false), []);
+  const [isVisibleTwo, setIsVisibleTwo] = React.useState(false);
+  const openDrawerTwo = React.useCallback(() => setIsVisibleTwo(true), []);
+  const closeDrawerTwo = React.useCallback(() => setIsVisibleTwo(false), []);
 
   return (
-    <form onSubmit={handleSubmit(onSubmit)} className="w-full px-5 flex justify-center items-center gap-2 mt-4">
-
+    <form
+      onSubmit={handleSubmit(onSubmit)}
+      className="w-full px-5 flex justify-center items-center gap-2 mt-4"
+    >
       <div className="flex justify-center items-center flex-grow py-2 bg-[#F9FAFB] leading-none text-[1rem] px-5 border outline-none rounded-lg border-[#D1D5DB] gap-1 min-w-0">
         <IoSearchOutline className="text-slate-500 text-[1.2rem] flex-shrink-0" />
         <input
@@ -190,177 +223,197 @@ function SearchC({
         <IoCloseOutline className="text-slate-500 text-[1.2rem] flex-shrink-0" />
       </div>
 
-      <Drawer>
-        <DrawerTrigger>
-          <button className="flex justify-center items-center w-[42px] h-[42px] bg-content-color leading-none text-[1rem] px-2 border outline-none rounded-lg border-content-color">
-            <MdOutlineFilterAlt className="text-white text-[1.6rem]" />
+      <button
+        className="flex justify-center items-center w-[42px] h-[42px] bg-content-color leading-none text-[1rem] px-2 border outline-none rounded-lg border-content-color"
+        onClick={openDrawer}
+      >
+        <MdOutlineFilterAlt className="text-white text-[1.6rem]" />
+      </button>
+
+      <Drawer
+        duration={250}
+        hideScrollbars={true}
+        onClose={closeDrawer}
+        isVisible={isVisible}
+      >
+        <div
+          className="w-full overflow-y-auto max-h-[70vh] flex flex-col justify-start items-start mt-8"
+          style={{ scrollbarWidth: "none", msOverflowStyle: "none" }}
+        >
+          <ChipsBox
+            loading={isLoading}
+            name="ingredients"
+            label="Ingredients"
+            options={ingredientsQuery?.map((i) => i.name) || []}
+            selectedConditions={ingredient}
+            setSelectedConditions={setIngredient}
+            register={register}
+            errors={
+              errors &&
+              errors.medical_condition &&
+              errors.medical_condition?.chronicDiseases
+            }
+          />
+
+          <Controller
+            control={control}
+            name="cookingTime"
+            defaultValue={undefined}
+            render={({ field }) => (
+              <Input
+                type="number"
+                label="Cooking Time"
+                placeholder="cookingTime"
+                value={field.value}
+                onChange={(e) => {
+                  if (e.target.value == "")
+                    field.onChange({ target: { value: undefined } });
+                  field.onChange(e);
+                  onTimeChange(e);
+                }}
+                instruction="In minutes."
+                noPad={true}
+                errors={errors.cookingTime}
+              />
+            )}
+          />
+          <Choice
+            label="Preferred Meal Time"
+            data={Object.values(EPreferredMealTime)}
+            value={mealTime}
+            setValues={setMealTime}
+            multiSelect={true}
+            noPad={true}
+          />
+          <Choice
+            label="Preparation Difficulty"
+            data={Object.values(EPreparationDifficulty)}
+            value={difficulty}
+            setValues={setDifficulty}
+            multiSelect={false}
+            noPad={true}
+          />
+          <ChipsBox
+            name="medical_condition.chronicDisease"
+            label="Chronic Diseases"
+            options={Object.values(EChronicDisease)}
+            detail="Select all the condition(s) you have"
+            selectedConditions={healthCondition}
+            setSelectedConditions={setHealthCondition}
+            register={register}
+            errors={
+              errors &&
+              errors.medical_condition &&
+              errors.medical_condition?.chronicDiseases
+            }
+          />
+
+          <ChipsBox
+            name="medical_condition.dietaryPreferences"
+            label="Dietary Preferences"
+            options={Object.values(EDietaryPreferences)}
+            detail="This is here to make sure you end up loving the recipes we suggest."
+            selectedConditions={mealPreference}
+            setSelectedConditions={setMealPreference}
+            register={register}
+            errors={
+              errors &&
+              errors.medical_condition &&
+              errors.medical_condition?.dietary_preferences
+            }
+          />
+
+          <ChipsBox
+            name="medical_condition.allergies"
+            label="Allergies"
+            options={Object.values(EAllergies)}
+            detail="This is here to make sure you end up loving the recipes we suggest."
+            selectedConditions={mealPreference}
+            setSelectedConditions={setMealPreference}
+            register={register}
+            errors={
+              errors &&
+              errors.medical_condition &&
+              errors.medical_condition?.dietary_preferences
+            }
+          />
+          <Button
+            variant="outline"
+            className="absolute top-4 left-2 border-none shadow-none"
+            onClick={closeDrawer}
+          >
+            <RiCloseLargeLine className="text-[1rem] text-content-color" />
+          </Button>
+          <button
+            type="submit"
+            className="bg-content-color absolute top-5 right-6 text-white px-4 rounded-full"
+          >
+            Done
           </button>
-        </DrawerTrigger>
-        <DrawerContent className="rounded-t-[30px]">
-          <DrawerHeader>
-            <button type="submit" className="bg-content-color absolute top-5 right-6 text-white px-4 rounded-full">
-              Done
-            </button>
-          </DrawerHeader>
-          <DrawerFooter>
-            <div
-              className="w-full overflow-y-auto max-h-[70vh] flex flex-col justify-start items-start"
-              style={{ scrollbarWidth: "none", msOverflowStyle: "none" }}
-            >
-              <ChipsBox
-                loading={isLoading}
-                name="ingredients"
-                label="Ingredients"
-                options={ingredientsQuery?.map((i) => i.name) || []}
-                selectedConditions={ingredient}
-                setSelectedConditions={setIngredient}
-                register={register}
-                errors={errors && errors.medical_condition && errors.medical_condition?.chronicDiseases}
-              />
-
-              <Controller
-                control={control}
-                name="cookingTime"
-                defaultValue={undefined}
-                render={({ field }) => (
-                  <Input
-                    type="number"
-                    label="Cooking Time"
-                    placeholder="cookingTime"
-                    value={field.value}
-                    onChange={(e) => {
-                      if (e.target.value == "") field.onChange({ target: { value: undefined } });
-                      field.onChange(e);
-                      onTimeChange(e);
-                    }}
-                    instruction="In minutes."
-                    noPad={true}
-                    errors={errors.cookingTime}
-                  />
-                )}
-              />
-              <Choice
-                label="Preferred Meal Time"
-                data={Object.values(EPreferredMealTime)}
-                value={mealTime}
-                setValues={setMealTime}
-                multiSelect={true}
-                noPad={true}
-              />
-              <Choice
-                label="Preparation Difficulty"
-                data={Object.values(EPreparationDifficulty)}
-                value={difficulty}
-                setValues={setDifficulty}
-                multiSelect={false}
-                noPad={true}
-              />
-              <ChipsBox
-                name="medical_condition.chronicDisease"
-                label="Chronic Diseases"
-                options={Object.values(EChronicDisease)}
-                detail="Select all the condition(s) you have"
-                selectedConditions={healthCondition}
-                setSelectedConditions={setHealthCondition}
-                register={register}
-                errors={errors && errors.medical_condition && errors.medical_condition?.chronicDiseases}
-              />
-
-              <ChipsBox
-                name="medical_condition.dietaryPreferences"
-                label="Dietary Preferences"
-                options={Object.values(EDietaryPreferences)}
-                detail="This is here to make sure you end up loving the recipes we suggest."
-                selectedConditions={mealPreference}
-                setSelectedConditions={setMealPreference}
-                register={register}
-                errors={errors && errors.medical_condition && errors.medical_condition?.dietary_preferences}
-              />
-
-              <ChipsBox
-                name="medical_condition.allergies"
-                label="Allergies"
-                options={Object.values(EAllergies)}
-                detail="This is here to make sure you end up loving the recipes we suggest."
-                selectedConditions={mealPreference}
-                setSelectedConditions={setMealPreference}
-                register={register}
-                errors={errors && errors.medical_condition && errors.medical_condition?.dietary_preferences}
-              />
-            </div>
-            <DrawerClose>
-              <Button
-                variant="outline"
-                className="absolute top-4 left-2 border-none shadow-none"
-              >
-                <RiCloseLargeLine className="text-[1rem] text-content-color" />
-              </Button>
-            </DrawerClose>
-          </DrawerFooter>
-        </DrawerContent>
+        </div>
       </Drawer>
 
-      <Drawer>
-        <DrawerTrigger>
-          <button className="flex justify-center items-center w-[42px] h-[42px] bg-content-color leading-none text-[1rem] px-2 border outline-none rounded-lg border-content-color">
-            <HiArrowsUpDown className="text-white text-[1.6rem]" />
+      <button
+        className="flex justify-center items-center w-[42px] h-[42px] bg-content-color leading-none text-[1rem] px-2 border outline-none rounded-lg border-content-color"
+        onClick={openDrawerTwo}
+      >
+        <HiArrowsUpDown className="text-white text-[1.6rem]" />
+      </button>
+      <Drawer
+        duration={250}
+        hideScrollbars={true}
+        onClose={closeDrawerTwo}
+        isVisible={isVisibleTwo}
+      >
+        <div
+          className="w-full overflow-y-auto max-h-[70vh] flex flex-col justify-start items-start py-3 gap-2 mt-8"
+          style={{ scrollbarWidth: "none", msOverflowStyle: "none" }}
+        >
+          <FilterButton
+            content={ingredientContent}
+            setContent={setIngredientContent}
+            text="Ingredients"
+          />
+          <FilterButton
+            content={timeContent}
+            setContent={setTimeContent}
+            text="Cooking Time"
+          />
+          <FilterButton
+            content={nameContent}
+            setContent={setNameContent}
+            text="Name"
+          />
+          <FilterButton
+            content={preferenceContent}
+            setContent={setPreferenceContent}
+            text="Preferred Meal Time"
+          />
+          <FilterButton
+            content={difficultyContent}
+            setContent={setDifficultyContent}
+            text="Preparation Difficulty"
+          />
+          <Button
+            variant="outline"
+            className="absolute top-4 left-2 border-none shadow-none"
+            onClick={closeDrawerTwo}
+          >
+            <RiCloseLargeLine className="text-[1rem] text-content-color" />
+          </Button>
+          <button
+            type="submit"
+            className="bg-content-color absolute top-5 right-6 text-white px-4 rounded-full"
+          >
+            Done
           </button>
-        </DrawerTrigger>
-
-
-        <DrawerContent className="rounded-t-[30px]">
-          <DrawerHeader>
-            <div className="bg-content-color absolute top-5 right-6 text-white px-4 rounded-full">
-              Done
-            </div>
-          </DrawerHeader>
-
-          <DrawerFooter>
-            <div
-              className="w-full overflow-y-auto max-h-[70vh] flex flex-col justify-start items-start py-3 gap-2"
-              style={{ scrollbarWidth: "none", msOverflowStyle: "none" }}
-            >
-              <FilterButton
-                content={ingredientContent}
-                setContent={setIngredientContent}
-                text="Ingredients"
-              />
-              <FilterButton
-                content={timeContent}
-                setContent={setTimeContent}
-                text="Cooking Time"
-              />
-              <FilterButton
-                content={nameContent}
-                setContent={setNameContent}
-                text="Name"
-              />
-              <FilterButton
-                content={preferenceContent}
-                setContent={setPreferenceContent}
-                text="Preferred Meal Time"
-              />
-              <FilterButton
-                content={difficultyContent}
-                setContent={setDifficultyContent}
-                text="Preparation Difficulty"
-              />
-              {/* <FilterButton content={content} setContent={setContent} text="Ingredients" /> */}
-            </div>
-            <DrawerClose>
-              <Button
-                variant="outline"
-                className="absolute top-4 left-2 border-none shadow-none"
-              >
-                <RiCloseLargeLine className="text-[1rem] text-content-color" />
-              </Button>
-            </DrawerClose>
-          </DrawerFooter>
-
-        </DrawerContent>
+        </div>
       </Drawer>
 
-      <button type="submit" className="flex justify-center items-center w-[42px] h-[42px] bg-white border border-content-color leading-none text-[1rem] px-2 outline-none rounded-lg">
+      <button
+        type="submit"
+        className="flex justify-center items-center w-[42px] h-[42px] bg-white border border-content-color leading-none text-[1rem] px-2 outline-none rounded-lg"
+      >
         <IoSearchOutline className="text-content-color text-[1.6rem]" />
       </button>
     </form>
