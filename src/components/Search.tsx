@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { IoSearchOutline, IoCloseOutline } from "react-icons/io5";
 import { MdOutlineFilterAlt } from "react-icons/md";
 import { HiArrowsUpDown } from "react-icons/hi2";
@@ -10,6 +10,7 @@ import {
 import {
   EPreferredMealTime,
   EPreparationDifficulty,
+  IRecipeSearchFrom,
 } from "../api/types/recipe.type";
 
 import {
@@ -30,6 +31,9 @@ import ChipsBox from "./ChipsBoxTwo";
 import { Input } from "./Input";
 import Choice from "./Choice";
 import FilterButton from "./FilterButton";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { searchRecipeSchema } from "../validation/recipe.validation";
+import { useForm } from "react-hook-form";
 
 interface SearchProps {
   ingredient: string[];
@@ -57,6 +61,10 @@ interface SearchProps {
   setPreferenceContent: any;
   difficultyContent: number;
   setDifficultyContent: any;
+  Search: any;
+  page: number;
+  setAllergy: any;
+  allergy: any;
 }
 
 function SearchC({
@@ -84,11 +92,58 @@ function SearchC({
   setPreferenceContent,
   difficultyContent,
   setDifficultyContent,
+  Search,
+  page,
+  allergy,
+  setAllergy
 }: SearchProps) {
-  const { data: ingredientsQuery } = useGetIngredientsQuery({
-    skip: 0,
-    limit: 10,
+
+  const { register, handleSubmit, formState: { errors }, setError, setValue, getValues } = useForm<IRecipeSearchFrom>({
+    resolver: zodResolver(searchRecipeSchema),
+    reValidateMode: "onSubmit",
   });
+
+  const { data: ingredientsQuery } = useGetIngredientsQuery({ skip: 0, limit: 10 });
+
+
+  const onSubmit = async (data: IRecipeSearchFrom) => {
+    console.log({ data });
+    Search({
+      form: data,
+      page
+    });
+  }
+
+  console.log({ errors });
+
+  useEffect(() => {
+    setValue("preferredMealTime", mealTime);
+  }, [mealTime]);
+
+  useEffect(() => {
+    setValue("preparationDifficulty", difficulty);
+  }, [difficulty]);
+
+  useEffect(() => {
+    setValue("cookingTime", time);
+  }, [time]);
+
+  useEffect(() => {
+    setValue("name", name);
+  }, [time]);
+
+  useEffect(() => {
+    setValue("medical_condition.chronicDiseases", healthCondition as any);
+  }, [healthCondition]);
+
+  useEffect(() => {
+    setValue("medical_condition.dietary_preferences", mealPreference as any);
+  }, [mealPreference]);
+
+  useEffect(() => {
+    setValue("medical_condition.allergies", allergy);
+  }, [allergy]);
+
 
   const onTimeChange = (e: React.ChangeEvent<HTMLInputElement>) =>
     setTime(Number.parseInt(e.target.value));
@@ -96,12 +151,14 @@ function SearchC({
     setName(e.target.value);
 
   return (
-    <div className="w-full px-5 flex justify-center items-center gap-2 mt-4">
+    <form onSubmit={handleSubmit(onSubmit)} className="w-full px-5 flex justify-center items-center gap-2 mt-4">
+
       <div className="flex justify-center items-center flex-grow py-2 bg-[#F9FAFB] leading-none text-[1rem] px-5 border outline-none rounded-lg border-[#D1D5DB] gap-1 min-w-0">
         <IoSearchOutline className="text-slate-500 text-[1.2rem] flex-shrink-0" />
         <input
           className="border-none outline-none leading-6 bg-transparent flex-grow min-w-0"
           placeholder="Search"
+          {...register("name")}
         />
         <IoCloseOutline className="text-slate-500 text-[1.2rem] flex-shrink-0" />
       </div>
@@ -114,9 +171,9 @@ function SearchC({
         </DrawerTrigger>
         <DrawerContent className="rounded-t-[30px]">
           <DrawerHeader>
-            <div className="bg-content-color absolute top-5 right-6 text-white px-4 rounded-full">
+            <button type="submit" className="bg-content-color absolute top-5 right-6 text-white px-4 rounded-full">
               Done
-            </div>
+            </button>
           </DrawerHeader>
           <DrawerFooter>
             <div
@@ -124,13 +181,13 @@ function SearchC({
               style={{ scrollbarWidth: "none", msOverflowStyle: "none" }}
             >
               <ChipsBox
-                name="medical_condition.chronicDisease"
+                name="ingredients"
                 label="Ingredients"
-                options={Object.values(EChronicDisease)}
+                options={ingredientsQuery?.map((i) => i.name) || []}
                 selectedConditions={ingredient}
                 setSelectedConditions={setIngredient}
-                // register={register}
-                // errors={errors && errors.medical_condition && errors.medical_condition?.chronicDiseases}
+                register={register}
+                errors={errors && errors.medical_condition && errors.medical_condition?.chronicDiseases}
               />
               <Input
                 type="number"
@@ -140,19 +197,8 @@ function SearchC({
                 onChange={onTimeChange}
                 instruction="In minutes."
                 noPad={true}
-                // register={register}
-                // errors={errors.cookingTime}
-              />
-              <Input
-                type="text"
-                label="Name"
-                placeholder="name"
-                value={name}
-                onChange={onNameChange}
-                // instruction="In minutes."
-                noPad={true}
-                // register={register}
-                // errors={errors.cookingTime}
+                register={register}
+                errors={errors.cookingTime}
               />
               <Choice
                 label="Preferred Meal Time"
@@ -174,22 +220,33 @@ function SearchC({
                 name="medical_condition.chronicDisease"
                 label="Chronic Diseases"
                 options={Object.values(EChronicDisease)}
-                // detail="Select all the condition(s) you have"
+                detail="Select all the condition(s) you have"
                 selectedConditions={healthCondition}
                 setSelectedConditions={setHealthCondition}
-                // register={register}
-                // errors={errors && errors.medical_condition && errors.medical_condition?.chronicDiseases}
+                register={register}
+                errors={errors && errors.medical_condition && errors.medical_condition?.chronicDiseases}
               />
 
               <ChipsBox
                 name="medical_condition.dietaryPreferences"
                 label="Dietary Preferences"
                 options={Object.values(EDietaryPreferences)}
-                // detail="This is here to make sure you end up loving the recipes we suggest."
+                detail="This is here to make sure you end up loving the recipes we suggest."
                 selectedConditions={mealPreference}
                 setSelectedConditions={setMealPreference}
-                // register={register}
-                // errors={errors && errors.medical_condition && errors.medical_condition?.dietary_preferences}
+                register={register}
+                errors={errors && errors.medical_condition && errors.medical_condition?.dietary_preferences}
+              />
+
+              <ChipsBox
+                name="medical_condition.allergies"
+                label="Allergies"
+                options={Object.values(EAllergies)}
+                detail="This is here to make sure you end up loving the recipes we suggest."
+                selectedConditions={mealPreference}
+                setSelectedConditions={setMealPreference}
+                register={register}
+                errors={errors && errors.medical_condition && errors.medical_condition?.dietary_preferences}
               />
             </div>
             <DrawerClose>
@@ -203,18 +260,22 @@ function SearchC({
           </DrawerFooter>
         </DrawerContent>
       </Drawer>
+
       <Drawer>
         <DrawerTrigger>
           <button className="flex justify-center items-center w-[42px] h-[42px] bg-content-color leading-none text-[1rem] px-2 border outline-none rounded-lg border-content-color">
             <HiArrowsUpDown className="text-white text-[1.6rem]" />
           </button>
         </DrawerTrigger>
+
+
         <DrawerContent className="rounded-t-[30px]">
           <DrawerHeader>
             <div className="bg-content-color absolute top-5 right-6 text-white px-4 rounded-full">
               Done
             </div>
           </DrawerHeader>
+
           <DrawerFooter>
             <div
               className="w-full overflow-y-auto max-h-[70vh] flex flex-col justify-start items-start py-3 gap-2"
@@ -256,12 +317,14 @@ function SearchC({
               </Button>
             </DrawerClose>
           </DrawerFooter>
+
         </DrawerContent>
       </Drawer>
-      <button className="flex justify-center items-center w-[42px] h-[42px] bg-white border border-content-color leading-none text-[1rem] px-2 outline-none rounded-lg">
+
+      <button type="submit" className="flex justify-center items-center w-[42px] h-[42px] bg-white border border-content-color leading-none text-[1rem] px-2 outline-none rounded-lg">
         <IoSearchOutline className="text-content-color text-[1.6rem]" />
       </button>
-    </div>
+    </form>
   );
 }
 
