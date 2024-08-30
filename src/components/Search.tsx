@@ -28,27 +28,27 @@ import { Button } from "./ui/button";
 import { RiCloseLargeLine } from "react-icons/ri";
 import { useGetIngredientsQuery } from "../api/slices/ingredient.slices";
 import ChipsBox from "./ChipsBoxTwo";
-import { Input } from "./Input";
+import { Input, InputNumber } from "./Input";
 import Choice from "./Choice";
 import FilterButton from "./FilterButton";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { searchRecipeSchema } from "../validation/recipe.validation";
-import { useForm } from "react-hook-form";
+import { Controller, useForm } from "react-hook-form";
 
 interface SearchProps {
-  ingredient: string[];
+  ingredient: string[] | undefined;
   setIngredient: any;
-  time: number;
-  setTime: React.Dispatch<React.SetStateAction<number>>;
+  time: number | undefined;
+  setTime: React.Dispatch<React.SetStateAction<number | undefined>>;
   name: string;
   setName: React.Dispatch<React.SetStateAction<string>>;
-  mealTime: EPreferredMealTime[];
+  mealTime: EPreferredMealTime[] | undefined;
   setMealTime: any;
   difficulty: any;
   setDifficulty: any;
-  healthCondition: string[];
+  healthCondition: string[] | undefined;
   setHealthCondition: any;
-  mealPreference: string[];
+  mealPreference: string[] | undefined;
   setMealPreference: any;
 
   ingredientContent: number;
@@ -98,12 +98,25 @@ function SearchC({
   setAllergy
 }: SearchProps) {
 
-  const { register, handleSubmit, formState: { errors }, setError, setValue, getValues } = useForm<IRecipeSearchFrom>({
+  const { register, control, handleSubmit, formState: { errors }, setError, setValue, getValues } = useForm<IRecipeSearchFrom>({
     resolver: zodResolver(searchRecipeSchema),
     reValidateMode: "onSubmit",
+    defaultValues: {
+      name: undefined,
+      cookingTime: undefined,
+      ingredients: undefined,
+      preferredMealTime: undefined,
+      preparationDifficulty: undefined,
+      rating: undefined,
+      medical_condition: {
+        allergies: undefined,
+        chronicDiseases: undefined,
+        dietary_preferences: undefined
+      }
+    }
   });
 
-  const { data: ingredientsQuery } = useGetIngredientsQuery({ skip: 0, limit: 10 });
+  const { data: ingredientsQuery, isLoading } = useGetIngredientsQuery({ skip: 0, limit: 10 });
 
 
   const onSubmit = async (data: IRecipeSearchFrom) => {
@@ -115,40 +128,54 @@ function SearchC({
   }
 
   console.log({ errors });
+  console.log({ getValues: getValues() });
 
   useEffect(() => {
-    setValue("preferredMealTime", mealTime);
+    if (mealTime?.length == 0) setValue("preferredMealTime", undefined);
+    else setValue("preferredMealTime", mealTime);
   }, [mealTime]);
 
   useEffect(() => {
-    setValue("preparationDifficulty", difficulty);
+    if (difficulty == "") setValue("preparationDifficulty", undefined);
+    else setValue("preparationDifficulty", difficulty);
   }, [difficulty]);
 
   useEffect(() => {
-    setValue("cookingTime", time);
-  }, [time]);
+    if (name == "") setValue("name", undefined);
+    else setValue("name", name);
+  }, [name]);
 
   useEffect(() => {
-    setValue("name", name);
-  }, [time]);
+    console.log({ ingredient });
+    if (ingredient?.length == 0) setValue("medical_condition.chronicDiseases", undefined);
+    else setValue("ingredients", ingredient as any);
+  }, [ingredient]);
 
   useEffect(() => {
-    setValue("medical_condition.chronicDiseases", healthCondition as any);
+    if (healthCondition?.length == 0) setValue("medical_condition.chronicDiseases", undefined);
+    else setValue("medical_condition.chronicDiseases", healthCondition as any);
   }, [healthCondition]);
 
   useEffect(() => {
-    setValue("medical_condition.dietary_preferences", mealPreference as any);
+    if (mealPreference?.length == 0) setValue("medical_condition.dietary_preferences", undefined);
+    else setValue("medical_condition.dietary_preferences", mealPreference as any);
   }, [mealPreference]);
 
   useEffect(() => {
-    setValue("medical_condition.allergies", allergy);
+    if (allergy?.length == 0) setValue("medical_condition.allergies", undefined);
+    else setValue("medical_condition.allergies", allergy);
   }, [allergy]);
 
 
-  const onTimeChange = (e: React.ChangeEvent<HTMLInputElement>) =>
-    setTime(Number.parseInt(e.target.value));
-  const onNameChange = (e: React.ChangeEvent<HTMLInputElement>) =>
-    setName(e.target.value);
+  const onTimeChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    e.preventDefault();
+    const time = e.target.value;
+    if (time == undefined) setValue("cookingTime", undefined);
+    else if (time == "") setValue("cookingTime", undefined);
+    else if (Number.parseInt(time as any) <= 0) setValue("cookingTime", undefined);
+    else if (Number.parseInt(time as any) == Number.NaN) setValue("cookingTime", undefined);
+    else setValue("cookingTime", Number.parseInt(time as any), { shouldValidate: false });
+  }
 
   return (
     <form onSubmit={handleSubmit(onSubmit)} className="w-full px-5 flex justify-center items-center gap-2 mt-4">
@@ -181,6 +208,7 @@ function SearchC({
               style={{ scrollbarWidth: "none", msOverflowStyle: "none" }}
             >
               <ChipsBox
+                loading={isLoading}
                 name="ingredients"
                 label="Ingredients"
                 options={ingredientsQuery?.map((i) => i.name) || []}
@@ -189,16 +217,27 @@ function SearchC({
                 register={register}
                 errors={errors && errors.medical_condition && errors.medical_condition?.chronicDiseases}
               />
-              <Input
-                type="number"
-                label="Cooking Time"
-                placeholder="cookingTime"
-                value={time}
-                onChange={onTimeChange}
-                instruction="In minutes."
-                noPad={true}
-                register={register}
-                errors={errors.cookingTime}
+
+              <Controller
+                control={control}
+                name="cookingTime"
+                defaultValue={undefined}
+                render={({ field }) => (
+                  <Input
+                    type="number"
+                    label="Cooking Time"
+                    placeholder="cookingTime"
+                    value={field.value}
+                    onChange={(e) => {
+                      if (e.target.value == "") field.onChange({ target: { value: undefined } });
+                      field.onChange(e);
+                      onTimeChange(e);
+                    }}
+                    instruction="In minutes."
+                    noPad={true}
+                    errors={errors.cookingTime}
+                  />
+                )}
               />
               <Choice
                 label="Preferred Meal Time"

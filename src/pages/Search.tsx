@@ -13,7 +13,7 @@ import { EPreferredMealTime, EPreparationDifficulty, IRecipeSearchFrom } from ".
 function Search() {
   const navigate = useNavigate();
 
-  const [page, setPage] = useState(0);
+  const [page, setPage] = useState(1);
   const [Search, { data: searchedRecipes, isLoading: searchedLoading }] = useSearchRecipesMutation();
 
   const skeletonCount = searchedLoading
@@ -22,8 +22,8 @@ function Search() {
 
   const { data: user } = useGetUserQuery();
 
-  const [ingredient, setIngredient] = useState<EChronicDisease[]>([]);
-  const [time, setTime] = useState<number>(0);
+  const [ingredient, setIngredient] = useState<string[] | undefined>(undefined);
+  const [time, setTime] = useState<number | undefined>(undefined);
   const [name, setName] = useState<string>("");
 
   const [ingredientContent, setIngredientContent] = useState<number>(1);
@@ -32,11 +32,11 @@ function Search() {
   const [preferenceContent, setPreferenceContent] = useState<number>(1);
   const [difficultyContent, setDifficultyContent] = useState<number>(1);
 
-  const [mealTime, setMealTime] = useState<EPreferredMealTime[]>([]);
+  const [mealTime, setMealTime] = useState<EPreferredMealTime[] | undefined>(undefined);
   const [difficulty, setDifficulty] = useState<EPreparationDifficulty>();
-  const [healthCondition, setHealthCondition] = useState<EChronicDisease[]>([]);
-  const [allergy, setAllergy] = useState<EAllergies[]>([]);
-  const [mealPreference, setMealPreference] = useState<EDietaryPreferences[]>([]);
+  const [healthCondition, setHealthCondition] = useState<EChronicDisease[] | undefined>(undefined);
+  const [allergy, setAllergy] = useState<EAllergies[] | undefined>(undefined);
+  const [mealPreference, setMealPreference] = useState<EDietaryPreferences[] | undefined>(undefined);
 
   useEffect(() => {
     if (user) {

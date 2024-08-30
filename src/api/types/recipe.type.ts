@@ -124,7 +124,7 @@ export interface IRecipeSearchFrom {
     cookingTime?: number;
     ingredients: string[]
     sort?: { field: string, order: 1 | -1 }[];
-    medical_condition?: IMedicalCondition;
+    medical_condition?: Partial<IMedicalCondition>;
     status?: TRecipeStatus;
     rating?: number;
 }
