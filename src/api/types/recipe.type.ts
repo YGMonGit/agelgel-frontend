@@ -123,7 +123,7 @@ export interface IRecipeSearchFrom {
     preparationDifficulty?: TPreparationDifficulty;
     cookingTime?: number;
     ingredients: string[]
-    sort?: { field: string, order: 1 | -1 }[];
+    sort?: { field: string, order: "asc" | "desc" }[];
     medical_condition?: Partial<IMedicalCondition>;
     status?: TRecipeStatus;
     rating?: number;

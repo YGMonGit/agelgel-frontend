@@ -41,7 +41,7 @@ export const searchRecipeSchema = z.object({
     ingredients: z.array(z.string().min(1)).optional(),
     sort: z.array(z.object({
         field: z.string().min(1),
-        order: z.number().int().min(1).max(-1)
+        order: z.enum(["asc", "desc"]),
     })).optional(),
     // medical_condition: z.object({
     //     chronicDiseases: z.array(z.nativeEnum(EChronicDisease)).optional(),

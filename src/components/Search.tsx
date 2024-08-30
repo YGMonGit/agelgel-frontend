@@ -166,6 +166,23 @@ function SearchC({
     else setValue("medical_condition.allergies", allergy);
   }, [allergy]);
 
+  const onSort = (field: string, Content: number) => {
+    const sort = getValues("sort");
+    // if (sort?.findIndex((s) => s.field == field) != -1) {
+    if (Content == 3) {
+      setValue("sort", sort?.filter((s) => s.field != field));
+    } else {
+      console.log("add", [...(sort?.filter((s) => s.field != field) ?? []), { field: field, order: Content == 1 ? "asc" : "desc" }]);
+      setValue("sort", [...(sort?.filter((s) => s.field != field) ?? []), { field: field, order: Content == 1 ? "asc" : "desc" }]);
+      // }
+    }
+  }
+
+  useEffect(() => { onSort("name", nameContent) }, [nameContent]);
+  useEffect(() => { onSort("preferredMealTime", preferenceContent) }, [preferenceContent]);
+  useEffect(() => { onSort("ingredients", ingredientContent) }, [ingredientContent]);
+  useEffect(() => { onSort("cookingTime", timeContent) }, [timeContent]);
+  useEffect(() => { onSort("difficultyContent", difficultyContent) }, [difficultyContent]);
 
   const onTimeChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     e.preventDefault();

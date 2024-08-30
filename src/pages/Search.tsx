@@ -26,11 +26,11 @@ function Search() {
   const [time, setTime] = useState<number | undefined>(undefined);
   const [name, setName] = useState<string>("");
 
-  const [ingredientContent, setIngredientContent] = useState<number>(1);
-  const [timeContent, setTimeContent] = useState<number>(1);
-  const [nameContent, setNameContent] = useState<number>(1);
-  const [preferenceContent, setPreferenceContent] = useState<number>(1);
-  const [difficultyContent, setDifficultyContent] = useState<number>(1);
+  const [ingredientContent, setIngredientContent] = useState<number>(3);
+  const [timeContent, setTimeContent] = useState<number>(3);
+  const [nameContent, setNameContent] = useState<number>(3);
+  const [preferenceContent, setPreferenceContent] = useState<number>(3);
+  const [difficultyContent, setDifficultyContent] = useState<number>(3);
 
   const [mealTime, setMealTime] = useState<EPreferredMealTime[] | undefined>(undefined);
   const [difficulty, setDifficulty] = useState<EPreparationDifficulty>();
