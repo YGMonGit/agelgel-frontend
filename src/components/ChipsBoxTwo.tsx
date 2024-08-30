@@ -7,10 +7,11 @@ interface ChipsBoxProps {
   name: string;
   options: string[];
   detail?: string;
-  selectedConditions: string[];
+  selectedConditions: string[] | undefined;
   setSelectedConditions: React.Dispatch<React.SetStateAction<string[]>>;
   errors?: any;
   register?: any;
+  loading?: boolean;
 }
 
 const ChipsBox: React.FC<ChipsBoxProps> = ({
@@ -22,6 +23,7 @@ const ChipsBox: React.FC<ChipsBoxProps> = ({
   setSelectedConditions,
   errors,
   register = (placeholder: string) => { },
+  loading
 }) => {
   const [inputValue, setInputValue] = React.useState("");
   const [chipAdded, setChipAdded] = useState(false);
@@ -36,11 +38,21 @@ const ChipsBox: React.FC<ChipsBoxProps> = ({
   };
 
   const handleAddCondition = () => {
-    if (inputValue && options.includes(inputValue) && !selectedConditions.includes(inputValue)) {
-      setSelectedConditions([...selectedConditions, inputValue]);
-      setInputValue("");
-      setChipAdded(true); // Indicate that a chip was added
+    console.log('selectedConditions', selectedConditions)
+    if (selectedConditions) {
+      if (inputValue && options.includes(inputValue) && !selectedConditions.includes(inputValue)) {
+        setSelectedConditions([...selectedConditions, inputValue]);
+        setInputValue("");
+        setChipAdded(true); // Indicate that a chip was added
+      }
+    } else {
+      if (inputValue && options.includes(inputValue)) {
+        setSelectedConditions([inputValue]);
+        setInputValue("");
+        setChipAdded(true); // Indicate that a chip was added
+      }
     }
+
   };
 
   const handleWheel = (event: React.WheelEvent<HTMLDivElement>) => {
@@ -76,7 +88,7 @@ const ChipsBox: React.FC<ChipsBoxProps> = ({
         ref={scrollableDivRef}
         onWheel={handleWheel}
       >
-        {selectedConditions.map((condition, index) => (
+        {selectedConditions?.map((condition, index) => (
           <Chip
             key={index}
             label={condition}
@@ -94,9 +106,21 @@ const ChipsBox: React.FC<ChipsBoxProps> = ({
           />
         ))}
         <Autocomplete
-          freeSolo
+          loading={loading}
+          sx={{
+            zIndex: 13000000
+          }}
+          renderOption={
+            (props, option, { selected }) => (
+              <li {...props} style={{
+                zIndex: 13000000
+              }}>
+                {option}
+              </li>
+            )
+          }
           options={options.filter(
-            (option) => !selectedConditions.includes(option)
+            (option) => !selectedConditions?.includes(option)
           )}
           inputValue={inputValue}
           onInputChange={(_, newInputValue, reason) => {
@@ -105,8 +129,8 @@ const ChipsBox: React.FC<ChipsBoxProps> = ({
             }
           }}
           onChange={(_, newValue) => {
-            if (typeof newValue === 'string' && options.includes(newValue) && !selectedConditions.includes(newValue)) {
-              setSelectedConditions([...selectedConditions, newValue]);
+            if (typeof newValue === 'string' && options.includes(newValue)) {// && selectedConditions.includes(newValue)) {
+              setSelectedConditions([...(selectedConditions ?? []), newValue]);
               setInputValue("");
               setChipAdded(true); // Indicate that a chip was added
             }
@@ -131,7 +155,9 @@ const ChipsBox: React.FC<ChipsBoxProps> = ({
               InputProps={{
                 ...params.InputProps,
                 endAdornment: inputValue && options.includes(inputValue) ? (
-                  <div onClick={handleAddCondition} className="hover:bg-gray-100 w-5 h-5 flex justify-center items-center rounded-full text-[1.1rem] leading-none cursor-pointer">
+                  <div style={{
+                    zIndex: 13000000
+                  }} onClick={handleAddCondition} className="hover:bg-gray-100 w-5 h-5 flex justify-center items-center rounded-full text-[1.1rem] leading-none cursor-pointer">
                     +
                   </div>
                 ) : null,
