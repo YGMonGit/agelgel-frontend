@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import SignUpUsername from "./sub_pages/SignUpUsername";
 import SignUpCreatePassword from "./sub_pages/SignUpCreatePassword";
 import HealthConditions from "./sub_pages/HealthConditions";
@@ -11,6 +11,7 @@ import { useNavigate } from "react-router-dom";
 import { signUpSchema } from "../validation/user.validation";
 import { homeUrl } from "../assets/data";
 import useFileUpload from "../hooks/useFileUpload";
+import ErrorPopup from "../components/ErrorPopup";
 
 
 function SignUp() {
@@ -37,6 +38,8 @@ function SignUp() {
 
   const [signUp, { isLoading }] = useSignUpMutation();
   const { uploadFile, loading } = useFileUpload();
+
+  const [errorMessage, setErrorMessage] = useState<string | null>(null);
 
   const { register, handleSubmit, formState: { errors }, setError, setValue, getValues } = useForm<IUserSignUpFrom>({
     resolver: zodResolver(signUpSchema),
@@ -74,6 +77,48 @@ function SignUp() {
 
 
   const handleWithGoogleClick = () => { };
+
+  const formatErrors = (): string | null => {
+    const errorMessages: string[] = [];
+    const pageErrors: { [key: number]: string[] } = {
+      1: [],
+      2: [],
+      3: [],
+    };
+
+    const addErrorToPage = (page: number, field: string) => {
+      pageErrors[page].push(field);
+    };
+
+    if (errors.profile_img) addErrorToPage(1, "profile image");
+    if (errors.first_name) addErrorToPage(1, "first name");
+    if (errors.last_name) addErrorToPage(1, "last name");
+    if (errors.email) addErrorToPage(1, "email");
+    if (errors.phone_number) addErrorToPage(1, "phone number");
+
+    if (errors.password) addErrorToPage(2, "password");
+    if (errors.confirm_password) addErrorToPage(2, "confirm password");
+
+    if (errors.medical_condition?.chronicDiseases)
+      addErrorToPage(3, "chronic diseases");
+    if (errors.medical_condition?.allergies) addErrorToPage(3, "allergies");
+    if (errors.medical_condition?.dietary_preferences)
+      addErrorToPage(3, "dietary preferences");
+
+    // Format error messages
+    Object.entries(pageErrors).forEach(([page, fields]) => {
+      if (fields.length > 0) {
+        errorMessages.push(`Errors on Page ${page}: ${fields.join(", ")}`);
+      }
+    });
+
+    return errorMessages.length > 0 ? errorMessages.join(". ") : null;
+  };
+
+  useEffect(() => {
+    const formattedError = formatErrors();
+    setErrorMessage(formattedError);
+  }, [errors]);
 
 
   return (
@@ -121,6 +166,7 @@ function SignUp() {
           errors={errors}
         />
       )}
+      <ErrorPopup error={errorMessage} />
     </form>
   );
 }

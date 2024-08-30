@@ -20,7 +20,7 @@ import {
   AlertDialogTitle,
   AlertDialogTrigger,
 } from "./ui/alert-dialog";
-import { IoSearchOutline, IoCloseOutline } from "react-icons/io5";
+import { IoSearchOutline } from "react-icons/io5";
 
 function Navbar() {
   const location = useLocation();
@@ -89,7 +89,7 @@ function Navbar() {
       );
     } else if (location.pathname.startsWith(recipeDetailUrl) || location.pathname.startsWith(editPostUrl) || location.pathname.startsWith(editUserUrl) || location.pathname === mySpaceUrl) {
       return (
-        <div className="flex justify-start items-center gap-5 py-2" onClick={() => navigate(homeUrl)}>
+        <div className="flex justify-start items-center gap-5 py-2 select-none cursor-pointer" onClick={() => navigate(homeUrl)}>
           <SlArrowLeft className="text-content-color text-[1rem]"/>
           <p className="text-[1.2rem] font-semibold leading-none">Back</p>
         </div>
@@ -98,9 +98,11 @@ function Navbar() {
   };
 
   return (
-    <div className={`w-full h-[56px] py-[14px] px-5 ${location.pathname !== loadingUrl && "border-b"} fixed top-0 left-0 right-0 bg-white flex justify-between items-center z-50`}>
-      <div className="flex items-end">{getLeftContent()}</div>
-      <div className="flex items-end">{getRightContent()}</div>
+    <div className={`w-full flex justify-center items-center bg-red-30 ${location.pathname !== loadingUrl && "border-b shadow-md"} fixed top-0 left-0 right-0 z-50`}>
+      <div className={`w-full  max-w-[800px] h-[56px] py-[14px] px-5 bg-white flex justify-between items-center z-50`}>
+        <div className="flex items-end">{getLeftContent()}</div>
+        <div className="flex items-end">{getRightContent()}</div>
+      </div>
     </div>
   );
 }

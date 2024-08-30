@@ -53,7 +53,6 @@ function Search() {
   const [mealTime, setMealTime] = useState<EPreferredMealTime[]>([EPreferredMealTime.breakfast]);
   const [difficulty, setDifficulty] = useState<EPreparationDifficulty>(EPreparationDifficulty.easy);
   const [healthCondition, setHealthCondition] = useState<EChronicDisease[]>([]);
-  // const [allergy, setAllergy] = useState<EAllergies[]>([]);
   const [mealPreference, setMealPreference] = useState<EDietaryPreferences[]>([]);
 
   return (

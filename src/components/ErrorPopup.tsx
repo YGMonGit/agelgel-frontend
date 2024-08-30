@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { Snackbar, Alert } from "@mui/material";
 
 interface ErrorPopupProps {
@@ -7,9 +7,9 @@ interface ErrorPopupProps {
 }
 
 const ErrorPopup: React.FC<ErrorPopupProps> = ({ error, autoHideDuration = 6000 }) => {
-  const [open, setOpen] = React.useState(false);
+  const [open, setOpen] = useState(false);
 
-  React.useEffect(() => {
+  useEffect(() => {
     if (error) {
       setOpen(true);
     }

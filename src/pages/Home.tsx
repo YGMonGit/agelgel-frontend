@@ -8,6 +8,7 @@ import DisplayCard from "../components/DisplayCard";
 import { IoAdd } from "react-icons/io5";
 import { useGetRecipesQuery } from "../api/slices/recipe.slices";
 import { useNavigate } from "react-router-dom";
+import EmptyListIcon from "../assets/images/empty-list.png";
 
 import {
   Drawer,
@@ -29,7 +30,7 @@ function Home() {
     limit: 10,
   });
 
-  const { data: recommendedRecipes, isLoading } =
+  const { data: recommendedRecipes, isLoading, isSuccess, isError } =
     useGetRecipesQuery(pagination);
 
   const skeletonCount = isLoading
@@ -40,7 +41,7 @@ function Home() {
 
 
   return (
-    <div className="w-full flex-wrap flex flex-col justify-start items-center relative mb-5">
+    <div className="w-full flex-wrap flex flex-col justify-start items-center relative">
       <PageHeader
         header={`Good Morning, ${user?.first_name}!`}
         detail="Browse through our suggestions."
@@ -50,21 +51,29 @@ function Home() {
         <FilterBarActive data={filterData} />
       </div>
 
-      <div className="grid grid-cols-2 sm:grid-cols-3 gap-4 w-full px-5">
-        {isLoading
-          ? Array.from({ length: skeletonCount }).map((_, index) => (
-            <DisplayCard post={null} key={`skeleton-${index}`} />
-          ))
-          : recommendedRecipes?.map((post, index) => (
-            <DisplayCard post={post} key={index} />
-          ))}
-      </div>
+      {recommendedRecipes?.length !== 0 ? (
+        <div className="grid grid-cols-2 sm:grid-cols-3 gap-4 w-full px-5">
+          {isLoading
+            ? Array.from({ length: skeletonCount }).map((_, index) => (
+              <DisplayCard post={null} key={`skeleton-${index}`} />
+            ))
+            : recommendedRecipes?.map((post, index) => (
+              <DisplayCard post={post} key={index} />
+            ))}
+        </div>
+      ) : (
+        <div className="w-full flex justify-center items-center flex-grow">
+          <img src={EmptyListIcon} alt="pic" className="w-[75%] sm:w-[50%]" />
+        </div>
+      )}
 
-      <div
-        className="w-14 h-14 bg-content-color flex justify-center items-center rounded-full text-[2rem] text-white fixed bottom-10 right-5"
-        onClick={() => navigate(postUrl)}
-      >
-        <IoAdd />
+      <div className="w-full flex justify-end items-center sticky bottom-0 px-5 pb-10">
+        <div
+          className="w-14 h-14 bg-content-color flex justify-center items-center rounded-full text-[2rem] text-white"
+          onClick={() => navigate(postUrl)}
+        >
+          <IoAdd />
+        </div>
       </div>
     </div>
   );

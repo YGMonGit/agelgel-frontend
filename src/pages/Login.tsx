@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import PageHeader from "../components/PageHeader";
 import { Input, UseGoogle } from "../components/Input";
 import { RiEyeCloseLine, RiEyeLine } from "react-icons/ri";
@@ -21,11 +21,11 @@ function Login() {
   const [password, setPassword] = useState("");
   const [showPassword, setShowPassword] = useState(false);
   const [rememberMe, setRememberMe] = useState(false);
-  const [serverError, setServerError] = useState<string | null>(null); // State to track server errors
-
+  const [serverError, setServerError] = useState<string | null>(null);
+  
   const navigate = useNavigate();
 
-  const [logIn, { isLoading }] = useLogInMutation();
+  const [logIn, { isLoading, isError }] = useLogInMutation();
 
   const { register, handleSubmit, formState: { errors }, setError } = useForm<IUserLogInFrom>({
     resolver: zodResolver(logInSchema),
@@ -61,7 +61,7 @@ function Login() {
       <PageHeader header="Hey! Welcome Back." detail="Log in to your account." />
       <UseGoogle clickAction={handleWithGoogleClick} />
       <form className="w-full flex flex-col justify-start items-center flex-grow" onSubmit={handleSubmit(login)}>
-        <Input label="Your email" placeholder="email" value={email} onChange={onEmailChange} register={register} errors={errors.email} />
+        <Input label="Your email" placeholder="email" value={email} onChange={onEmailChange} register={register} errors={!isError && errors.email} />
         <Input label="Password" placeholder="password" value={password} isPassword={true} showPassword={showPassword} onChange={onPasswordChange} register={register} errors={errors.password}>
           <div
             className="text-[#6B7280] text-[1.3rem] absolute top-0 right-2 h-full flex justify-end items-center cursor-pointer border-0 bg-transparent"
