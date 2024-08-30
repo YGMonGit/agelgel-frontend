@@ -12,7 +12,7 @@ interface FilterButtonProps {
 function FilterButton({ content, setContent, text }: FilterButtonProps) {
   return (
     <div
-      className="flex justify-start items-start gap-1"
+      className="flex justify-start items-start gap-1 cursor-pointer select-none"
       onClick={() => {
         if (content === 1) {
           setContent(2);

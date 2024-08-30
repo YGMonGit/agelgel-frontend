@@ -122,7 +122,7 @@ export interface IRecipeSearchFrom {
     name?: string;
     preparationDifficulty?: TPreparationDifficulty;
     cookingTime?: number;
-    ingredients: string[]
+    ingredients?: string[]
     sort?: { field: string, order: "asc" | "desc" }[];
     medical_condition?: Partial<IMedicalCondition>;
     status?: TRecipeStatus;

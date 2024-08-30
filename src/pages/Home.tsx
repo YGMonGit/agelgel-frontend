@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import PageHeader from "../components/PageHeader";
 // import Search from "../components/Search";
 import FilterBar from "../components/FilterBar";
@@ -24,6 +24,10 @@ import { Button } from "../components/ui/button";
 import { useGetUserQuery } from "../api/slices/user.slices";
 
 function Home() {
+  useEffect(() => {
+    window.scrollTo({ top: 0 });
+  }, []);
+
   const navigate = useNavigate();
   const [pagination, setPagination] = useState({
     skip: 0,
@@ -41,7 +45,7 @@ function Home() {
 
 
   return (
-    <div className="w-full flex-wrap flex flex-col justify-start items-center relative">
+    <div className="w-full flex-wrap flex flex-col justify-start items-center relative min-h-[100%-56px]">
       <PageHeader
         header={`Good Morning, ${user?.first_name}!`}
         detail="Browse through our suggestions."
