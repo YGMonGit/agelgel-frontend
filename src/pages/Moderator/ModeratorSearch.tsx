@@ -1,30 +1,30 @@
 import React, { useEffect, useState } from "react";
-import PageHeader from "../components/PageHeader";
-import SearchC from "../components/Search";
-import { homeUrl } from "../assets/data";
-import DisplayCard from "../components/DisplayCard";
+import PageHeader from "../../components/PageHeader";
+import SearchC from "../../components/Search";
+import { homeUrl, moderatorHomeUrl } from "../../assets/data";
+import DisplayCard from "../../components/DisplayCard";
 import {
   useGetRecipesQuery,
   useSearchRecipesMutation,
-} from "../api/slices/recipe.slices";
+} from "../../api/slices/recipe.slices";
 import { useNavigate } from "react-router-dom";
 import { MdOutlineKeyboardArrowLeft } from "react-icons/md";
-import { useGetUserQuery } from "../api/slices/user.slices";
+import { useGetUserQuery } from "../../api/slices/user.slices";
 import {
   EAllergies,
   EChronicDisease,
   EDietaryPreferences,
-} from "../api/types/user.type";
+} from "../../api/types/user.type";
 import {
   EPreferredMealTime,
   EPreparationDifficulty,
   IRecipeSearchFrom,
-} from "../api/types/recipe.type";
+} from "../../api/types/recipe.type";
 import { set } from "react-hook-form";
 
-import EmptyListIcon from "../assets/images/empty-list.png";
+import EmptyListIcon from "../../assets/images/empty-list.png";
 
-function Search() {
+function ModeratorSearch() {
   const navigate = useNavigate();
 
   const [page, setPage] = useState(1);
@@ -76,7 +76,7 @@ function Search() {
     <div className="w-full flex-wrap flex flex-col justify-start items-center relative mb-5">
       <div
         className="text-[1.1rem] text-content-color font-semibold cursor-pointer select-none mt-5 flex justify-start items-center w-full px-5"
-        onClick={() => navigate(homeUrl)}
+        onClick={() => navigate(moderatorHomeUrl)}
       >
         <MdOutlineKeyboardArrowLeft className="text-[1.9rem]" /> Home
       </div>
@@ -134,4 +134,4 @@ function Search() {
   );
 }
 
-export default Search;
+export default ModeratorSearch;

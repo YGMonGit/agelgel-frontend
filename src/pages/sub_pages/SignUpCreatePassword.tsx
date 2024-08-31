@@ -3,7 +3,7 @@ import PageHeader from "../../components/PageHeader";
 import { Input, UseGoogle } from "../../components/Input";
 import { RiEyeCloseLine, RiEyeLine } from "react-icons/ri";
 import WideButton from "../../components/WideButton";
-import { loginUrl } from "../../assets/data";
+import { loginUrl, moderatorLoginUrl } from "../../assets/data";
 import WideLink from "../../components/WideLink";
 
 interface SingUpCreatePasswordProps {
@@ -14,6 +14,7 @@ interface SingUpCreatePasswordProps {
   setConfirmPassword: React.Dispatch<React.SetStateAction<string>>;
   register: any;
   errors: any;
+  forModerator?: boolean;
   handleWithGoogleClick?: () => void;
 }
 
@@ -25,6 +26,7 @@ function SignUpCreatePassword({
   setConfirmPassword,
   register,
   errors,
+  forModerator = false,
   handleWithGoogleClick,
 }: SingUpCreatePasswordProps) {
   const [showPassword, setShowPassword] = useState(false);
@@ -93,15 +95,22 @@ function SignUpCreatePassword({
           outline={true}
           clickAction={onBackClick}
         />
-        <WideLink
-          label="Next"
-          color="bg-content-color"
-          clickAction={onNextClick}
-        />
+        {forModerator ? (
+          <WideButton
+            label="Finish"
+            color="bg-content-color"
+          />
+        ): (
+          <WideLink
+            label="Next"
+            color="bg-content-color"
+            clickAction={onNextClick}
+          />
+        )}
       </div>
       <div className="w-full px-5 text-slate-400 text-[1rem] mb-10">
         Already have an account?{" "}
-        <a href={loginUrl} className="text-content-color font-[470]">
+        <a href={ forModerator ? moderatorLoginUrl : loginUrl } className="text-content-color font-[470]">
           Login now
         </a>
       </div>

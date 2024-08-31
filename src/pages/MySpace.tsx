@@ -69,7 +69,7 @@ function MySpace() {
           pending
         </button>
         <button
-          className="px-4 py-1 rounded-lg text-white outline-none border-none text-white"
+          className="px-4 py-1 rounded-lg text-white outline-none border-none"
           style={{
             backgroundColor: postStatus === ERecipeStatus.rejected ? "#15803d" : "#F3F4F6",
             color: postStatus === ERecipeStatus.rejected ? "#fff" : "#15803d",

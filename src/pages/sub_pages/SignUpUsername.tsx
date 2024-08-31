@@ -1,7 +1,7 @@
 import React from "react";
 import PageHeader from "../../components/PageHeader";
 import { Input, UseGoogle } from "../../components/Input";
-import { loginUrl } from "../../assets/data";
+import { loginUrl, moderatorLoginUrl } from "../../assets/data";
 import ProfileImageInput from "../../components/ProfileImageInput";
 import WideLink from "../../components/WideLink";
 
@@ -18,6 +18,7 @@ interface SingUpUsernameProps {
   phone: string;
   setPhone: React.Dispatch<React.SetStateAction<string>>;
   handleWithGoogleClick?: () => void;
+  forModerator?: boolean;
   register: any;
   setValue:any
   errors:any
@@ -35,6 +36,7 @@ function SignUpUsername({
   setEmail,
   phone,
   setPhone,
+  forModerator=false,
   handleWithGoogleClick,
   register,
   setValue,
@@ -106,7 +108,7 @@ function SignUpUsername({
       </div>
       <div className="w-full px-5 text-slate-400 text-[1rem] mb-10">
         Already have an account?{" "}
-        <a href={loginUrl} className="text-content-color font-[470]">
+        <a href={ forModerator ? moderatorLoginUrl : loginUrl } className="text-content-color font-[470]">
           Login now
         </a>
       </div>

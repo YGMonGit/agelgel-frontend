@@ -16,6 +16,12 @@ import {
   postUrl,
   recipeDetailUrl,
   signUpUrl,
+  moderatorHomeUrl,
+  moderatorLoginUrl,
+  moderatorSearchUrl,
+  moderatorSignUpUrl,
+  moderatorRecipeDetailUrl,
+  moderatorSpaceUrl,
 } from "../assets/data";
 
 import { SlClose, SlArrowLeft } from "react-icons/sl";
@@ -38,11 +44,11 @@ function Navbar() {
   const navigate = useNavigate();
 
   const getRightContent = () => {
-    if (location.pathname === homeUrl) {
+    if (location.pathname === homeUrl || location.pathname === moderatorHomeUrl) {
       return (
         <div className="flex justify-center items-center gap-2">
           <NavLink
-            to={searchUrl}
+            to={location.pathname === homeUrl ? searchUrl : moderatorSearchUrl}
             className="w-9 h-9 bg-content-color flex justify-center items-center rounded-full text-[2rem] text-white"
             onClick={() => {
               window.scrollTo({ top: 0 });
@@ -70,7 +76,7 @@ function Navbar() {
           />
         </NavLink>
       );
-    } else if (location.pathname === searchUrl) {
+    } else if (location.pathname === searchUrl || location.pathname === moderatorSearchUrl) {
       return <CircleDropdown />;
     } else if (location.pathname === loginUrl) {
       return (
@@ -133,14 +139,18 @@ function Navbar() {
   const getLeftContent = () => {
     if (
       location.pathname === homeUrl ||
+      location.pathname === moderatorHomeUrl ||
       location.pathname === searchUrl ||
+      location.pathname === moderatorSearchUrl ||
       location.pathname === loginUrl ||
+      location.pathname === moderatorLoginUrl ||
       location.pathname === signUpUrl ||
+      location.pathname === moderatorSignUpUrl ||
       location.pathname === postUrl
     ) {
       return (
         <NavLink
-          to={homeUrl}
+          to={location.pathname.startsWith("/moderator") ? moderatorHomeUrl : homeUrl}
           className="flex justify-start items-center gap-2 select-none"
           onClick={() => {
             window.scrollTo({ top: 0 });
@@ -152,15 +162,19 @@ function Navbar() {
       );
     } else if (
       location.pathname.startsWith(recipeDetailUrl) ||
+      location.pathname.startsWith(moderatorRecipeDetailUrl) ||
       location.pathname.startsWith(editPostUrl) ||
       location.pathname.startsWith(editUserUrl) ||
-      location.pathname === mySpaceUrl
+      location.pathname === mySpaceUrl ||
+      location.pathname === moderatorSpaceUrl
     ) {
       return (
         <NavLink
-          to={homeUrl}
+          to="#"
           className="flex justify-start items-center gap-5 py-2 select-none cursor-pointer"
-          onClick={() => {
+          onClick={(e) => {
+            e.preventDefault();
+            navigate(-1);
             window.scrollTo({ top: 0 });
           }}
         >
@@ -175,8 +189,8 @@ function Navbar() {
 
   return (
     <nav
-      className={`w-full flex justify-center items-center bg-red-30 ${location.pathname !== loadingUrl && "border-b shadow-md"
-        } fixed top-0 left-0 right-0 z-50 bg-white`}
+      className={`w-full flex justify-center items-center bg-red-30 ${location.pathname !== loadingUrl && "border-b"
+        } ${location.pathname !== loadingUrl && location.pathname !== homeUrl && location.pathname !== moderatorHomeUrl && "shadow-md"} fixed top-0 left-0 right-0 z-50 bg-white`}
     >
       <div
         className={`w-full max-w-[800px] h-[56px] py-[14px] px-5 bg-white flex justify-between items-center z-50`}

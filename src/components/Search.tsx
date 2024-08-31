@@ -14,16 +14,6 @@ import {
   IRecipeSearchFrom,
 } from "../api/types/recipe.type";
 
-import {
-  // Drawer,
-  DrawerClose,
-  DrawerContent,
-  DrawerDescription,
-  DrawerFooter,
-  DrawerHeader,
-  DrawerTitle,
-  DrawerTrigger,
-} from "./ui/drawer";
 import { Button } from "./ui/button";
 
 import { RiCloseLargeLine } from "react-icons/ri";
@@ -36,11 +26,8 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { searchRecipeSchema } from "../validation/recipe.validation";
 import { Controller, useForm } from "react-hook-form";
 
-import Chip from "@mui/material/Chip";
-import Autocomplete from "@mui/material/Autocomplete";
-import TextField from "@mui/material/TextField";
-import Stack from "@mui/material/Stack";
 import { Checkbox } from "@mui/material";
+import { Switch } from "./ui/switch";
 
 interface SearchProps {
   ingredient: string[] | undefined;
@@ -322,16 +309,21 @@ function SearchC({
             noPad={true}
           />
 
-          <div className="flex justify-start items-center gap-2 w-full">
-            <Checkbox
+          <div className="flex justify-start items-center leading-none gap-3 w-full mb-4">
+            {/* <Checkbox
               checked={useUserData}
               onChange={(e) => setUserData(!useUserData)}
               color="primary"
+            /> */}
+            <Switch
+              id="airplane-mode"
+              checked={useUserData}
+              onCheckedChange={(checked) => setUserData(checked)}
             />
 
-            <p className="text-[1rem] text-content-color">
+            <label htmlFor="airplane-mode" className="text-[1rem] text-content-color">
               Use your medical condition
-            </p>
+            </label>
           </div>
 
 

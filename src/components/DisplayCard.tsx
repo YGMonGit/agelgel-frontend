@@ -2,8 +2,8 @@ import React from "react";
 import Rating from '@mui/material/Rating';
 import { styled } from '@mui/system';
 import { Chip } from "@mui/material";
-import { useNavigate } from "react-router-dom";
-import { recipeDetailUrl } from "../assets/data";
+import { useLocation, useNavigate } from "react-router-dom";
+import { moderatorRecipeDetailUrl, recipeDetailUrl } from "../assets/data";
 import { IRecipeCard } from "../api/types/recipe.type";
 import { Skeleton } from "../components/ui/skeleton";
 
@@ -17,10 +17,11 @@ interface DisplayCardProps {
 
 function DisplayCard({ post }: DisplayCardProps) {
   const navigate = useNavigate();
+  const location = useLocation();
 
   const goToDetailedPage = () => {
     if (post) {
-      navigate(`${recipeDetailUrl}/${post._id}`);
+      navigate(`${location.pathname.startsWith("/moderator") ? moderatorRecipeDetailUrl : recipeDetailUrl}/${post._id}`);
     }
   };
 
