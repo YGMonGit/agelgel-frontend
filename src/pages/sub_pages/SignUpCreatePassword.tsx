@@ -3,7 +3,7 @@ import PageHeader from "../../components/PageHeader";
 import { Input, UseGoogle } from "../../components/Input";
 import { RiEyeCloseLine, RiEyeLine } from "react-icons/ri";
 import WideButton from "../../components/WideButton";
-import { loginUrl } from "../../assets/data";
+import { userLoginUrl } from "../../assets/data";
 import WideLink from "../../components/WideLink";
 
 interface SingUpCreatePasswordProps {
@@ -101,7 +101,7 @@ function SignUpCreatePassword({
       </div>
       <div className="w-full px-5 text-slate-400 text-[1rem] mb-10">
         Already have an account?{" "}
-        <a href={loginUrl} className="text-content-color font-[470]">
+        <a href={userLoginUrl} className="text-content-color font-[470]">
           Login now
         </a>
       </div>

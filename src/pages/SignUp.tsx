@@ -9,7 +9,7 @@ import { useSignUpMutation } from "../api/slices/user.slices";
 import * as Bytescale from "@bytescale/sdk";
 import { useNavigate } from "react-router-dom";
 import { signUpSchema } from "../validation/user.validation";
-import { homeUrl } from "../assets/data";
+import { userHomeUrl } from "../assets/data";
 import useFileUpload from "../hooks/useFileUpload";
 import ErrorPopup from "../components/ErrorPopup";
 
@@ -66,7 +66,9 @@ function SignUp() {
           }
         }
       }).unwrap();
-      navigate(homeUrl);
+
+      navigate(`/user/${userHomeUrl}`);
+
     } catch (error: any) {
       if (!error.data.error) return;
       const err = error.data.error;

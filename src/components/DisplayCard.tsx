@@ -3,7 +3,7 @@ import Rating from '@mui/material/Rating';
 import { styled } from '@mui/system';
 import { Chip } from "@mui/material";
 import { useNavigate } from "react-router-dom";
-import { recipeDetailUrl } from "../assets/data";
+import { userRecipeDetailUrl } from "../assets/data";
 import { IRecipeCard } from "../api/types/recipe.type";
 import { Skeleton } from "../components/ui/skeleton";
 
@@ -20,7 +20,7 @@ function DisplayCard({ post }: DisplayCardProps) {
 
   const goToDetailedPage = () => {
     if (post) {
-      navigate(`${recipeDetailUrl}/${post._id}`);
+      navigate(`${userRecipeDetailUrl}/${post._id}`);
     }
   };
 

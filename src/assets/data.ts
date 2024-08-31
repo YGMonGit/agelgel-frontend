@@ -9,16 +9,16 @@ import user1 from "./images/post/user_1.png";
 export const domainUrl = "http://localhost:3000";
 
 // Page urls
-export const homeUrl = "/home";
-export const searchUrl = "/search";
-export const loginUrl = "/login";
-export const signUpUrl = "/sign-up";
-export const editUserUrl = "/edit-user";
-export const recipeDetailUrl = "/recipe-detail";
-export const postUrl = "/post";
-export const editPostUrl = "/edit-post";
-export const mySpaceUrl = "/my-space";
-export const loadingUrl = "/";
+export const userHomeUrl = "/home";
+export const userSearchUrl = "/search";
+export const userLoginUrl = "/user/login";
+export const userSignUp = "/user/sign-up";
+export const userEditUserUrl = "/edit-user";
+export const userRecipeDetailUrl = "/recipe-detail";
+export const userPostUrl = "/post";
+export const userEditPostUrl = "/edit-post";
+export const userSpaceUrl = "/my-space";
+export const userLoadingUrl = "/user/";
 
 export const allergies = [
   "Peanuts",

@@ -1,8 +1,8 @@
 import React, { useState, useRef, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
-import { mySpaceUrl } from "../assets/data";
+import { userSpaceUrl } from "../assets/data";
 import { useGetUserQuery, useLogOutMutation } from "../api/slices/user.slices";
-import { loadingUrl } from "../assets/data";
+import { userLoadingUrl } from "../assets/data";
 
 
 function CircleDropdown() {
@@ -62,7 +62,7 @@ function CircleDropdown() {
               <p className="text-[.9rem] font-semibold">{user?.first_name}</p>
               <p className="text-[.8rem] text-slate-500 -mt-1">{user?.email}</p>
             </li>
-            <li className="hover:bg-gray-100 text-slate-500 rounded-md p-1 px-3 cursor-pointer" onClick={() => navigate(mySpaceUrl)}>
+            <li className="hover:bg-gray-100 text-slate-500 rounded-md p-1 px-3 cursor-pointer" onClick={() => navigate(userSpaceUrl)}>
               Recipes
             </li>
             <li className="hover:bg-gray-100 text-slate-500 rounded-md p-1 px-3 cursor-pointer">
@@ -70,7 +70,7 @@ function CircleDropdown() {
             </li>
             <li className="hover:bg-gray-100 rounded-md p-1 px-3 cursor-pointer text-red-700" onClick={async () => {
               await logOut().unwrap();
-              navigate(loadingUrl);
+              navigate(userLoadingUrl);
             }}>
               Logout
             </li>

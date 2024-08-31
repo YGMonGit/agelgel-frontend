@@ -3,7 +3,7 @@ import Navbar from './components/Navbar';
 import Home from './pages/Home';
 import Login from './pages/Login';
 import { Routes, Route } from "react-router-dom";
-import { signUpUrl, loginUrl, homeUrl, recipeDetailUrl, postUrl, mySpaceUrl, loadingUrl, searchUrl } from './assets/data';
+import { userSignUp, userLoginUrl, userHomeUrl, userRecipeDetailUrl, userPostUrl, userSpaceUrl, userLoadingUrl, userSearchUrl } from './assets/data';
 import RecipeDetail from './pages/RecipeDetail';
 import NewRecipeForm from './pages/NewRecipeForm';
 import SignUp from './pages/SignUp';
@@ -16,6 +16,7 @@ import '@fontsource/roboto/700.css';
 import MySpace from './pages/MySpace';
 import Loading from './pages/Loading';
 import Search from './pages/Search';
+import ProtectedRoute from './hooks/userAuthGuard';
 
 function App() {
 
@@ -26,19 +27,31 @@ function App() {
       <div
         className="w-full overflow-x-hidden flex flex-col justify-start items-center max-w-[800px]"
         style={{ scrollbarWidth: "none", msOverflowStyle: "none", height: `calc(${adjustedHeight}px)` }}
-        
+
       >
         <Navbar />
         <div className='mt-[56px]'></div>
-        <Routes> 
-          <Route path={homeUrl} element={<Home />} />
-          <Route path={searchUrl} element={<Search />} />
-          <Route path={loginUrl} element={<Login />} />
-          <Route path={signUpUrl} element={<SignUp />} />
-          <Route path={`${recipeDetailUrl}/:id`} element={<RecipeDetail />} />
-          <Route path={postUrl} element={<NewRecipeForm />} />
-          <Route path={mySpaceUrl} element={<MySpace />} />
-          <Route path={loadingUrl} element={<Loading />} />
+        <Routes>
+
+          <Route path={userLoginUrl} element={<Login />} />
+          <Route path={userSignUp} element={<SignUp />} />
+          <Route path={userLoadingUrl} element={<Loading />} />
+
+
+          <Route
+            path="/user/*"
+            element={
+              <ProtectedRoute>
+                <Routes>
+                  <Route path={userHomeUrl} element={<Home />} />
+                  <Route path={userSearchUrl} element={<Search />} />
+                  <Route path={`${userRecipeDetailUrl}/:id`} element={<RecipeDetail />} />
+                  <Route path={userPostUrl} element={<NewRecipeForm />} />
+                  <Route path={userSpaceUrl} element={<MySpace />} />
+                </Routes>
+              </ProtectedRoute>
+            }
+          />
         </Routes>
       </div>
     </div>

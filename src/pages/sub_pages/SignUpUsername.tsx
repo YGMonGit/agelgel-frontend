@@ -1,14 +1,14 @@
 import React from "react";
 import PageHeader from "../../components/PageHeader";
 import { Input, UseGoogle } from "../../components/Input";
-import { loginUrl } from "../../assets/data";
+import { userLoginUrl } from "../../assets/data";
 import ProfileImageInput from "../../components/ProfileImageInput";
 import WideLink from "../../components/WideLink";
 
 interface SingUpUsernameProps {
   setFormNumber: React.Dispatch<React.SetStateAction<number>>;
   image: string | null;
-  setImage: React.Dispatch<React.SetStateAction<string|null>>;
+  setImage: React.Dispatch<React.SetStateAction<string | null>>;
   firstName: string;
   setFirstName: React.Dispatch<React.SetStateAction<string>>;
   lastName: string;
@@ -19,8 +19,8 @@ interface SingUpUsernameProps {
   setPhone: React.Dispatch<React.SetStateAction<string>>;
   handleWithGoogleClick?: () => void;
   register: any;
-  setValue:any
-  errors:any
+  setValue: any
+  errors: any
 }
 
 function SignUpUsername({
@@ -106,7 +106,7 @@ function SignUpUsername({
       </div>
       <div className="w-full px-5 text-slate-400 text-[1rem] mb-10">
         Already have an account?{" "}
-        <a href={loginUrl} className="text-content-color font-[470]">
+        <a href={userLoginUrl} className="text-content-color font-[470]">
           Login now
         </a>
       </div>

@@ -6,16 +6,16 @@ import HelpIcon from "../assets/icons/help-icon.png";
 import CircleDropdown from "./CircleDropdown";
 import DetailNavDropdown from "./DetailNavDropdown";
 import {
-  editPostUrl,
-  editUserUrl,
-  homeUrl,
-  searchUrl,
-  loadingUrl,
-  loginUrl,
-  mySpaceUrl,
-  postUrl,
-  recipeDetailUrl,
-  signUpUrl,
+  userEditPostUrl,
+  userEditUserUrl,
+  userHomeUrl,
+  userSearchUrl,
+  userLoadingUrl,
+  userLoginUrl,
+  userSpaceUrl,
+  userPostUrl,
+  userRecipeDetailUrl,
+  userSignUp,
 } from "../assets/data";
 
 import { SlClose, SlArrowLeft } from "react-icons/sl";
@@ -38,11 +38,11 @@ function Navbar() {
   const navigate = useNavigate();
 
   const getRightContent = () => {
-    if (location.pathname === homeUrl) {
+    if (location.pathname === `/user/${userHomeUrl}`) {
       return (
         <div className="flex justify-center items-center gap-2">
           <NavLink
-            to={searchUrl}
+            to={userSearchUrl}
             className="w-9 h-9 bg-content-color flex justify-center items-center rounded-full text-[2rem] text-white"
             onClick={() => {
               window.scrollTo({ top: 0 });
@@ -53,7 +53,7 @@ function Navbar() {
           <CircleDropdown />
         </div>
       );
-    } else if (location.pathname === signUpUrl) {
+    } else if (location.pathname === userSignUp) {
       return (
         <NavLink
           to="#"
@@ -70,12 +70,12 @@ function Navbar() {
           />
         </NavLink>
       );
-    } else if (location.pathname === searchUrl) {
+    } else if (location.pathname === userSearchUrl) {
       return <CircleDropdown />;
-    } else if (location.pathname === loginUrl) {
+    } else if (location.pathname === userLoginUrl) {
       return (
         <NavLink
-          to={signUpUrl}
+          to={userSignUp}
           className="text-content-color text-[1.1rem] flex items-end font-[600] leading-none gap-1"
           onClick={() => {
             window.scrollTo({ top: 0 });
@@ -89,7 +89,7 @@ function Navbar() {
           />
         </NavLink>
       );
-    } else if (location.pathname === postUrl) {
+    } else if (location.pathname === userPostUrl) {
       return (
         <AlertDialog>
           <AlertDialogTrigger asChild>
@@ -113,7 +113,7 @@ function Navbar() {
               <AlertDialogAction
                 className="text-[1.2rem] h-[56px] bg-red-700 rounded-xl"
                 onClick={() => {
-                  navigate(homeUrl);
+                  navigate(userHomeUrl);
                   window.scrollTo({ top: 0 });
                 }}
               >
@@ -123,7 +123,7 @@ function Navbar() {
           </AlertDialogContent>
         </AlertDialog>
       );
-    } else if (location.pathname.startsWith(recipeDetailUrl)) {
+    } else if (location.pathname.startsWith(userRecipeDetailUrl)) {
       return <DetailNavDropdown />;
     } else {
       return null;
@@ -132,15 +132,15 @@ function Navbar() {
 
   const getLeftContent = () => {
     if (
-      location.pathname === homeUrl ||
-      location.pathname === searchUrl ||
-      location.pathname === loginUrl ||
-      location.pathname === signUpUrl ||
-      location.pathname === postUrl
+      location.pathname === userHomeUrl ||
+      location.pathname === userSearchUrl ||
+      location.pathname === userLoginUrl ||
+      location.pathname === userSignUp ||
+      location.pathname === userPostUrl
     ) {
       return (
         <NavLink
-          to={homeUrl}
+          to={userHomeUrl}
           className="flex justify-start items-center gap-2 select-none"
           onClick={() => {
             window.scrollTo({ top: 0 });
@@ -151,14 +151,14 @@ function Navbar() {
         </NavLink>
       );
     } else if (
-      location.pathname.startsWith(recipeDetailUrl) ||
-      location.pathname.startsWith(editPostUrl) ||
-      location.pathname.startsWith(editUserUrl) ||
-      location.pathname === mySpaceUrl
+      location.pathname.startsWith(userRecipeDetailUrl) ||
+      location.pathname.startsWith(userEditPostUrl) ||
+      location.pathname.startsWith(userEditUserUrl) ||
+      location.pathname === userSpaceUrl
     ) {
       return (
         <NavLink
-          to={homeUrl}
+          to={userHomeUrl}
           className="flex justify-start items-center gap-5 py-2 select-none cursor-pointer"
           onClick={() => {
             window.scrollTo({ top: 0 });
@@ -175,7 +175,7 @@ function Navbar() {
 
   return (
     <nav
-      className={`w-full flex justify-center items-center bg-red-30 ${location.pathname !== loadingUrl && "border-b shadow-md"
+      className={`w-full flex justify-center items-center bg-red-30 ${location.pathname !== userLoadingUrl && "border-b shadow-md"
         } fixed top-0 left-0 right-0 z-50 bg-white`}
     >
       <div
