@@ -3,11 +3,10 @@ import logo from "../assets/images/agelgel-logo.png";
 import ClipLoader from "react-spinners/ClipLoader";
 import { useGetUserQuery } from '../api/slices/user.slices';
 import { useNavigate } from 'react-router-dom';
-import { userHomeUrl, userLoginUrl, userSignUp } from '../assets/data';
+import { homeUrl, loginUrl, signUpUrl } from '../assets/data';
 
 function Loading() {
   const navigate = useNavigate();
-
 
   return (
     <div className='flex flex-col justify-center items-center gap-5 w-screen h-screen pb-10'>
@@ -16,8 +15,8 @@ function Loading() {
 
       <div className='w-full flex flex-col justify-center items-center gap-2 px-5'>
         <p className="w-full text-[1rem] text-slate-500 text-center">It seems your not login</p>
-        <button className="bg-content-color border border-content-color font-semibold text-white px-4 py-2 rounded-md w-full" onClick={() => navigate(userSignUp)}>Sign Up</button>
-        <button className="bg-white border border-content-color font-semibold text-content-color px-4 py-2 rounded-md w-full" onClick={() => navigate(userLoginUrl)}>Log In</button>
+        <button className="bg-content-color border border-content-color font-semibold text-white px-4 py-2 rounded-md w-full" onClick={() => navigate(signUpUrl)}>Sign Up</button>
+        <button className="bg-white border border-content-color font-semibold text-content-color px-4 py-2 rounded-md w-full" onClick={() => navigate(loginUrl)}>Log In</button>
       </div>
     </div>
   )

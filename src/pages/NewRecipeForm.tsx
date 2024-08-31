@@ -22,7 +22,7 @@ import {
   EChronicDisease,
 } from "../api/types/user.type";
 import HealthConditions from "./sub_pages/HealthConditions";
-import { userHomeUrl } from "../assets/data";
+import { homeUrl } from "../assets/data";
 import { useGetUserQuery } from "../api/slices/user.slices";
 import useFileUpload from "../hooks/useFileUpload";
 import ErrorPopup from "../components/ErrorPopup";
@@ -144,7 +144,7 @@ function NewRecipeForm() {
           dietary_preferences: mealPreference,
         },
       }).unwrap();
-      navigate(userHomeUrl);
+      navigate(homeUrl);
     } catch (error: any) {
       if (!error.data.error) return;
       const err = error.data.error;

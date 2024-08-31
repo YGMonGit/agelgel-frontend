@@ -10,7 +10,7 @@ import {
   editUserUrl,
   homeUrl,
   searchUrl,
-  loadingUrl,
+  welcomeUrl,
   loginUrl,
   mySpaceUrl,
   postUrl,
@@ -59,7 +59,7 @@ function Navbar() {
           <CircleDropdown />
         </div>
       );
-    } else if (location.pathname === userSignUp) {
+    } else if (location.pathname === signUpUrl) {
       return (
         <NavLink
           to="#"
@@ -78,10 +78,10 @@ function Navbar() {
       );
     } else if (location.pathname === searchUrl || location.pathname === moderatorSearchUrl) {
       return <CircleDropdown />;
-    } else if (location.pathname === userLoginUrl) {
+    } else if (location.pathname === loginUrl) {
       return (
         <NavLink
-          to={userSignUp}
+          to={signUpUrl}
           className="text-content-color text-[1.1rem] flex items-end font-[600] leading-none gap-1"
           onClick={() => {
             window.scrollTo({ top: 0 });
@@ -95,7 +95,7 @@ function Navbar() {
           />
         </NavLink>
       );
-    } else if (location.pathname === userPostUrl) {
+    } else if (location.pathname === postUrl) {
       return (
         <AlertDialog>
           <AlertDialogTrigger asChild>
@@ -119,7 +119,7 @@ function Navbar() {
               <AlertDialogAction
                 className="text-[1.2rem] h-[56px] bg-red-700 rounded-xl"
                 onClick={() => {
-                  navigate(userHomeUrl);
+                  navigate(homeUrl);
                   window.scrollTo({ top: 0 });
                 }}
               >
@@ -129,7 +129,7 @@ function Navbar() {
           </AlertDialogContent>
         </AlertDialog>
       );
-    } else if (location.pathname.startsWith(userRecipeDetailUrl)) {
+    } else if (location.pathname.startsWith(recipeDetailUrl)) {
       return <DetailNavDropdown />;
     } else {
       return null;
@@ -189,8 +189,7 @@ function Navbar() {
 
   return (
     <nav
-      className={`w-full flex justify-center items-center bg-red-30 ${location.pathname !== loadingUrl && "border-b"
-        } ${location.pathname !== loadingUrl && location.pathname !== homeUrl && location.pathname !== moderatorHomeUrl && "shadow-md"} fixed top-0 left-0 right-0 z-50 bg-white`}
+      className={`w-full flex justify-center items-center bg-red-30 ${location.pathname !== homeUrl && location.pathname !== moderatorHomeUrl && "shadow-md"} fixed top-0 left-0 right-0 z-50 bg-white`}
     >
       <div
         className={`w-full max-w-[800px] h-[56px] py-[14px] px-5 bg-white flex justify-between items-center z-50`}

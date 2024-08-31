@@ -21,6 +21,8 @@ function DisplayCard({ post }: DisplayCardProps) {
 
   const goToDetailedPage = () => {
     if (post) {
+      console.log(location.pathname);
+      
       navigate(`${location.pathname.startsWith("/moderator") ? moderatorRecipeDetailUrl : recipeDetailUrl}/${post._id}`);
     }
   };

@@ -9,23 +9,23 @@ import user1 from "./images/post/user_1.png";
 export const domainUrl = "http://localhost:3000";
 
 // Page urls
-export const homeUrl = "/user/home";
-export const searchUrl = "/user/search";
-export const loginUrl = "/user/login";
-export const signUpUrl = "/user/sign-up";
-export const editUserUrl = "/user/edit-user";
-export const recipeDetailUrl = "/user/recipe-detail";
-export const postUrl = "/user/post";
-export const editPostUrl = "/user/edit-post";
-export const mySpaceUrl = "/user/my-space";
-export const loadingUrl = "/";
+export const homeUrl = "/home";
+export const searchUrl = "/search";
+export const loginUrl = "/login";
+export const signUpUrl = "/sign-up";
+export const editUserUrl = "/edit-user";
+export const recipeDetailUrl = "/recipe-detail";
+export const postUrl = "/post";
+export const editPostUrl = "/edit-post";
+export const mySpaceUrl = "/my-space";
+export const welcomeUrl = "/";
 
-export const moderatorSignUpUrl = "/moderator/sign-up";
-export const moderatorLoginUrl = "/moderator/login";
-export const moderatorHomeUrl = "/moderator/home";
-export const moderatorSearchUrl = "/moderator/search";
-export const moderatorRecipeDetailUrl = "/moderator/recipe-detail";
-export const moderatorSpaceUrl = "/moderator/space";
+export const moderatorSignUpUrl = "/sign-up";
+export const moderatorLoginUrl = "/login";
+export const moderatorHomeUrl = "/home";
+export const moderatorSearchUrl = "/search";
+export const moderatorRecipeDetailUrl = "/recipe-detail";
+export const moderatorSpaceUrl = "/space";
 
 export const allergies = [
   "Peanuts",

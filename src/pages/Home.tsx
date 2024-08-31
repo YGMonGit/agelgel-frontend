@@ -3,7 +3,7 @@ import PageHeader from "../components/PageHeader";
 // import Search from "../components/Search";
 import FilterBar from "../components/FilterBar";
 import FilterBarActive from "../components/FilterBarActive";
-import { filterData, userPostUrl } from "../assets/data";
+import { filterData, postUrl } from "../assets/data";
 import DisplayCard from "../components/DisplayCard";
 import { IoAdd } from "react-icons/io5";
 import { useGetRecipesQuery } from "../api/slices/recipe.slices";
@@ -74,7 +74,7 @@ function Home() {
       <div className="w-full flex justify-end items-center sticky bottom-0 px-5 pb-10">
         <div
           className="w-14 h-14 bg-content-color flex justify-center items-center rounded-full text-[2rem] text-white"
-          onClick={() => navigate(userPostUrl)}
+          onClick={() => navigate(postUrl)}
         >
           <IoAdd />
         </div>
