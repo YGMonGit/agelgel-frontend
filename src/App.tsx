@@ -23,6 +23,7 @@ import ModeratorHome from './pages/Moderator/ModeratorHome';
 import ModeratorSearch from './pages/Moderator/ModeratorSearch';
 import ModeratorRecipeDetail from './pages/Moderator/ModeratorRecipeDetail';
 import ModeratorSpace from './pages/Moderator/ModeratorSpace';
+import ProtectedRoute from './hooks/userAuthGuard';
 
 function App() {
 
@@ -33,19 +34,31 @@ function App() {
       <div
         className="w-full overflow-x-hidden flex flex-col justify-start items-center max-w-[800px]"
         style={{ scrollbarWidth: "none", msOverflowStyle: "none", height: `calc(${adjustedHeight}px)` }}
-        
+
       >
         <Navbar />
         <div className='mt-[56px]'></div>
-        <Routes> 
-          <Route path={homeUrl} element={<Home />} />
-          <Route path={searchUrl} element={<Search />} />
+        <Routes>
+
           <Route path={loginUrl} element={<Login />} />
           <Route path={signUpUrl} element={<SignUp />} />
-          <Route path={`${recipeDetailUrl}/:id`} element={<RecipeDetail />} />
-          <Route path={postUrl} element={<NewRecipeForm />} />
-          <Route path={mySpaceUrl} element={<MySpace />} />
           <Route path={loadingUrl} element={<Loading />} />
+
+
+          <Route
+            path="/user/*"
+            element={
+              <ProtectedRoute>
+                <Routes>
+                  <Route path={homeUrl} element={<Home />} />
+                  <Route path={searchUrl} element={<Search />} />
+                  <Route path={`${recipeDetailUrl}/:id`} element={<RecipeDetail />} />
+                  <Route path={postUrl} element={<NewRecipeForm />} />
+                  <Route path={mySpaceUrl} element={<MySpace />} />
+                </Routes>
+              </ProtectedRoute>
+            }
+          />
 
           <Route path={moderatorSignUpUrl} element={<ModeratorSignUp />} />
           <Route path={moderatorLoginUrl} element={<ModeratorLogin />} />

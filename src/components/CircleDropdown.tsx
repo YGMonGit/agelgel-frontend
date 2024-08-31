@@ -72,7 +72,7 @@ function CircleDropdown() {
             )}
             <li className="hover:bg-gray-100 rounded-md p-1 px-3 cursor-pointer text-red-700" onClick={async () => {
               await logOut().unwrap();
-              navigate(loadingUrl);
+              navigate(userLoadingUrl);
             }}>
               Logout
             </li>

@@ -8,7 +8,7 @@ import WideLink from "../../components/WideLink";
 interface SingUpUsernameProps {
   setFormNumber: React.Dispatch<React.SetStateAction<number>>;
   image: string | null;
-  setImage: React.Dispatch<React.SetStateAction<string|null>>;
+  setImage: React.Dispatch<React.SetStateAction<string | null>>;
   firstName: string;
   setFirstName: React.Dispatch<React.SetStateAction<string>>;
   lastName: string;
@@ -20,8 +20,8 @@ interface SingUpUsernameProps {
   handleWithGoogleClick?: () => void;
   forModerator?: boolean;
   register: any;
-  setValue:any
-  errors:any
+  setValue: any
+  errors: any
 }
 
 function SignUpUsername({

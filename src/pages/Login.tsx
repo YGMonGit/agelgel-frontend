@@ -4,7 +4,7 @@ import { Input, UseGoogle } from "../components/Input";
 import { RiEyeCloseLine, RiEyeLine } from "react-icons/ri";
 import { Checkbox } from "../components/ui/checkbox";
 import WideButton from "../components/WideButton";
-import { homeUrl, signUpUrl } from "../assets/data";
+import { userHomeUrl, userSignUp } from "../assets/data";
 import { useLogInMutation } from "../api/slices/user.slices";
 import { useForm } from "react-hook-form";
 import { IUserLogInFrom } from "../api/types/user.type";
@@ -22,7 +22,7 @@ function Login() {
   const [showPassword, setShowPassword] = useState(false);
   const [rememberMe, setRememberMe] = useState(false);
   const [serverError, setServerError] = useState<string | null>(null);
-  
+
   const navigate = useNavigate();
 
   const [logIn, { isLoading, isError }] = useLogInMutation();
@@ -35,7 +35,7 @@ function Login() {
     console.log("Logging in...");
     try {
       await logIn({ data }).unwrap();
-      navigate(homeUrl);
+      navigate(`/user/${userHomeUrl}`);
     } catch (error: any) {
       if (!error.data.error) return;
       const err = error.data.error;
@@ -50,7 +50,7 @@ function Login() {
     }
   }
 
-  const handleWithGoogleClick = () => {};
+  const handleWithGoogleClick = () => { };
 
   const onEmailChange = (e: React.ChangeEvent<HTMLInputElement>) => setEmail(e.target.value);
   const onPasswordChange = (e: React.ChangeEvent<HTMLInputElement>) => setPassword(e.target.value);
@@ -98,7 +98,7 @@ function Login() {
           )}
         </div>
       </form>
-      <div className="w-full px-5 text-slate-400 text-[1rem] mb-10">Not Registered? <a href={signUpUrl} className="text-content-color font-[470]">Create Account</a></div>
+      <div className="w-full px-5 text-slate-400 text-[1rem] mb-10">Not Registered? <a href={userSignUp} className="text-content-color font-[470]">Create Account</a></div>
 
       {/* Display the ErrorPopup component */}
       <ErrorPopup error={errors.email?.message} />
