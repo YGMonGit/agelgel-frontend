@@ -99,6 +99,7 @@ const moderatorApiSlice = agelgilAPI.injectEndpoints({
             invalidatesTags: ['Moderator'],
             onQueryStarted: async (_, { queryFulfilled }) => {
                 try {
+                    await queryFulfilled;
                     localStorage.removeItem('agelgilAuthorizationToken');
                     localStorage.removeItem('agelgilRefreshToken');
                 } catch (error) {
@@ -108,14 +109,15 @@ const moderatorApiSlice = agelgilAPI.injectEndpoints({
         }),
         updateRecipeStatus: builder.mutation<IRecipe, { recipeId: string; updates: IModeratorRecipeUpdateFrom }>({
             query: ({ recipeId, updates }) => ({
-                url: `/moderator/updateRecipeStatus/${recipeId}`,
+                url: `/private/moderator/updateRecipeStatus/${recipeId}`,
                 method: 'PATCH',
                 body: updates,
             }),
             invalidatesTags: (result, _, { recipeId }) => result ? [{ type: 'Recipe', id: recipeId }] : [],
+            transformResponse: (response: { body: IRecipe }) => response.body,
         }),
         moderatedRecipes: builder.query<IRecipe[], { status: ERecipeStatus, skip: number; limit: number }>({
-            query: ({ status, skip, limit }) => `/moderator/recipes/${status}?skip=${skip}&limit=${limit}`,
+            query: ({ status, skip, limit }) => `/private/moderator/recipes/${status}?skip=${skip}&limit=${limit}`,
             providesTags: (result, _, { status }) => result ? [{ type: 'Recipe', status }] : [],
             transformResponse: (response: { body: IRecipe[] }) => response.body,
         }),

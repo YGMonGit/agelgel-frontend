@@ -1,22 +1,19 @@
 import React, { useEffect, useState } from "react";
 import SignUpUsername from "../sub_pages/SignUpUsername";
 import SignUpCreatePassword from "../sub_pages/SignUpCreatePassword";
-import HealthConditions from "../sub_pages/HealthConditions";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import {
   IUserSignUpFrom,
-  EAllergies,
-  EDietaryPreferences,
-  EChronicDisease,
 } from "../../api/types/user.type";
-import { useSignUpMutation } from "../../api/slices/user.slices";
-import * as Bytescale from "@bytescale/sdk";
+
 import { useNavigate } from "react-router-dom";
 import { signUpSchema } from "../../validation/user.validation";
-import { homeUrl, moderatorHomeUrl } from "../../assets/data";
+import { moderatorHomeUrl } from "../../assets/data";
 import useFileUpload from "../../hooks/useFileUpload";
 import ErrorPopup from "../../components/ErrorPopup";
+import { useModeratorSignUpMutation } from "../../api/slices/moderator.slices";
+import { IModeratorSignUpFrom } from "../../api/types/moderator.type";
 
 function ModeratorSignUp() {
   // Form navigator state
@@ -28,21 +25,17 @@ function ModeratorSignUp() {
   const [lastName, setLastName] = useState("");
   const [email, setEmail] = useState("");
   const [phone, setPhone] = useState("");
+  const [bio, setBio] = useState("");
+
 
   // For form sign up create password
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
 
-  // For form sign up health conditions
-  const [healthCondition, setHealthCondition] = useState<EChronicDisease[]>([]);
-  const [allergy, setAllergy] = useState<EAllergies[]>([]);
-  const [mealPreference, setMealPreference] = useState<EDietaryPreferences[]>(
-    []
-  );
 
   const navigate = useNavigate();
 
-  const [signUp, { isLoading }] = useSignUpMutation();
+  const [signUp, { isLoading }] = useModeratorSignUpMutation();
   const { uploadFile, loading } = useFileUpload();
 
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
@@ -53,14 +46,13 @@ function ModeratorSignUp() {
     formState: { errors },
     setError,
     setValue,
-    getValues,
-  } = useForm<IUserSignUpFrom>({
+  } = useForm<IModeratorSignUpFrom>({
     resolver: zodResolver(signUpSchema),
   });
 
   console.log({ errors });
 
-  async function SignUp(user: IUserSignUpFrom) {
+  async function SignUp(user: IModeratorSignUpFrom) {
     console.log("signing up in...");
 
     try {
@@ -70,18 +62,8 @@ function ModeratorSignUp() {
       await signUp({
         data: {
           ...user,
+          bio,
           profile_img: fileUrl,
-          medical_condition: {
-            chronicDiseases:
-              healthCondition.length == 0
-                ? [EChronicDisease.none]
-                : healthCondition,
-            allergies: allergy.length == 0 ? [EAllergies.none] : allergy,
-            dietary_preferences:
-              mealPreference.length == 0
-                ? [EDietaryPreferences.none]
-                : mealPreference,
-          },
         },
       }).unwrap();
       navigate(moderatorHomeUrl);
@@ -92,7 +74,7 @@ function ModeratorSignUp() {
     }
   }
 
-  const handleWithGoogleClick = () => {};
+  const handleWithGoogleClick = () => { };
 
   const formatErrors = (): string | null => {
     const errorMessages: string[] = [];
@@ -115,11 +97,6 @@ function ModeratorSignUp() {
     if (errors.password) addErrorToPage(2, "password");
     if (errors.confirm_password) addErrorToPage(2, "confirm password");
 
-    if (errors.medical_condition?.chronicDiseases)
-      addErrorToPage(3, "chronic diseases");
-    if (errors.medical_condition?.allergies) addErrorToPage(3, "allergies");
-    if (errors.medical_condition?.dietary_preferences)
-      addErrorToPage(3, "dietary preferences");
 
     // Format error messages
     Object.entries(pageErrors).forEach(([page, fields]) => {
@@ -158,6 +135,8 @@ function ModeratorSignUp() {
           setValue={setValue}
           forModerator={true}
           handleWithGoogleClick={handleWithGoogleClick}
+          bio={bio}
+          setBio={setBio}
           errors={errors}
         />
       ) : (

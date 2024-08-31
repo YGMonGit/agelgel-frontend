@@ -20,7 +20,7 @@ import {
   DrawerTrigger,
 } from "../../components/ui/drawer";
 import { Button } from "../../components/ui/button";
-import { useGetUserQuery } from "../../api/slices/user.slices";
+import { useGetModeratorQuery } from "../../api/slices/moderator.slices";
 
 function ModeratorHome() {
   useEffect(() => {
@@ -40,7 +40,7 @@ function ModeratorHome() {
     ? pagination.limit
     : recommendedRecipes?.length || 0;
 
-  const { data: user } = useGetUserQuery();
+  const { data: user } = useGetModeratorQuery();
 
 
   return (

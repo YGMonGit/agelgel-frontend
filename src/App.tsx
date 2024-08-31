@@ -65,6 +65,7 @@ function App() {
       >
         <div className="mt-[56px]"></div>
         <Routes>
+
           <Route
             path={loginUrl}
             element={
@@ -83,6 +84,23 @@ function App() {
           />
 
           <Route path={welcomeUrl} element={<Loading />} />
+
+          <Route
+            path={moderatorSignUpUrl}
+            element={
+              <NavLayout>
+                <ModeratorSignUp />
+              </NavLayout>
+            }
+          />
+          <Route
+            path={moderatorLoginUrl}
+            element={
+              <NavLayout>
+                <ModeratorLogin />
+              </NavLayout>
+            }
+          />
 
           <Route
             path="/user/*"
@@ -138,54 +156,40 @@ function App() {
             path="/moderator/*"
             element={
               <ModeratorProtectedRoute>
-                <Route
-                  path={moderatorSignUpUrl}
-                  element={
-                    <NavLayout>
-                      <ModeratorSignUp />
-                    </NavLayout>
-                  }
-                />
-                <Route
-                  path={moderatorLoginUrl}
-                  element={
-                    <NavLayout>
-                      <ModeratorLogin />
-                    </NavLayout>
-                  }
-                />
-                <Route
-                  path={moderatorHomeUrl}
-                  element={
-                    <NavLayout>
-                      <ModeratorHome />
-                    </NavLayout>
-                  }
-                />
-                <Route
-                  path={moderatorSearchUrl}
-                  element={
-                    <NavLayout>
-                      <ModeratorSearch />
-                    </NavLayout>
-                  }
-                />
-                <Route
-                  path={`${moderatorRecipeDetailUrl}/:id`}
-                  element={
-                    <NavLayout>
-                      <ModeratorRecipeDetail />
-                    </NavLayout>
-                  }
-                />
-                <Route
-                  path={moderatorSpaceUrl}
-                  element={
-                    <NavLayout>
-                      <ModeratorSpace />
-                    </NavLayout>
-                  }
-                />
+                <Routes>
+                  <Route
+                    path={moderatorHomeUrl}
+                    element={
+                      <NavLayout>
+                        <ModeratorHome />
+                      </NavLayout>
+                    }
+                  />
+                  <Route
+                    path={moderatorSearchUrl}
+                    element={
+                      <NavLayout>
+                        <ModeratorSearch />
+                      </NavLayout>
+                    }
+                  />
+                  <Route
+                    path={`${moderatorRecipeDetailUrl}/:id`}
+                    element={
+                      <NavLayout>
+                        <ModeratorRecipeDetail />
+                      </NavLayout>
+                    }
+                  />
+                  <Route
+                    path={moderatorSpaceUrl}
+                    element={
+                      <NavLayout>
+                        <ModeratorSpace />
+                      </NavLayout>
+                    }
+                  />
+                </Routes>
               </ModeratorProtectedRoute>
             }
           />

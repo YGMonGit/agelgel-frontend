@@ -73,7 +73,7 @@ export interface IRecipe {
             full_name: string;
             profile_img: string;
         }
-        Comment: string;
+        comment: string;
     };
 
     user: {
@@ -83,6 +83,7 @@ export interface IRecipe {
     }
 
     hasBookedRecipe: boolean;
+    isModeratedRecipe: boolean;
 
 
     createdAt: Date;

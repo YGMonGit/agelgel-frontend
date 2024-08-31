@@ -1,20 +1,19 @@
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import PageHeader from "../../components/PageHeader";
 import { Input, UseGoogle } from "../../components/Input";
 import { RiEyeCloseLine, RiEyeLine } from "react-icons/ri";
 import { Checkbox } from "../../components/ui/checkbox";
 import WideButton from "../../components/WideButton";
-import { homeUrl, moderatorHomeUrl, moderatorSignUpUrl, signUpUrl } from "../../assets/data";
-import { useLogInMutation } from "../../api/slices/user.slices";
+import { moderatorHomeUrl, moderatorSignUpUrl, signUpUrl } from "../../assets/data";
 import { useForm } from "react-hook-form";
 import { IUserLogInFrom } from "../../api/types/user.type";
 import { zodResolver } from '@hookform/resolvers/zod';
-import { z } from 'zod';
 import { useNavigate } from "react-router-dom";
-import ProfileImageInput from "../../components/ProfileImageInput";
-import { logInSchema } from "../../validation/user.validation";
+import { logInSchema } from "../../validation/moderator.validation";
 import ClipLoader from "react-spinners/ClipLoader";
-import ErrorPopup from "../../components/ErrorPopup"; // Import the ErrorPopup component
+import ErrorPopup from "../../components/ErrorPopup";
+import { useModeratorIogInMutation } from "../../api/slices/moderator.slices";
+import { IModeratorLogInFrom } from "@/src/api/types/moderator.type";
 
 function ModeratorLogin() {
   const [email, setEmail] = useState("");
@@ -22,12 +21,12 @@ function ModeratorLogin() {
   const [showPassword, setShowPassword] = useState(false);
   const [rememberMe, setRememberMe] = useState(false);
   const [serverError, setServerError] = useState<string | null>(null);
-  
+
   const navigate = useNavigate();
 
-  const [logIn, { isLoading, isError }] = useLogInMutation();
+  const [logIn, { isLoading, isError }] = useModeratorIogInMutation();
 
-  const { register, handleSubmit, formState: { errors }, setError } = useForm<IUserLogInFrom>({
+  const { register, handleSubmit, formState: { errors }, setError } = useForm<IModeratorLogInFrom>({
     resolver: zodResolver(logInSchema),
   });
 
@@ -39,6 +38,7 @@ function ModeratorLogin() {
     } catch (error: any) {
       if (!error.data.error) return;
       const err = error.data.error;
+      console.log({ err });
       if (err.type === "Validation") {
         if (err.attr === "")
           setError("email", { message: err.msg });
@@ -50,7 +50,7 @@ function ModeratorLogin() {
     }
   }
 
-  const handleWithGoogleClick = () => {};
+  const handleWithGoogleClick = () => { };
 
   const onEmailChange = (e: React.ChangeEvent<HTMLInputElement>) => setEmail(e.target.value);
   const onPasswordChange = (e: React.ChangeEvent<HTMLInputElement>) => setPassword(e.target.value);
@@ -102,6 +102,9 @@ function ModeratorLogin() {
 
       {/* Display the ErrorPopup component */}
       <ErrorPopup error={errors.email?.message} />
+      {
+        serverError && <ErrorPopup error={serverError} />
+      }
     </div>
   );
 }

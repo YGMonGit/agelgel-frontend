@@ -20,8 +20,8 @@ export const editPostUrl = "/edit-post";
 export const mySpaceUrl = "/my-space";
 export const welcomeUrl = "/";
 
-export const moderatorSignUpUrl = "/sign-up";
-export const moderatorLoginUrl = "/login";
+export const moderatorSignUpUrl = "/moderator/sign-up";
+export const moderatorLoginUrl = "/moderator/login";
 export const moderatorHomeUrl = "/home";
 export const moderatorSearchUrl = "/search";
 export const moderatorRecipeDetailUrl = "/recipe-detail";
