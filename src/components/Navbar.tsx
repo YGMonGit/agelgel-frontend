@@ -22,6 +22,7 @@ import {
   moderatorSignUpUrl,
   moderatorRecipeDetailUrl,
   moderatorSpaceUrl,
+  moderatorAddIngredientUrl,
 } from "../assets/data";
 
 import { SlClose, SlArrowLeft } from "react-icons/sl";
@@ -59,7 +60,7 @@ function Navbar() {
           <CircleDropdown />
         </div>
       );
-    } else if (location.pathname === signUpUrl) {
+    } else if (location.pathname === signUpUrl || location.pathname === moderatorSignUpUrl) {
       return (
         <NavLink
           to="#"
@@ -78,10 +79,10 @@ function Navbar() {
       );
     } else if (location.pathname === searchUrl || location.pathname === moderatorSearchUrl) {
       return <CircleDropdown />;
-    } else if (location.pathname === loginUrl) {
+    } else if (location.pathname === loginUrl || location.pathname === moderatorLoginUrl) {
       return (
         <NavLink
-          to={signUpUrl}
+          to={location.pathname.startsWith("/moderator") ? moderatorSignUpUrl : signUpUrl}
           className="text-content-color text-[1.1rem] flex items-end font-[600] leading-none gap-1"
           onClick={() => {
             window.scrollTo({ top: 0 });
@@ -166,7 +167,8 @@ function Navbar() {
       location.pathname.startsWith(editPostUrl) ||
       location.pathname.startsWith(editUserUrl) ||
       location.pathname === mySpaceUrl ||
-      location.pathname === moderatorSpaceUrl
+      location.pathname === moderatorSpaceUrl ||
+      location.pathname === moderatorAddIngredientUrl
     ) {
       return (
         <NavLink

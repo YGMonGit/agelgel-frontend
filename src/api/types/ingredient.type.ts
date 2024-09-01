@@ -8,8 +8,9 @@ export interface IIngredient {
 
 export interface INewIngredientFrom {
     name: string;
+    localName: string;
     type: string;
-    unit: string;
+    unit: string[];
 }
 
 export interface IngredientUpdateFrom extends Partial<INewIngredientFrom> {

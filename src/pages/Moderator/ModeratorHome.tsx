@@ -21,6 +21,7 @@ import {
 } from "../../components/ui/drawer";
 import { Button } from "../../components/ui/button";
 import { useGetUserQuery } from "../../api/slices/user.slices";
+import ModeratorNav from "../../components/ModeratorNav";
 
 function ModeratorHome() {
   useEffect(() => {
@@ -33,15 +34,20 @@ function ModeratorHome() {
     limit: 10,
   });
 
-  const { data: recommendedRecipes, isLoading, isSuccess, isError } =
-    useGetRecipesQuery(pagination);
+  const {
+    data: recommendedRecipes,
+    isLoading,
+    isSuccess,
+    isError,
+  } = useGetRecipesQuery(pagination);
 
   const skeletonCount = isLoading
     ? pagination.limit
     : recommendedRecipes?.length || 0;
 
-  const { data: user } = useGetUserQuery();
+  const [spaceType, setSpaceType] = useState("recipe");
 
+  const { data: user } = useGetUserQuery();
 
   return (
     <div className="w-full flex-wrap flex flex-col justify-start items-center relative min-h-[100%-56px]">
@@ -49,6 +55,7 @@ function ModeratorHome() {
         header={`Good Morning, ${user?.first_name}!`}
         detail="Browse through our suggestions."
       />
+      <ModeratorNav spaceType={spaceType} setSpaceType={setSpaceType} />
       {/* <Search /> */}
       <div className="w-full px-5">
         <FilterBarActive data={filterData} />
@@ -58,11 +65,11 @@ function ModeratorHome() {
         <div className="grid grid-cols-2 sm:grid-cols-3 gap-4 w-full px-5">
           {isLoading
             ? Array.from({ length: skeletonCount }).map((_, index) => (
-              <DisplayCard post={null} key={`skeleton-${index}`} />
-            ))
+                <DisplayCard post={null} key={`skeleton-${index}`} />
+              ))
             : recommendedRecipes?.map((post, index) => (
-              <DisplayCard post={post} key={index} />
-            ))}
+                <DisplayCard post={post} key={index} />
+              ))}
         </div>
       ) : (
         <div className="w-full flex justify-center items-center flex-grow">

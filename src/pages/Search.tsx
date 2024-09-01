@@ -1,13 +1,13 @@
 import React, { useEffect, useState } from "react";
 import PageHeader from "../components/PageHeader";
 import SearchC from "../components/Search";
-import { homeUrl } from "../assets/data";
+import { homeUrl, moderatorHomeUrl } from "../assets/data";
 import DisplayCard from "../components/DisplayCard";
 import {
   useGetRecipesQuery,
   useSearchRecipesMutation,
 } from "../api/slices/recipe.slices";
-import { useNavigate } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 import { MdOutlineKeyboardArrowLeft } from "react-icons/md";
 import { useGetUserQuery } from "../api/slices/user.slices";
 import {
@@ -26,6 +26,7 @@ import EmptyListIcon from "../assets/images/empty-list.png";
 
 function Search() {
   const navigate = useNavigate();
+  const location = useLocation();
 
   const [page, setPage] = useState(1);
   const [Search, { data: searchedRecipes, isLoading: searchedLoading }] =
@@ -73,10 +74,10 @@ function Search() {
   }, [user, useUserData]);
 
   return (
-    <div className="w-full flex-wrap flex flex-col justify-start items-center relative mb-5">
+    <div className="w-full flex-grow flex-wrap flex flex-col justify-start items-center relative mb-5 bg-rd-300">
       <div
         className="text-[1.1rem] text-content-color font-semibold cursor-pointer select-none mt-5 flex justify-start items-center w-full px-5"
-        onClick={() => navigate(homeUrl)}
+        onClick={() => navigate(location.pathname.startsWith("/user") ? homeUrl : moderatorHomeUrl)}
       >
         <MdOutlineKeyboardArrowLeft className="text-[1.9rem]" /> Home
       </div>
@@ -112,9 +113,9 @@ function Search() {
         difficultyContent={difficultyContent}
         setDifficultyContent={setDifficultyContent}
       />
-      <div
+      {/* <div
         className="text-[1.1rem] text-content-color font-semibold cursor-pointer select-none mt-5 flex justify-start items-center w-full px-5"
-        onClick={() => navigate(homeUrl)}
+        onClick={() => navigate(location.pathname.startsWith("/user") ? homeUrl : moderatorHomeUrl)}
       >
         <MdOutlineKeyboardArrowLeft className="text-[1.9rem]" /> Home
       </div>
@@ -149,7 +150,7 @@ function Search() {
         setPreferenceContent={setPreferenceContent}
         difficultyContent={difficultyContent}
         setDifficultyContent={setDifficultyContent}
-      />
+      /> */}
 
       <div className="grid grid-cols-2 sm:grid-cols-3 gap-4 w-full px-5 mt-4">
         {searchedRecipes?.length !== 0 ? (

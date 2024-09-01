@@ -65,7 +65,7 @@ function CircleDropdown() {
             <li className="hover:bg-gray-100 text-slate-500 rounded-md p-1 px-3 cursor-pointer" onClick={() => navigate(location.pathname.startsWith("/moderator") ? moderatorSpaceUrl : mySpaceUrl)}>
               Recipes
             </li>
-            {location.pathname === homeUrl || location.pathname === searchUrl && (
+            {(location.pathname === homeUrl || location.pathname === searchUrl) && (
               <li className="hover:bg-gray-100 text-slate-500 rounded-md p-1 px-3 cursor-pointer">
                 Health condition
               </li>
