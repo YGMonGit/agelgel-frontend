@@ -14,10 +14,9 @@ import Rating from "@mui/material/Rating";
 import { styled } from "@mui/system";
 import Comment, { ModeratorComment } from "../../components/Comment";
 import {
+  useGetModeratorRecipeByIdQuery,
   useGetPrivateRecipeByIdQuery,
   useGetRecipeByIdQuery,
-  useGetRecipeCarbsQuery,
-  useGetRecipesQuery,
   useSimilarQuery,
 } from "../../api/slices/recipe.slices";
 import { IIngredient } from "../../api/types/ingredient.type";
@@ -42,13 +41,10 @@ import {
   useCreateReviewMutation,
   useGetRecipeReviewsQuery,
 } from "../../api/slices/review.slices";
-import { set } from "react-hook-form";
 import CircularProgress from "../../components/CircularProgress";
-import { HiFire } from "react-icons/hi";
 import DisplayCard from "../../components/DisplayCard";
 import { useToggleBookedRecipeMutation } from "../../api/slices/user.slices";
 import ClipLoader from "react-spinners/ClipLoader";
-import FilterBarActive from "../../components/FilterBarActive";
 import { getCalorieColor, getCarbsColor, getFatColor, getFiberColor, getProteinColor } from "../../assets/data";
 
 // import { IoAdd } from "react-icons/io5";
@@ -56,6 +52,9 @@ import { MdVerified } from "react-icons/md";
 import DetailInput from "../../components/DetailInput";
 import { Button } from "../../components/ui/button";
 import { RiCloseLargeLine } from "react-icons/ri";
+import { useUpdateRecipeStatusMutation } from "../../api/slices/moderator.slices";
+import { ERecipeStatus } from "../../api/types/recipe.type";
+import { set } from "react-hook-form";
 
 const StyledRating = styled(Rating)({
   fontSize: "1rem",
@@ -117,7 +116,7 @@ function ModeratorRecipeDetail() {
   };
 
   const { data: recipe, isLoading: recipesLoading } =
-    useGetPrivateRecipeByIdQuery(String(rID.id));
+    useGetModeratorRecipeByIdQuery(String(rID.id));
   const [reviewsPagination, setReviewsPagination] = useState({
     skip: 0,
     limit: 10,
@@ -129,11 +128,9 @@ function ModeratorRecipeDetail() {
       limit: reviewsPagination.limit,
     }
   );
-  const [CreateReview, { isLoading: createLoading }] =
-    useCreateReviewMutation();
+  const [UpdateRecipeStatus, { isLoading: createLoading }] =
+    useUpdateRecipeStatusMutation();
   const [ingredientImages, setIngredientImages] = useState<string[]>([]);
-  const [ToggleBookedRecipe, { isLoading: bookMarkLoading }] =
-    useToggleBookedRecipeMutation();
 
   const [page, setPage] = useState(0);
 
@@ -166,17 +163,6 @@ function ModeratorRecipeDetail() {
     }
   }, [recipe]);
 
-  async function addComment(e: React.FormEvent<HTMLFormElement>) {
-    e.preventDefault();
-    console.log("Adding comment...");
-    await CreateReview({
-      recipe: recipe?._id ?? "",
-      rating: value ?? 0,
-      comment: newComment,
-    }).unwrap();
-    setNewComment("");
-    setValue(0);
-  }
 
   function convertToEmbedUrl(youtubeLink: string) {
     const videoId = youtubeLink.split("v=")[1];
@@ -257,42 +243,9 @@ function ModeratorRecipeDetail() {
               {recipe.user.full_name}
             </p>
           </div>
-          <BsFillPersonCheckFill className="text-content-color text-[1.5rem]" />
         </div>
         <div className="w-full flex justify-between items-center mt-6">
           <h2 className="text-[1.3rem] font-bold">{recipe.name}</h2>
-          {recipe.hasBookedRecipe ? (
-            !bookMarkLoading ? (
-              <HiMiniBookmark
-                fill="#0e9f6e"
-                className="text-[1.5rem] text-highlight-color"
-                onClick={async () => {
-                  await ToggleBookedRecipe({ recipeId: recipe._id }).unwrap();
-                }}
-              />
-            ) : (
-              <ClipLoader
-                color={"var(--content-color)"}
-                size={15}
-                aria-label="Loading Spinner"
-                data-testid="loader"
-              />
-            )
-          ) : !bookMarkLoading ? (
-            <HiOutlineBookmark
-              className="text-[1.5rem] text-content-color"
-              onClick={async () => {
-                await ToggleBookedRecipe({ recipeId: recipe._id }).unwrap();
-              }}
-            />
-          ) : (
-            <ClipLoader
-              color={"var(--content-color)"}
-              size={15}
-              aria-label="Loading Spinner"
-              data-testid="loader"
-            />
-          )}
         </div>
         <div className="w-full flex justify-start items-center gap-1 my-2">
           <StyledRating
@@ -482,70 +435,10 @@ function ModeratorRecipeDetail() {
             <Comment key={index} comments={review as IReview} />
           ))}
         </div>
-        <form
-          className="w-full flex flex-col justify-start items-start gap-3"
-          onSubmit={addComment}
-        >
-          <Rating
-            name="simple-controlled"
-            size="small"
-            value={value}
-            onChange={(
-              event: React.SyntheticEvent<Element, Event>,
-              newValue: number | null
-            ) => {
-              setValue(newValue);
-            }}
-          />
-          <input
-            type="text"
-            placeholder="Add a comment ..."
-            value={newComment}
-            onChange={onNewCommentChange}
-            autoComplete="off"
-            required
-            className={`w-full py-[10px] bg-[#F9FAFB] leading-none text-[1rem] px-4 border outline-none rounded-lg border-[#D1D5DB]`}
-          />
-          {!showCommentButton && (
-            <p className="text-yellow-300 text-[.8rem] leading-none mb-3 -mt-2">
-              {value === 0 && newComment.trim() !== "" && "Please fill retting"}
-              {newComment.trim() === "" && value !== 0 && "Please fill comment"}
-              {newComment.trim() === "" &&
-                value === 0 &&
-                "Please fill retting and comment"}
-            </p>
-          )}
-          {createLoading ? (
-            <button
-              type="submit"
-              className={`flex justify-center items-center gap-2 ${showCommentButton
-                ? "w-full h-[52px] bg-content-color mb-5 text-white rounded-lg"
-                : "w-full py-[8px] bg-neutral-300 text-neutral-500 mb-5"
-                }`}
-              disabled={false}
-            >
-              <ClipLoader
-                color={"white"}
-                size={15}
-                aria-label="Loading Spinner"
-                data-testid="loader"
-              />
-              <p className="text-white text-[1.1rem] italic">loading ...</p>
-            </button>
-          ) : (
-            <button
-              type="submit"
-              className={`${showCommentButton
-                ? "w-full h-[52px] bg-content-color mb-5 text-white rounded-lg"
-                : "w-full py-[8px] bg-neutral-300 text-neutral-500 mb-5"
-                }`}
-              disabled={!showCommentButton}
-            >
-              Comment
-            </button>
-          )}
-        </form>
-        <div className="w-full flex justify-end items-center sticky bottom-0 px-2 pb-6">
+
+        <div className="w-full flex justify-end items-center sticky bottom-0 px-2 pb-6" style={{
+          display: recipe.isModeratedRecipe ? "none" : "flex"
+        }}>
           <div
             className="w-14 h-14 bg-content-color flex justify-center items-center rounded-full text-[2rem] text-white"
             onClick={openDrawer}
@@ -554,47 +447,71 @@ function ModeratorRecipeDetail() {
           </div>
         </div>
         <Drawer
-        duration={250}
-        hideScrollbars={true}
-        onClose={closeDrawer}
-        isVisible={isVisible}
-      >
-        <div
-          className="w-full overflow-y-auto max-h-[70vh] flex flex-col justify-start items-start mt-8"
-          style={{ scrollbarWidth: "none", msOverflowStyle: "none" }}
+          duration={250}
+          hideScrollbars={true}
+          onClose={closeDrawer}
+          isVisible={isVisible}
         >
-          <DetailInput
-            label="Comment"
-            placeholder="Write recipe description here ..."
-            value={mComment}
-            onChange={onMCommentChange}
-            noPad={true}
+          <div
+            className="w-full overflow-y-auto max-h-[70vh] flex flex-col justify-start items-start mt-8"
+            style={{ scrollbarWidth: "none", msOverflowStyle: "none" }}
+          >
+            <DetailInput
+              label="Comment"
+              placeholder="Write recipe description here ..."
+              value={mComment}
+              onChange={onMCommentChange}
+              noPad={true}
             // register={register}
             // errors={errors && errors.instructions}
-          />
-          <div className="w-full flex flex-col justify-center items-center px-2 gap-2 pb-8">
-            <WideButton
+            />
+            <div className="w-full flex flex-col justify-center items-center px-2 gap-2 pb-8">
+              <WideButton
                 label="Approve"
                 color="bg-content-color"
+                disable={createLoading}
+                clickEvent={async () => {
+                  await UpdateRecipeStatus({
+                    recipeId: recipe._id,
+                    updates: {
+                      comment: mComment,
+                      status: ERecipeStatus.verified,
+                    }
+                  });
+                  setMComment("");
+                  closeDrawer();
+                }}
               />
-            <WideButton
+              <WideButton
                 label="Disapprove"
                 color="bg-red-500"
                 borderColor="border-red-500"
+                disable={createLoading}
+                clickEvent={async () => {
+                  await UpdateRecipeStatus({
+                    recipeId: recipe._id,
+                    updates: {
+                      comment: mComment,
+                      status: ERecipeStatus.verified,
+                    }
+                  }).unwrap();
+                  setMComment("");
+                  closeDrawer();
+                }}
               />
+            </div>
+            <Button
+              variant="outline"
+              className="absolute top-4 right-2 border-none shadow-none"
+              onClick={(e) => {
+                e.preventDefault();
+                closeDrawer();
+              }}
+            >
+              <RiCloseLargeLine className="text-[1rem] text-content-color" />
+            </Button>
           </div>
-          <Button
-            variant="outline"
-            className="absolute top-4 right-2 border-none shadow-none"
-            onClick={(e) => {
-              e.preventDefault();
-              closeDrawer();
-            }}
-          >
-            <RiCloseLargeLine className="text-[1rem] text-content-color" />
-          </Button>
-        </div>
-      </Drawer>
+        </Drawer>
       </div>
     );
   }

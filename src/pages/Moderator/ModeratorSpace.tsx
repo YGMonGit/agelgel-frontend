@@ -8,13 +8,14 @@ import {
 import { ERecipeStatus } from "../../api/types/recipe.type";
 
 import EmptyListIcon from "../../assets/images/empty-list.png";
+import { useModeratedRecipesQuery } from "../../api/slices/moderator.slices";
 
 function ModeratorSpace() {
   const [spaceType, setSpaceType] = useState(true);
   const [postStatus, setPostStatus] = useState(ERecipeStatus.verified);
 
   const { data: myRecipes, isLoading: myRecipesIsLoading } =
-    useGetMyRecipesQuery(
+    useModeratedRecipesQuery(
       { status: postStatus, skip: 0, limit: 10 },
       {
         skip: !spaceType,
@@ -54,23 +55,23 @@ function ModeratorSpace() {
       </div>
 
       {/* {spaceType ? ( */}
-        {myRecipes?.length !== 0 ? (
-          <div className="grid grid-cols-2 sm:grid-cols-3 gap-4 w-full px-5 mt-5">
-            {myRecipesIsLoading
-              ? Array.from({ length: skeletonMyRecipeCount }).map(
-                (_, index) => (
-                  <DisplayCard post={null} key={`skeleton-${index}`} />
-                )
+      {myRecipes?.length !== 0 ? (
+        <div className="grid grid-cols-2 sm:grid-cols-3 gap-4 w-full px-5 mt-5">
+          {myRecipesIsLoading
+            ? Array.from({ length: skeletonMyRecipeCount }).map(
+              (_, index) => (
+                <DisplayCard post={null} key={`skeleton-${index}`} />
               )
-              : myRecipes?.map((post, index) => (
-                <DisplayCard post={post} key={index} />
-              ))}
-          </div>
-        ) : (
-          <div className="w-full flex justify-center items-center flex-grow">
-            <img src={EmptyListIcon} alt="pic" className="w-[75%] sm:w-[50%]" />
-          </div>
-        )}
+            )
+            : myRecipes?.map((post, index) => (
+              <DisplayCard post={post} key={index} />
+            ))}
+        </div>
+      ) : (
+        <div className="w-full flex justify-center items-center flex-grow">
+          <img src={EmptyListIcon} alt="pic" className="w-[75%] sm:w-[50%]" />
+        </div>
+      )}
     </div>
   );
 }

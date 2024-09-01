@@ -5,7 +5,7 @@ import { homeUrl, moderatorHomeUrl } from "../../assets/data";
 import DisplayCard from "../../components/DisplayCard";
 import {
   useGetRecipesQuery,
-  useSearchRecipesMutation,
+  useModeratorSearchRecipesMutation,
 } from "../../api/slices/recipe.slices";
 import { useNavigate } from "react-router-dom";
 import { MdOutlineKeyboardArrowLeft } from "react-icons/md";
@@ -29,7 +29,7 @@ function ModeratorSearch() {
 
   const [page, setPage] = useState(1);
   const [Search, { data: searchedRecipes, isLoading: searchedLoading }] =
-    useSearchRecipesMutation();
+    useModeratorSearchRecipesMutation();
   useEffect(() => {
     Search({ page: page, form: {} });
   }, []);

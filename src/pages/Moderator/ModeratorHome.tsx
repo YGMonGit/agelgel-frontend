@@ -5,7 +5,7 @@ import FilterBar from "../../components/FilterBar";
 import FilterBarActive from "../../components/FilterBarActive";
 import { filterData, postUrl } from "../../assets/data";
 import DisplayCard from "../../components/DisplayCard";
-import { useGetRecipesQuery } from "../../api/slices/recipe.slices";
+import { useGetModeratorRecipesQuery, useGetRecipesQuery } from "../../api/slices/recipe.slices";
 import { useNavigate } from "react-router-dom";
 import EmptyListIcon from "../../assets/images/empty-list.png";
 
@@ -20,7 +20,8 @@ import {
   DrawerTrigger,
 } from "../../components/ui/drawer";
 import { Button } from "../../components/ui/button";
-import { useGetUserQuery } from "../../api/slices/user.slices";
+import { useGetModeratorQuery } from "../../api/slices/moderator.slices";
+import { EPreferredMealTime, EPreferredMealTimeFilter } from "../../api/types/recipe.type";
 import ModeratorNav from "../../components/ModeratorNav";
 
 function ModeratorHome() {
@@ -33,21 +34,20 @@ function ModeratorHome() {
     skip: 0,
     limit: 10,
   });
+  const [filter, setFilter] = useState<string | null>(null);
 
-  const {
-    data: recommendedRecipes,
-    isLoading,
-    isSuccess,
-    isError,
-  } = useGetRecipesQuery(pagination);
+  const { data: recommendedRecipes, isLoading, refetch, isFetching, isUninitialized } =
+    useGetModeratorRecipesQuery({ skip: pagination.skip, limit: pagination.limit, filter: filter || "all" }, {
+      skip: filter ? false : true
+    });
 
   const skeletonCount = isLoading
     ? pagination.limit
     : recommendedRecipes?.length || 0;
+    const [spaceType, setSpaceType] = useState("recipe");
 
-  const [spaceType, setSpaceType] = useState("recipe");
+  const { data: user } = useGetModeratorQuery();
 
-  const { data: user } = useGetUserQuery();
 
   return (
     <div className="w-full flex-wrap flex flex-col justify-start items-center relative min-h-[100%-56px]">
@@ -58,7 +58,11 @@ function ModeratorHome() {
       <ModeratorNav spaceType={spaceType} setSpaceType={setSpaceType} />
       {/* <Search /> */}
       <div className="w-full px-5">
-        <FilterBarActive data={filterData} />
+        <FilterBarActive data={Object.values(EPreferredMealTimeFilter)} selectedChip={filter as any} setSelectedChip={(filter) => {
+          console.log({ filter });
+          setFilter(filter);
+          if (!isFetching && !isUninitialized) refetch();
+        }} />
       </div>
 
       {recommendedRecipes?.length !== 0 ? (
