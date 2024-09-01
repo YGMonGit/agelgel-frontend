@@ -22,6 +22,7 @@ import {
 } from "../components/ui/drawer";
 import { Button } from "../components/ui/button";
 import { useGetUserQuery } from "../api/slices/user.slices";
+import { EPreferredMealTime, EPreferredMealTimeFilter } from "../api/types/recipe.type";
 
 function Home() {
   useEffect(() => {
@@ -34,10 +35,13 @@ function Home() {
     limit: 10,
   });
 
-  const { data: recommendedRecipes, isLoading, isSuccess, isError } =
+  const [filter, setFilter] = useState<EPreferredMealTimeFilter>(EPreferredMealTimeFilter.all);
+
+
+  const { data: recommendedRecipes, isFetching, isUninitialized, refetch } =
     useGetRecipesQuery(pagination);
 
-  const skeletonCount = isLoading
+  const skeletonCount = isFetching
     ? pagination.limit
     : recommendedRecipes?.length || 0;
 
@@ -52,12 +56,15 @@ function Home() {
       />
       {/* <Search /> */}
       <div className="w-full px-5">
-        <FilterBarActive data={filterData} />
+        <FilterBarActive data={["all", ...Object.values(EPreferredMealTime)]} selectedChip={filter} setSelectedChip={(filter) => {
+          setFilter(filter as any);
+          if (!isFetching && !isUninitialized) refetch();
+        }} />
       </div>
 
       {recommendedRecipes?.length !== 0 ? (
         <div className="grid grid-cols-2 sm:grid-cols-3 gap-4 w-full px-5">
-          {isLoading
+          {isFetching
             ? Array.from({ length: skeletonCount }).map((_, index) => (
               <DisplayCard post={null} key={`skeleton-${index}`} />
             ))

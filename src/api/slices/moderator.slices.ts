@@ -117,7 +117,7 @@ const moderatorApiSlice = agelgilAPI.injectEndpoints({
             transformResponse: (response: { body: IRecipe }) => response.body,
         }),
         moderatedRecipes: builder.query<IRecipe[], { status: ERecipeStatus, skip: number; limit: number }>({
-            query: ({ status, skip, limit }) => `/private/moderator/recipes/${status}?skip=${skip}&limit=${limit}`,
+            query: ({ status, skip, limit }) => `/private/moderator/moderatedRecipes/${status}/${skip}/${limit}`,
             providesTags: (result, _, { status }) => result ? [{ type: 'Recipe', status }] : [],
             transformResponse: (response: { body: IRecipe[] }) => response.body,
         }),

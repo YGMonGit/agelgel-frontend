@@ -5,7 +5,7 @@ import FilterBar from "../../components/FilterBar";
 import FilterBarActive from "../../components/FilterBarActive";
 import { filterData, postUrl } from "../../assets/data";
 import DisplayCard from "../../components/DisplayCard";
-import { useGetRecipesQuery } from "../../api/slices/recipe.slices";
+import { useGetModeratorRecipesQuery, useGetRecipesQuery } from "../../api/slices/recipe.slices";
 import { useNavigate } from "react-router-dom";
 import EmptyListIcon from "../../assets/images/empty-list.png";
 
@@ -21,6 +21,7 @@ import {
 } from "../../components/ui/drawer";
 import { Button } from "../../components/ui/button";
 import { useGetModeratorQuery } from "../../api/slices/moderator.slices";
+import { EPreferredMealTime, EPreferredMealTimeFilter } from "../../api/types/recipe.type";
 
 function ModeratorHome() {
   useEffect(() => {
@@ -32,9 +33,12 @@ function ModeratorHome() {
     skip: 0,
     limit: 10,
   });
+  const [filter, setFilter] = useState<string | null>(null);
 
-  const { data: recommendedRecipes, isLoading, isSuccess, isError } =
-    useGetRecipesQuery(pagination);
+  const { data: recommendedRecipes, isLoading, refetch, isFetching, isUninitialized } =
+    useGetModeratorRecipesQuery({ skip: pagination.skip, limit: pagination.limit, filter: filter || "all" }, {
+      skip: filter ? false : true
+    });
 
   const skeletonCount = isLoading
     ? pagination.limit
@@ -51,7 +55,11 @@ function ModeratorHome() {
       />
       {/* <Search /> */}
       <div className="w-full px-5">
-        <FilterBarActive data={filterData} />
+        <FilterBarActive data={Object.values(EPreferredMealTimeFilter)} selectedChip={filter as any} setSelectedChip={(filter) => {
+          console.log({ filter });
+          setFilter(filter);
+          if (!isFetching && !isUninitialized) refetch();
+        }} />
       </div>
 
       {recommendedRecipes?.length !== 0 ? (

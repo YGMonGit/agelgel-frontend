@@ -11,6 +11,17 @@ export enum EPreferredMealTime {
     dessert = "dessert",
     other = "other",
 }
+
+export enum EPreferredMealTimeFilter {
+    all = "all",
+    breakfast = "breakfast",
+    lunch = "lunch",
+    dinner = "dinner",
+    snack = "snack",
+    dessert = "dessert",
+    other = "other",
+}
+
 export type TPreferredMealTime = "breakfast" | "lunch" | "dinner" | "snack" | "dessert" | "other";
 
 

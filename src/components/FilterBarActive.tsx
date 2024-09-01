@@ -1,12 +1,15 @@
 import React, { useEffect, useRef, useState } from "react";
 import { Chip } from "@mui/material";
+import { EPreferredMealTimeFilter } from "../api/types/recipe.type";
 
 interface FilterBarActiveProps {
   data: string[];
+  selectedChip: EPreferredMealTimeFilter | null;
+  setSelectedChip: (condition: EPreferredMealTimeFilter) => void;
 }
 
-function FilterBarActive({ data }: FilterBarActiveProps) {
-  const [selectedChip, setSelectedChip] = useState<string | null>(null);
+function FilterBarActive({ data, selectedChip, setSelectedChip }: FilterBarActiveProps) {
+
   const scrollableDivRef = useRef<HTMLDivElement>(null);
 
   // Determine the current time of day and set the selected chip
@@ -15,16 +18,16 @@ function FilterBarActive({ data }: FilterBarActiveProps) {
 
     if (currentHour >= 6 && currentHour < 11) {
       // Breakfast time: 6 AM - 11 AM
-      setSelectedChip("Breakfast");
+      setSelectedChip(EPreferredMealTimeFilter.breakfast);
     } else if (currentHour >= 11 && currentHour < 16) {
       // Lunch time: 11 AM - 4 PM
-      setSelectedChip("Lunch");
+      setSelectedChip(EPreferredMealTimeFilter.lunch);
     } else if (currentHour >= 16 && currentHour < 18) {
       // Snacks time: 4 PM - 6 PM
-      setSelectedChip("Snacks");
-    } else {
+      setSelectedChip(EPreferredMealTimeFilter.snack);
+    } else if (currentHour >= 18 || currentHour < 6) {
       // Dinner time: 6 PM - 6 AM
-      setSelectedChip("Dinner");
+      setSelectedChip(EPreferredMealTimeFilter.dinner);
     }
   }, []);
 
@@ -35,9 +38,8 @@ function FilterBarActive({ data }: FilterBarActiveProps) {
     }
   };
 
-  const handleChipClick = (condition: string) => {
-    console.log(condition);
-    setSelectedChip(condition === selectedChip ? null : condition);
+  const handleChipClick = (condition: EPreferredMealTimeFilter) => {
+    setSelectedChip(condition);
   };
 
   return (
@@ -52,7 +54,7 @@ function FilterBarActive({ data }: FilterBarActiveProps) {
           <Chip
             key={index}
             label={condition}
-            onClick={() => handleChipClick(condition)}
+            onClick={() => { handleChipClick(EPreferredMealTimeFilter[condition as keyof typeof EPreferredMealTimeFilter]) }}
             sx={{
               margin: "0 4px",
               borderRadius: "8px",
@@ -66,9 +68,9 @@ function FilterBarActive({ data }: FilterBarActiveProps) {
                   color: "#15803d"
                 }
                 : {
-                    backgroundColor: "#e5e7eb",
-                    color: "#1f2937",
-                  },
+                  backgroundColor: "#e5e7eb",
+                  color: "#1f2937",
+                },
             }}
             className="font-[500]"
           />
