@@ -5,6 +5,7 @@ import { RiEyeCloseLine, RiEyeLine } from "react-icons/ri";
 import WideButton from "../../components/WideButton";
 import { loginUrl, moderatorLoginUrl } from "../../assets/data";
 import WideLink from "../../components/WideLink";
+import ClipLoader from "react-spinners/ClipLoader";
 
 interface SingUpCreatePasswordProps {
   setFormNumber: React.Dispatch<React.SetStateAction<number>>;
@@ -15,6 +16,7 @@ interface SingUpCreatePasswordProps {
   register: any;
   errors: any;
   forModerator?: boolean;
+  isLoading?: any;
   handleWithGoogleClick?: () => void;
 }
 
@@ -27,6 +29,7 @@ function SignUpCreatePassword({
   register,
   errors,
   forModerator = false,
+  isLoading,
   handleWithGoogleClick,
 }: SingUpCreatePasswordProps) {
   const [showPassword, setShowPassword] = useState(false);
@@ -96,10 +99,24 @@ function SignUpCreatePassword({
           clickAction={onBackClick}
         />
         {forModerator ? (
-          <WideButton
-            label="Finish"
-            color="bg-content-color"
-          />
+          isLoading ? (
+            <WideButton label={
+              <div className="flex justify-center items-center w-full h-full gap-2">
+              <ClipLoader
+              color={"white"}
+              size={15}
+              aria-label="Loading Spinner"
+              data-testid="loader"
+              />
+              <p className="text-white text-[1.1rem] italic">loading ...</p>
+              </div>
+            } color="bg-content-color" disable={isLoading} />
+          ) : (
+            <WideButton
+              label="Finish"
+              color="bg-content-color"
+            />
+          )
         ): (
           <WideLink
             label="Next"
