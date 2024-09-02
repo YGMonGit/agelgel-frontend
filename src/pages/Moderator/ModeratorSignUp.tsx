@@ -149,6 +149,7 @@ function ModeratorSignUp() {
           register={register}
           errors={errors}
           forModerator={true}
+          isLoading={isLoading}
           handleWithGoogleClick={handleWithGoogleClick}
         />
       )}
