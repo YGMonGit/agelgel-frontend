@@ -40,6 +40,11 @@ const ingredientApiSlice = agelgilAPI.injectEndpoints({
             transformResponse: (response: { body: string[] }) => response.body,
             providesTags: ['Ingredient'],
         }),
+        getUniqueUnit: builder.query<string[], void>({
+            query: () => `/public/ingredients/unique/unitOptions`,
+            transformResponse: (response: { body: string[] }) => response.body,
+            providesTags: ['Ingredient'],
+        }),
         createIngredient: builder.mutation<IIngredient, INewIngredientFrom>({
             query: (newIngredient) => ({
                 url: '/private/ingredients/',
@@ -63,6 +68,9 @@ export const {
     useGetIngredientByIdQuery,
     useGetIngredientsQuery,
     useGetIngredientByNameQuery,
-    // useCreateIngredientMutation,
-    // useUpdateIngredientMutation,
+    useGetUniqueTypeQuery,
+    useGetUniqueNameQuery,
+    useCreateIngredientMutation,
+    useUpdateIngredientMutation,
+    useGetUniqueUnitQuery,
 } = ingredientApiSlice
