@@ -96,3 +96,8 @@ export interface IUserSignUpFrom {
 export interface IUserUpdateFrom extends Partial<IUserSignUpFrom> {
 }
 
+export interface IModeratorUserUpdateSchema {
+    verified?: boolean;
+    status?: EStatus;
+}
+

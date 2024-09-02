@@ -1,6 +1,6 @@
 import agelgilAPI from "..";
 import { ERecipeStatus, IRecipe } from "../types/recipe.type";
-import { IUser, IUserSignUpFrom, IUserLogInFrom, IUserUpdateFrom } from "../types/user.type";
+import { IUser, IUserSignUpFrom, IUserLogInFrom, IUserUpdateFrom, IModeratorUserUpdateSchema } from "../types/user.type";
 
 const userApiSlice = agelgilAPI.injectEndpoints({
     endpoints: (builder) => ({
@@ -138,6 +138,26 @@ const userApiSlice = agelgilAPI.injectEndpoints({
                 }
             },
         }),
+        listUsers: builder.query<IUser[], { page: number; verified: boolean }>({
+            query: ({ page, verified }) => `/private/user/list/${page}/verified=${verified}`,
+            providesTags: (result) =>
+                result
+                    ? [
+                        ...result.map((user) => ({ type: 'Users' as const, id: user._id })),
+                        { type: 'Users' as const, id: 'List' },
+                    ]
+                    : [{ type: 'Users' as const, id: 'List' }],
+            transformResponse: (response: { body: IUser[] }) => response.body,
+        }),
+        updateUserStatus: builder.mutation<IUser, { userId: string; update: IModeratorUserUpdateSchema }>({
+            query: ({ userId, update }) => ({
+                url: `/private/user/updateUserStatus/${userId}`,
+                method: 'PATCH',
+                body: update,
+            }),
+            invalidatesTags: (result, _, { userId }) => result ? [{ type: 'User', id: userId }] : [],
+            transformResponse: (response: { body: IUser }) => response.body,
+        }),
     }),
 });
 
@@ -152,4 +172,6 @@ export const {
     useLogInMutation,
     useRefreshTokenQuery,
     useLogOutMutation,
+    useListUsersQuery,
+    useUpdateUserStatusMutation,
 } = userApiSlice
