@@ -404,10 +404,10 @@ function RecipeDetail() {
                     }`}
                 />
                 <GoDotFill className="text-[.7rem] ml-[6px] mr-1 text-slate-500" />
-                {(ingredient.ingredient as IIngredient).name}({" "}
-                {(ingredient.ingredient as IIngredient).localName} )-{" "}
+                {ingredient.name}({" "}
+                {ingredient.localName} )-{" "}
                 {ingredient.amount}{" "}
-                {(ingredient.ingredient as IIngredient).unit}
+                {ingredient.unit}
               </div>
             );
           })}

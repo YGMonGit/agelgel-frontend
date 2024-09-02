@@ -8,7 +8,6 @@ import {
   INewRecipeFrom,
   EPreparationDifficulty,
   EPreferredMealTime,
-  IngredientDetail,
   IngredientDetailWithUnit,
 } from "../api/types/recipe.type";
 import { useFieldArray, useForm } from "react-hook-form";
@@ -26,6 +25,7 @@ import { homeUrl } from "../assets/data";
 import { useGetUserQuery } from "../api/slices/user.slices";
 import useFileUpload from "../hooks/useFileUpload";
 import ErrorPopup from "../components/ErrorPopup";
+import { INewIngredientFrom } from "../api/types/ingredient.type";
 
 function NewRecipeForm() {
   // Form navigator state
@@ -60,7 +60,7 @@ function NewRecipeForm() {
   const [ingredientList, setIngredientList] = useState<
     IngredientDetailWithUnit[]
   >([]);
-  const [ingredients, setIngredients] = useState<IngredientDetail[]>([]);
+  const [ingredients, setIngredients] = useState<INewIngredientFrom[]>([]);
 
   const [instructions, setInstructions] = useState("");
   const { uploadFile, loading } = useFileUpload();
@@ -88,7 +88,7 @@ function NewRecipeForm() {
   });
 
   useEffect(() => {
-    replaceIngredients(ingredients);
+    replaceIngredients(ingredients as any);
   }, [ingredients]);
 
   useEffect(() => {
@@ -213,12 +213,13 @@ function NewRecipeForm() {
           <>
             <NewRecipeFormTwo
               setFormNumber={setFormNumber}
-              ingredients={ingredients}
+              ingredients={ingredients as any}
               ingredientList={ingredientList}
-              setIngredients={setIngredients}
+              setIngredients={setIngredients as any}
               setIngredientList={setIngredientList}
               register={register}
               errors={errors}
+              setError={setErrorMessage}
             />
             {/* <button type="submit" className="btn-primary mt-4">Submit</button> */}
           </>
@@ -226,9 +227,9 @@ function NewRecipeForm() {
           <>
             <NewRecipeFormThree
               setFormNumber={setFormNumber}
-              ingredients={ingredients}
+              ingredients={ingredients as any}
               ingredientList={ingredientList}
-              setIngredients={setIngredients}
+              setIngredients={setIngredients as any}
               setIngredientList={setIngredientList}
               instructions={instructions}
               setInstructions={setInstructions}

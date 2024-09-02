@@ -1,5 +1,4 @@
 import { IIngredient } from "./ingredient.type";
-import { IModerator } from "./moderator.type";
 import { IReview } from "./review.type";
 import { IMedicalCondition, IUser } from "./user.type";
 
@@ -39,10 +38,9 @@ export enum ERecipeStatus {
     rejected = "rejected",
 }
 export type TRecipeStatus = "verified" | "pending" | "rejected";
-export interface IngredientDetail {
-    ingredient: string | IIngredient;
-    name: string;
+export interface IngredientDetail extends IIngredient {
     amount: number;
+    unit: string;
 }
 
 export interface IngredientDetailWithUnit {
@@ -50,6 +48,12 @@ export interface IngredientDetailWithUnit {
     name: string;
     amount: number;
     unit: string;
+}
+
+export interface INewIngredientFrom {
+    ingredient: string,
+    amount: number,
+    unit: string
 }
 
 export interface IRecipe {
@@ -120,7 +124,7 @@ export interface INewRecipeFrom {
     preferredMealTime: EPreferredMealTime[];
     preparationDifficulty: TPreparationDifficulty;
     cookingTime: string;
-    ingredients: IngredientDetail[];
+    ingredients: INewIngredientFrom[]
     instructions: string;
     medical_condition: IMedicalCondition;
     youtubeLink?: string;

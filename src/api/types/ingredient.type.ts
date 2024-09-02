@@ -3,14 +3,14 @@ export interface IIngredient {
     name: string;
     localName: string;
     type: string;
-    unit: string;
+    unitOptions: string[];
 }
 
 export interface INewIngredientFrom {
     name: string;
     localName: string;
     type: string;
-    unit: string[];
+    unitOptions: string[];
 }
 
 export interface IngredientUpdateFrom extends Partial<INewIngredientFrom> {

@@ -78,7 +78,7 @@ function ModeratorAddIngredient() {
           selectedConditions={unit}
           setSelectedConditions={setUnit}
           register={register}
-          errors={errors.unit}
+          errors={errors.unitOptions}
         />
       </div>
 
