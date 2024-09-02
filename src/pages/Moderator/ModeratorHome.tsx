@@ -44,7 +44,7 @@ function ModeratorHome() {
   const skeletonCount = isLoading
     ? pagination.limit
     : recommendedRecipes?.length || 0;
-    const [spaceType, setSpaceType] = useState("recipe");
+  const [spaceType, setSpaceType] = useState("recipe");
 
   const { data: user } = useGetModeratorQuery();
 
@@ -56,7 +56,7 @@ function ModeratorHome() {
         detail="Browse through our suggestions."
       />
       <ModeratorNav spaceType={spaceType} setSpaceType={setSpaceType} />
-      {/* <Search /> */}
+
       <div className="w-full px-5">
         <FilterBarActive data={Object.values(EPreferredMealTimeFilter)} selectedChip={filter as any} setSelectedChip={(filter) => {
           console.log({ filter });
@@ -69,11 +69,11 @@ function ModeratorHome() {
         <div className="grid grid-cols-2 sm:grid-cols-3 gap-4 w-full px-5">
           {isLoading
             ? Array.from({ length: skeletonCount }).map((_, index) => (
-                <DisplayCard post={null} key={`skeleton-${index}`} />
-              ))
+              <DisplayCard post={null} key={`skeleton-${index}`} />
+            ))
             : recommendedRecipes?.map((post, index) => (
-                <DisplayCard post={post} key={index} />
-              ))}
+              <DisplayCard post={post} key={index} />
+            ))}
         </div>
       ) : (
         <div className="w-full flex justify-center items-center flex-grow">

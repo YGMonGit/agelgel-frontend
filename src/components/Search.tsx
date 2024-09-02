@@ -59,8 +59,8 @@ interface SearchProps {
   page: number;
   setAllergy: any;
   allergy: any;
-  useUserData: boolean;
-  setUserData: any;
+  useUserData?: boolean;
+  setUserData?: any;
 }
 
 function SearchC({
@@ -315,13 +315,21 @@ function SearchC({
               onChange={(e) => setUserData(!useUserData)}
               color="primary"
             /> */}
+
+
             <Switch
               id="airplane-mode"
+              style={{
+                display: setUserData == undefined ? "none" : "block",
+              }}
               checked={useUserData}
+              disabled={setUserData == undefined}
               onCheckedChange={(checked) => setUserData(checked)}
             />
 
-            <label htmlFor="airplane-mode" className="text-[1rem] text-content-color">
+            <label style={{
+              display: setUserData == undefined ? "none" : "block",
+            }} htmlFor="airplane-mode" className="text-[1rem] text-content-color">
               Use your medical condition
             </label>
           </div>

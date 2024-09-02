@@ -1,7 +1,8 @@
 import React, { useState, useRef, useEffect } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
-import { homeUrl, moderatorSpaceUrl, mySpaceUrl, searchUrl } from "../assets/data";
+import { homeUrl, moderatorHomeUrl, moderatorSpaceUrl, moderatorWelcomeUrl, mySpaceUrl, searchUrl } from "../assets/data";
 import { useGetUserQuery, useLogOutMutation } from "../api/slices/user.slices";
+import { useGetModeratorQuery, useModeratorIogOutMutation } from "../api/slices/moderator.slices";
 import { welcomeUrl } from "../assets/data";
 
 function CircleDropdown() {
@@ -10,8 +11,23 @@ function CircleDropdown() {
   const [isOpen, setIsOpen] = useState<boolean>(false);
   const dropdownRef = useRef<HTMLDivElement>(null);
 
-  const { data: user } = useGetUserQuery();
+  const [user, setUser] = useState<any>(null);
+  const { data: _user } = useGetUserQuery({} as any, { skip: !location.pathname.startsWith("/user") });
+  const { data: moderator } = useGetModeratorQuery({} as any, { skip: !location.pathname.startsWith("/moderator") });
+
+  useEffect(() => {
+    if (location.pathname.startsWith("/user")) {
+      setUser(_user);
+    } else if (location.pathname.startsWith("/moderator")) {
+      setUser(moderator);
+    }
+  }, [location, moderator, _user]);
+
+
+
+
   const [logOut] = useLogOutMutation();
+  const [ModeratorLogOut] = useModeratorIogOutMutation();
 
 
   const toggleDropdown = () => {
@@ -71,8 +87,15 @@ function CircleDropdown() {
               </li>
             )}
             <li className="hover:bg-gray-100 rounded-md p-1 px-3 cursor-pointer text-red-700" onClick={async () => {
-              await logOut().unwrap();
-              navigate(welcomeUrl);
+              if (location.pathname.startsWith("/user")) {
+                await logOut().unwrap();
+                navigate(welcomeUrl);
+              }
+              else if (location.pathname.startsWith("/moderator")) {
+                await ModeratorLogOut().unwrap();
+                navigate(moderatorWelcomeUrl);
+              }
+
             }}>
               Logout
             </li>

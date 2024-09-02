@@ -15,7 +15,7 @@ import ModeratorHome from "./pages/Moderator/ModeratorHome";
 import ModeratorSearch from "./pages/Moderator/ModeratorSearch";
 import ModeratorRecipeDetail from "./pages/Moderator/ModeratorRecipeDetail";
 import ModeratorSpace from "./pages/Moderator/ModeratorSpace";
-import ProtectedRoute, {ModeratorProtectedRoute} from "./hooks/userAuthGuard";
+import ProtectedRoute, { ModeratorProtectedRoute } from "./hooks/userAuthGuard";
 import useAdjustedHeight from "./hooks/useAdjustedHeight";
 import {
   signUpUrl,
@@ -33,6 +33,7 @@ import {
   moderatorRecipeDetailUrl,
   moderatorSpaceUrl,
   moderatorAddIngredientUrl,
+  moderatorWelcomeUrl,
 } from "./assets/data";
 import ModeratorAddIngredient from "./pages/Moderator/ModeratorAddIngredient";
 
@@ -65,7 +66,8 @@ function App() {
         <div className="mt-[56px]"></div>
         <Routes>
           <Route path={welcomeUrl} element={<Loading />} />
-          
+          <Route path={moderatorWelcomeUrl} element={<Loading />} />
+
           {/* Public routes */}
           <Route
             path={loginUrl}

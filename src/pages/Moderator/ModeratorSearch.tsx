@@ -60,17 +60,6 @@ function ModeratorSearch() {
     EDietaryPreferences[] | undefined
   >(undefined);
 
-  const [useUserData, setUserData] = useState(true);
-
-  useEffect(() => {
-    if (user && useUserData) {
-      const { chronicDiseases, allergies, dietary_preferences } =
-        user.medical_condition;
-      setHealthCondition(chronicDiseases);
-      setAllergy(allergies);
-      setMealPreference(dietary_preferences);
-    }
-  }, [user, useUserData]);
 
   return (
     <div className="w-full flex-wrap flex flex-col justify-start items-center relative mb-5">
@@ -81,8 +70,6 @@ function ModeratorSearch() {
         <MdOutlineKeyboardArrowLeft className="text-[1.9rem]" /> Home
       </div>
       <SearchC
-        setUserData={setUserData}
-        useUserData={useUserData}
         page={page}
         Search={Search}
         allergy={allergy}
