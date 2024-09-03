@@ -99,6 +99,7 @@ export interface IRecipe {
 
     hasBookedRecipe: boolean;
     isModeratedRecipe: boolean;
+    ownsRecipe: boolean;
 
 
     createdAt: Date;

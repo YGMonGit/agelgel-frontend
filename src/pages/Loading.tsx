@@ -8,7 +8,6 @@ import { homeUrl, loginUrl, moderatorLoginUrl, moderatorSignUpUrl, signUpUrl } f
 function Loading() {
   const navigate = useNavigate();
   const location = useLocation();
-  console.log(location.pathname);
 
 
   return (
