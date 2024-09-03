@@ -92,6 +92,10 @@ function NewRecipeForm() {
   }, [ingredients]);
 
   useEffect(() => {
+    setValue("instructions", instructions);
+  }, [instructions]);
+
+  useEffect(() => {
     setValue("preferredMealTime", mealTime);
   }, [mealTime]);
 

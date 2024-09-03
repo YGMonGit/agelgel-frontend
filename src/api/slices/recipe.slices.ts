@@ -21,8 +21,8 @@ const recipeApiSlice = agelgilAPI.injectEndpoints({
         getRecipeCarbs: builder.query<INutritionData, string>({
             query: (recipeId) => `/public/recipe/carbs/${recipeId}`,
         }),
-        getRecipes: builder.query<IRecipe[], { skip: number; limit: number }>({
-            query: ({ skip, limit }) => `/public/recipe/list/${skip}/${limit}`,
+        getRecipes: builder.query<IRecipe[], { skip: number; limit: number, filter: string }>({
+            query: ({ skip, limit, filter }) => `/public/recipe/list/${filter}/${skip}/${limit}`,
             transformResponse: (response: { body: IRecipe[] }) => response.body,
             providesTags: (result) =>
                 result

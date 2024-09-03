@@ -9,10 +9,13 @@ import FormatListNumbered from '@mui/icons-material/FormatListNumbered';
 
 import { MdFormatBold, MdOutlineFormatItalic, MdOutlineFormatListBulleted, MdOutlineFormatListNumbered } from "react-icons/md";
 
-export default function FancyTextArea({ onChange }: { onChange: (html: string) => void }) {
+export default function FancyTextArea({ onChange, errors, register }: { onChange: (html: string) => void, errors: any, register: any }) {
   const [fontWeight, setFontWeight] = useState<'200' | 'normal' | 'bold'>('normal');
   const [anchorEl, setAnchorEl] = useState<HTMLElement | null>(null);
   const editorRef = useRef<HTMLDivElement>(null);
+
+  const errorStyle = "text-[.8rem] text-red-400";
+
 
   useEffect(() => {
     if (editorRef.current) {
@@ -35,13 +38,13 @@ export default function FancyTextArea({ onChange }: { onChange: (html: string) =
       listItem.appendChild(document.createTextNode('\u00A0')); // Add a non-breaking space
       listElement.appendChild(listItem);
       range.insertNode(listElement);
-      
+
       // Move the cursor inside the list item
       range.setStart(listItem, 0);
       range.setEnd(listItem, 0);
       selection.removeAllRanges();
       selection.addRange(range);
-      
+
       editorRef.current?.focus();
       updateContent();
     }
@@ -84,6 +87,7 @@ export default function FancyTextArea({ onChange }: { onChange: (html: string) =
     <FormControl className="w-full border-b border-[#D1D5DB]">
       <p className="text-[1.2rem] font-semibold pt-2 mb-2">Instructions</p>
       <Box
+        {...register('instructions')}
         ref={editorRef}
         contentEditable
         suppressContentEditableWarning
@@ -111,7 +115,7 @@ export default function FancyTextArea({ onChange }: { onChange: (html: string) =
         className="rounded-xl border border-neutral-300"
       />
       <Box
-        className="flex justify-start bg-red-00 items-center gap-0 pt-1 h-[30px]" 
+        className="flex justify-start bg-red-00 items-center gap-0 pt-1 h-[30px]"
       >
         <IconButton
           variant="plain"
@@ -147,6 +151,8 @@ export default function FancyTextArea({ onChange }: { onChange: (html: string) =
           {/* <FormatListNumbered /> */}
         </IconButton>
       </Box>
+
+      {errors && <p className={errorStyle}>{errors.message}</p>}
     </FormControl>
   );
 }

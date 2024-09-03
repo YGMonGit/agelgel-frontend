@@ -43,6 +43,10 @@ function ModeratorHome() {
       skip: filter ? false : true
     });
 
+  useEffect(() => {
+    if (!isFetching && !isUninitialized) refetch();
+  }, [filter, isUninitialized, refetch]);
+
   const skeletonCount = isLoading
     ? pagination.limit
     : recommendedRecipes?.length || 0;
@@ -66,7 +70,6 @@ function ModeratorHome() {
             setSelectedChip={(newFilter) => {
               console.log({ filter: newFilter });
               setFilter(newFilter);
-              if (!isFetching && !isUninitialized) refetch();
             }}
           />
           {recommendedRecipes?.length !== 0 ? (
