@@ -139,7 +139,7 @@ const userApiSlice = agelgilAPI.injectEndpoints({
             },
         }),
         listUsers: builder.query<IUser[], { page: number; verified: boolean }>({
-            query: ({ page, verified }) => `/private/user/list/${page}/verified=${verified}`,
+            query: ({ page, verified }) => `/private/user/list/${page}/${verified}`,
             providesTags: (result) =>
                 result
                     ? [

@@ -49,7 +49,7 @@ function Home() {
 
 
   return (
-    <div className="w-full flex-wrap flex flex-col justify-start items-center relative min-h-[100%-56px]">
+    <div className="w-full flex-wrap flex-grow flex flex-col justify-start items-center relative min-h-[100%-56px]">
       <PageHeader
         header={`Good Morning, ${user?.first_name}!`}
         detail="Browse through our suggestions."
