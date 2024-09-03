@@ -23,6 +23,8 @@ import { Button } from "../../components/ui/button";
 import { useGetModeratorQuery } from "../../api/slices/moderator.slices";
 import { EPreferredMealTime, EPreferredMealTimeFilter } from "../../api/types/recipe.type";
 import ModeratorNav from "../../components/ModeratorNav";
+import ModeratorUserList from "./ModeratorUserList";
+import ModeratorIngredientList from "./ModeratorIngredientList";
 
 function ModeratorHome() {
   useEffect(() => {
@@ -48,36 +50,80 @@ function ModeratorHome() {
 
   const { data: user } = useGetModeratorQuery();
 
-
   return (
-    <div className="w-full flex-wrap flex flex-col justify-start items-center relative min-h-[100%-56px]">
+    <div className="w-full flex-wrap flex flex-grow flex-col justify-start items-center relative min-h-[100%-56px]">
       <PageHeader
         header={`Good Morning, ${user?.first_name}!`}
         detail="Browse through our suggestions."
       />
       <ModeratorNav spaceType={spaceType} setSpaceType={setSpaceType} />
 
-      <div className="w-full px-5">
-        <FilterBarActive data={Object.values(EPreferredMealTimeFilter)} selectedChip={filter as any} setSelectedChip={(filter) => {
-          console.log({ filter });
-          setFilter(filter);
-          if (!isFetching && !isUninitialized) refetch();
-        }} />
-      </div>
-
-      {recommendedRecipes?.length !== 0 ? (
-        <div className="grid grid-cols-2 sm:grid-cols-3 gap-4 w-full px-5">
-          {isLoading
-            ? Array.from({ length: skeletonCount }).map((_, index) => (
-              <DisplayCard post={null} key={`skeleton-${index}`} />
-            ))
-            : recommendedRecipes?.map((post, index) => (
-              <DisplayCard post={post} key={index} />
-            ))}
+      {spaceType === "recipe" && (
+        <div className="w-full px-5">
+          <FilterBarActive
+            data={Object.values(EPreferredMealTimeFilter)}
+            selectedChip={filter as any}
+            setSelectedChip={(newFilter) => {
+              console.log({ filter: newFilter });
+              setFilter(newFilter);
+              if (!isFetching && !isUninitialized) refetch();
+            }}
+          />
+          {recommendedRecipes?.length !== 0 ? (
+            <div className="grid grid-cols-2 sm:grid-cols-3 gap-4 w-full px-5">
+              {isLoading
+                ? Array.from({ length: skeletonCount }).map((_, index) => (
+                  <DisplayCard post={null} key={`skeleton-${index}`} />
+                ))
+                : recommendedRecipes?.map((post, index) => (
+                  <DisplayCard post={post} key={index} />
+                ))}
+            </div>
+          ) : (
+            <div className="w-full flex justify-center items-center flex-grow">
+              <img src={EmptyListIcon} alt="pic" className="w-[75%] sm:w-[50%]" />
+            </div>
+          )}
         </div>
-      ) : (
-        <div className="w-full flex justify-center items-center flex-grow">
-          <img src={EmptyListIcon} alt="pic" className="w-[75%] sm:w-[50%]" />
+      )}
+      {spaceType === "user" && (
+        <div className="w-full px-5">
+          {recommendedRecipes?.length === 0 ? (
+            <div className="grid grid-cols-2 sm:grid-cols-3 gap-4 w-full px-5">
+              {isLoading
+                ? Array.from({ length: skeletonCount }).map((_, index) => (
+                  <DisplayCard post={null} key={`skeleton-${index}`} />
+                ))
+                : recommendedRecipes?.map((post, index) => (
+                  <DisplayCard post={post} key={index} />
+                ))}
+            </div>
+          ) : (
+            // <div className="w-full flex justify-center items-center flex-grow">
+            //   <img src={EmptyListIcon} alt="pic" className="w-[75%] sm:w-[50%]" />
+            // </div>
+            <ModeratorUserList />
+          )}
+        </div>
+      )}
+      {spaceType === "ingredient" && (
+        <div className="w-full px-5">
+          {recommendedRecipes?.length === 0 ? (
+            <div className="grid grid-cols-2 sm:grid-cols-3 gap-4 w-full px-5">
+              {isLoading
+                ? Array.from({ length: skeletonCount }).map((_, index) => (
+                  <DisplayCard post={null} key={`skeleton-${index}`} />
+                ))
+                : recommendedRecipes?.map((post, index) => (
+                  <DisplayCard post={post} key={index} />
+                ))}
+            </div>
+          ) : (
+            // <div className="w-full flex justify-center items-center flex-grow">
+            //   <img src={EmptyListIcon} alt="pic" className="w-[75%] sm:w-[50%]" />
+            // </div>
+            <ModeratorIngredientList />
+          )}
         </div>
       )}
     </div>

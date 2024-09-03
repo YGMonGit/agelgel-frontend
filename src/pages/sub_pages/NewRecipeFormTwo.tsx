@@ -112,14 +112,14 @@ function NewRecipeFormTwo({ setFormNumber, ingredientList, setIngredientList, se
         register={register}
         errors={errors && errors.ingredients}
       />
-      <div className="w-full px-5 flex flex-col justify-start items-start flex-grow">
+      <div className="w-full px-5 flex flex-col justify-start items-start flex-grow mt-5">
         <label htmlFor="ingredientQuantity" className="text-[1rem] font-semibold">
           Ingredient Quantity
         </label>
-        <div className="flex justify-start items-start outline-none my-2 gap-2">
-          <div className="flex justify-start items-start border rounded-lg outline-none border-gray-300">
+        <div className="flex w-full justify-start items-start outline-none my-2 gap-2">
+          <div className="flex justify-start items-start border rounded-lg outline-none border-gray-300 h-full">
             <button
-              className="h-[37px] w-[40px] bg-gray-200 rounded-l-lg flex justify-center items-center"
+              className="h-full w-[40px] bg-content-color rounded-l-lg flex justify-center items-center text-white text-[1.3rem]"
               onClick={() => setIngredientQuantity(Math.max(ingredientQuantity - 1, 0))}
             >
               <MdRemove />
@@ -135,18 +135,20 @@ function NewRecipeFormTwo({ setFormNumber, ingredientList, setIngredientList, se
               onChange={onIngredientQuantityChange}
               autoComplete="off"
               required
-              className="w-[65px] text-center h-[37px] bg-[#F9FAFB] text-[1rem] border-x outline-none border-gray-300"
+              className="w-[65px] text-center h-full bg-[#F9FAFB] text-[1rem] border-x outline-none border-gray-300"
             />
             {errors && errors.ingredients && <p className="text-[.8rem] text-red-400">{errors.ingredients.amount?.message}</p>}
             <button
               type="button"
-              className="h-[37px] w-[40px] bg-gray-200 rounded-r-lg flex justify-center items-center"
+              className="h-full w-[40px] bg-content-color rounded-r-lg flex justify-center items-center text-white text-[1.3rem]"
               onClick={() => setIngredientQuantity(ingredientQuantity + 1)}
             >
               <MdAdd />
             </button>
 
-            <FormControl variant="outlined">
+
+          </div>
+            <FormControl variant="outlined" className="flex-grow">
               <InputLabel id="demo-simple-select-outlined-label">Unit</InputLabel>
               <Select
                 labelId="demo-simple-select-outlined-label"
@@ -157,7 +159,7 @@ function NewRecipeFormTwo({ setFormNumber, ingredientList, setIngredientList, se
                 onChange={(e) => { console.log({ val: e.target.value }); setSelectedUnit(e.target.value as string) }}
                 label="Unit"
                 fullWidth
-                style={{ minWidth: "100px" }}
+                sx={{ minWidth: "100px", borderColor: "#0E9F6E" }}
               >
                 {
 
@@ -170,11 +172,9 @@ function NewRecipeFormTwo({ setFormNumber, ingredientList, setIngredientList, se
               {errors && errors.ingredients && <p className="text-[.8rem] text-red-400">{errors.ingredients.unit?.message}</p>}
 
             </FormControl>
-
-          </div>
           <button
             type="button"
-            className="h-[37px] px-3 rounded-md flex justify-center items-center border border-content-color bg-content-color text-white text-[.85rem] leading-none"
+            className="h-full flex-gr px-3 rounded-md flex justify-center items-center border border-content-color bg-content-color text-white text-[.85rem] leading-none"
             onClick={handleAddIngredient}
           >
             <MdAdd className="text-[1.5rem]" /> ADD
