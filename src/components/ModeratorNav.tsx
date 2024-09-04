@@ -22,7 +22,7 @@ function ModeratorNav({spaceType, setSpaceType}: ModeratorNavProps) {
   };
 
   return (
-    <div className="w-full fixed mt-16 bg-white top-0 px-5 flex justify-between items-center gap-2 select-none my-2">
+    <div className="w-full fixed mt-16 max-w-[800px] bg-white top-0 px-5 flex justify-between items-center gap-2 select-none my-2">
       <button 
         className={getButtonClasses("recipe")} 
         onClick={() => setSpaceType("recipe")}
