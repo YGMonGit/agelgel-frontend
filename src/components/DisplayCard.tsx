@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useRef } from "react";
 import Rating from '@mui/material/Rating';
 import { styled } from '@mui/system';
 import { Chip } from "@mui/material";
@@ -18,12 +18,18 @@ interface DisplayCardProps {
 function DisplayCard({ post }: DisplayCardProps) {
   const navigate = useNavigate();
   const location = useLocation();
-
+  const scrollableDivRef = useRef<HTMLDivElement>(null);
   const goToDetailedPage = () => {
     if (post) {
       console.log(location.pathname);
       
       navigate(`${location.pathname.startsWith("/moderator") ? moderatorRecipeDetailUrl : recipeDetailUrl}/${post._id}`);
+    }
+  };
+  const handleWheel = (event: React.WheelEvent<HTMLDivElement>) => {
+    const wheelDelta = Math.max(-1, Math.min(1, event.deltaY || -event.detail));
+    if (scrollableDivRef.current) {
+      scrollableDivRef.current.scrollLeft += wheelDelta * 30;
     }
   };
 
@@ -52,9 +58,15 @@ function DisplayCard({ post }: DisplayCardProps) {
       <p className="text-[.67rem] text-slate-500 whitespace-pre-wrap overflow-hidden line-clamp-2 flex-grow">{post.description}</p>
       <div className="flex justify-start items-center w-full gap-1">
         <p className="text-[.8rem] text-slate-400 italic leading-none ml-1 mt-4 mb-2">for </p>
-        {post.preferredMealTime.map((mealTime, index) => (
-          <h4 key={index} className="bg-green-100 px-2 py-[1px] text-[.7rem] font-semibold rounded-[6px] mt-4 mb-2">{mealTime}</h4>
-        ))}
+        <div className="flex justify-start items-center gap-1 overflow-x-auto"
+          style={{ scrollbarWidth: "none", msOverflowStyle: "none" }}
+          ref={scrollableDivRef}
+          onWheel={handleWheel}
+        >
+          {post.preferredMealTime.map((mealTime, index) => (
+            <h4 key={index} className="bg-green-100 px-2 py-[1px] text-[.7rem] font-semibold rounded-[6px] mt-4 mb-2">{mealTime}</h4>
+          ))}
+        </div>
       </div>
     </div>
   );

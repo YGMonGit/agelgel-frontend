@@ -1,12 +1,5 @@
 import React, { useState, useRef, useEffect } from 'react';
 import { Box, FormControl, FormLabel, IconButton, Menu, MenuItem, ListItemDecorator } from '@mui/joy';
-import FormatBold from '@mui/icons-material/FormatBold';
-import FormatItalic from '@mui/icons-material/FormatItalic';
-import KeyboardArrowDown from '@mui/icons-material/KeyboardArrowDown';
-import Check from '@mui/icons-material/Check';
-import FormatListBulleted from '@mui/icons-material/FormatListBulleted';
-import FormatListNumbered from '@mui/icons-material/FormatListNumbered';
-
 import { MdFormatBold, MdOutlineFormatItalic, MdOutlineFormatListBulleted, MdOutlineFormatListNumbered } from "react-icons/md";
 
 export default function FancyTextArea({ onChange, errors, register }: { onChange: (html: string) => void, errors: any, register: any }) {
@@ -15,7 +8,6 @@ export default function FancyTextArea({ onChange, errors, register }: { onChange
   const editorRef = useRef<HTMLDivElement>(null);
 
   const errorStyle = "text-[.8rem] text-red-400";
-
 
   useEffect(() => {
     if (editorRef.current) {
@@ -35,6 +27,14 @@ export default function FancyTextArea({ onChange, errors, register }: { onChange
       const range = selection.getRangeAt(0);
       const listElement = document.createElement(listType);
       const listItem = document.createElement('li');
+      if(listType === "ul"){
+        listElement.className = "list-disc px-7"
+        // listItem.className = "list-disc"
+      } else {
+        listElement.className = "list-decimal px-7"
+        // listItem.className = "list-decimal"
+
+      }
       listItem.appendChild(document.createTextNode('\u00A0')); // Add a non-breaking space
       listElement.appendChild(listItem);
       range.insertNode(listElement);
@@ -92,65 +92,54 @@ export default function FancyTextArea({ onChange, errors, register }: { onChange
         contentEditable
         suppressContentEditableWarning
         onInput={handleInput}
-        sx={{
-          minHeight: '130px',
-          padding: 1,
-          fontFamily: 'inherit',
-          fontSize: 'inherit',
-          '&:focus': {
-            outline: 'none',
-            borderColor: 'primary.main',
-          },
-          '& ul, & ol': {
-            paddingLeft: 2,
-            margin: '0.5em 0',
-          },
-          '& ul': {
-            listStyleType: 'disc',
-          },
-          '& ol': {
-            listStyleType: 'decimal',
-          },
-        }}
-        className="rounded-xl border border-neutral-300"
-      />
-      <Box
-        className="flex justify-start bg-red-00 items-center gap-0 pt-1 h-[30px]"
+        className="rounded-xl border border-neutral-300 min-h-[130px] p-1 font-inherit text-inherit focus:outline-none focus:border-primary-500"
       >
+        {/* <div className="space-y-2">
+          <div className="space-x-1">
+            <span className="font-bold">Bold</span>
+            <span className="italic">Italic</span>
+          </div>
+          <ul className="list-disc pl-4">
+            <li>Bullet Point 1</li>
+            <li>Bullet Point 2</li>
+          </ul>
+          <ol className="list-decimal pl-4">
+            <li>Numbered List 1</li>
+            <li>Numbered List 2</li>
+          </ol>
+        </div> */}
+      </Box>
+      <div className="flex justify-start items-center gap-1 pt-1 h-[30px]">
         <IconButton
           variant="plain"
           color="neutral"
           onClick={() => applyStyle('bold')}
           className="bg-blue-500"
         >
-          {/* <FormatBold className='text-content-color' /> */}
-          <MdFormatBold className='text-content-color bg-red-10 text-[1.2rem]' />
+          <MdFormatBold className="text-content-color text-[1.2rem]" />
         </IconButton>
         <IconButton
           variant="plain"
           color="neutral"
           onClick={() => applyStyle('italic')}
         >
-          <MdOutlineFormatItalic className='text-content-color text-[1.2rem]' />
-          {/* <FormatItalic /> */}
+          <MdOutlineFormatItalic className="text-content-color text-[1.2rem]" />
         </IconButton>
         <IconButton
           variant="plain"
           color="neutral"
           onClick={handleBulletPoints}
         >
-          <MdOutlineFormatListBulleted className='text-content-color text-[1.2rem]' />
-          {/* <FormatListBulleted /> */}
+          <MdOutlineFormatListBulleted className="text-content-color text-[1.2rem]" />
         </IconButton>
         <IconButton
           variant="plain"
           color="neutral"
           onClick={handleNumberedList}
         >
-          <MdOutlineFormatListNumbered className='text-content-color text-[1.2rem]' />
-          {/* <FormatListNumbered /> */}
+          <MdOutlineFormatListNumbered className="text-content-color text-[1.2rem]" />
         </IconButton>
-      </Box>
+      </div>
 
       {errors && <p className={errorStyle}>{errors.message}</p>}
     </FormControl>

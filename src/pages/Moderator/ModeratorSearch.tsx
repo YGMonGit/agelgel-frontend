@@ -62,7 +62,7 @@ function ModeratorSearch() {
 
 
   return (
-    <div className="w-full flex-wrap flex flex-col justify-start items-center relative mb-5">
+    <div className="w-full flex-grow flex-wrap flex flex-col justify-start items-center relative mb-5">
       <div
         className="text-[1.1rem] text-content-color font-semibold cursor-pointer select-none mt-5 flex justify-start items-center w-full px-5"
         onClick={() => navigate(moderatorHomeUrl)}

@@ -30,7 +30,7 @@ function NewRecipeFormThree({ setFormNumber, ingredientList, setIngredientList, 
   const onInstructionChange = (e: React.ChangeEvent<HTMLTextAreaElement>) =>
     setInstructions(e.target.value);
 
-  const onBackClick = () => { setFormNumber(2) };
+  const onBackClick = () => { setFormNumber(3) };
 
 
   return (
@@ -44,6 +44,7 @@ function NewRecipeFormThree({ setFormNumber, ingredientList, setIngredientList, 
       <div className="w-full flex flex-col justify-start items-start flex-grow">
         <div className="w-full px-5">
           <FancyTextArea register={register} errors={errors.instructions} onChange={setInstructions} />
+          
         </div>
       </div>
       <div className="w-full px-5 flex justify-center items-end gap-2">
