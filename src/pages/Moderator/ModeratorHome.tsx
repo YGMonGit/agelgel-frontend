@@ -32,6 +32,10 @@ function ModeratorHome() {
       skip: filter ? false : true
     });
 
+  useEffect(() => {
+    if (!isFetching && !isUninitialized) refetch();
+  }, [filter, isUninitialized, refetch]);
+
   const skeletonCount = isLoading
     ? pagination.limit
     : recommendedRecipes?.length || 0;
@@ -56,8 +60,7 @@ function ModeratorHome() {
               setSelectedChip={(newFilter) => {
                 console.log({ filter: newFilter });
                 setFilter(newFilter);
-                if (!isFetching && !isUninitialized) refetch();
-              }}
+                }}
             />
             {recommendedRecipes?.length !== 0 ? (
               <div className="grid grid-cols-2 sm:grid-cols-3 gap-4 w-full px-5">

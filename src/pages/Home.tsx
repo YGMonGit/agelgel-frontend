@@ -39,7 +39,15 @@ function Home() {
 
 
   const { data: recommendedRecipes, isFetching, isUninitialized, refetch } =
-    useGetRecipesQuery(pagination);
+    useGetRecipesQuery({
+      skip: pagination.skip,
+      limit: pagination.limit,
+      filter: filter,
+    });
+
+  useEffect(() => {
+    if (!isFetching && !isUninitialized) refetch();
+  }, [filter, isUninitialized, refetch]);
 
   const skeletonCount = isFetching
     ? pagination.limit
@@ -58,7 +66,7 @@ function Home() {
       <div className="w-full px-5">
         <FilterBarActive data={["all", ...Object.values(EPreferredMealTime)]} selectedChip={filter} setSelectedChip={(filter) => {
           setFilter(filter as any);
-          if (!isFetching && !isUninitialized) refetch();
+
         }} />
       </div>
 

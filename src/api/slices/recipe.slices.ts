@@ -9,20 +9,20 @@ const recipeApiSlice = agelgilAPI.injectEndpoints({
             providesTags: (result, error, recipeId) => [{ type: 'Recipe', id: recipeId }],
         }),
         getPrivateRecipeById: builder.query<IRecipe, string>({
-            query: (recipeId) => `/private/recipe/${recipeId}`,
+            query: (recipeId) => `/private/recipe/details/user/${recipeId}`,
             transformResponse: (response: { body: IRecipe }) => response.body,
             providesTags: (result, error, recipeId) => [{ type: 'Recipe', id: recipeId }],
         }),
         getModeratorRecipeById: builder.query<IRecipe, string>({
-            query: (recipeId) => `/private/recipe/moderator/${recipeId}`,
+            query: (recipeId) => `/private/recipe/details/moderator/${recipeId}`,
             transformResponse: (response: { body: IRecipe }) => response.body,
             providesTags: (result, error, recipeId) => [{ type: 'Recipe', id: recipeId }],
         }),
         getRecipeCarbs: builder.query<INutritionData, string>({
             query: (recipeId) => `/public/recipe/carbs/${recipeId}`,
         }),
-        getRecipes: builder.query<IRecipe[], { skip: number; limit: number }>({
-            query: ({ skip, limit }) => `/public/recipe/list/${skip}/${limit}`,
+        getRecipes: builder.query<IRecipe[], { skip: number; limit: number, filter: string }>({
+            query: ({ skip, limit, filter }) => `/public/recipe/list/${filter}/${skip}/${limit}`,
             transformResponse: (response: { body: IRecipe[] }) => response.body,
             providesTags: (result) =>
                 result
