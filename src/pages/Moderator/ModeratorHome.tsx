@@ -39,50 +39,31 @@ function ModeratorHome() {
   const skeletonCount = isLoading
     ? pagination.limit
     : recommendedRecipes?.length || 0;
-  const [spaceType, setSpaceType] = useState("recipe");
+  const [spaceType, setSpaceType] = useState<"recipe" | "user" | "ingredient">("user");
 
   const { data: user } = useGetModeratorQuery();
 
   return (
     <div className="w-full flex-wrap flex flex-grow flex-col justify-start items-center relative mt-12 min-h-[100%-56px]">
+
+      <PageHeader
+        header={`Good Morning, ${user?.first_name}!`}
+        detail="Browse through our suggestions."
+      />
+
       <ModeratorNav spaceType={spaceType} setSpaceType={setSpaceType} />
 
       {spaceType === "recipe" && (
-        <>
-          <PageHeader
-            header={`Good Morning, ${user?.first_name}!`}
-            detail="Browse through our suggestions."
+        <div className="w-full px-5">
+          <FilterBarActive
+            data={Object.values(EPreferredMealTimeFilter)}
+            selectedChip={filter as any}
+            setSelectedChip={(newFilter) => {
+              console.log({ filter: newFilter });
+              setFilter(newFilter);
+            }}
           />
-          <div className="w-full px-5">
-            <FilterBarActive
-              data={Object.values(EPreferredMealTimeFilter)}
-              selectedChip={filter as any}
-              setSelectedChip={(newFilter) => {
-                console.log({ filter: newFilter });
-                setFilter(newFilter);
-                }}
-            />
-            {recommendedRecipes?.length !== 0 ? (
-              <div className="grid grid-cols-2 sm:grid-cols-3 gap-4 w-full px-5">
-                {isLoading
-                  ? Array.from({ length: skeletonCount }).map((_, index) => (
-                    <DisplayCard post={null} key={`skeleton-${index}`} />
-                  ))
-                  : recommendedRecipes?.map((post, index) => (
-                    <DisplayCard post={post} key={index} />
-                  ))}
-              </div>
-            ) : (
-              <div className="w-full flex justify-center items-center flex-grow">
-                <img src={EmptyListIcon} alt="pic" className="w-[75%] sm:w-[50%]" />
-              </div>
-            )}
-          </div>
-        </>
-      )}
-      {spaceType === "user" && (
-        <div className="w-full flex flex-grow items-start px-5">
-          {recommendedRecipes?.length === 0 ? (
+          {recommendedRecipes?.length !== 0 ? (
             <div className="grid grid-cols-2 sm:grid-cols-3 gap-4 w-full px-5">
               {isLoading
                 ? Array.from({ length: skeletonCount }).map((_, index) => (
@@ -93,25 +74,20 @@ function ModeratorHome() {
                 ))}
             </div>
           ) : (
-            <ModeratorUserList />
+            <div className="w-full flex justify-center items-center flex-grow">
+              <img src={EmptyListIcon} alt="pic" className="w-[75%] sm:w-[50%]" />
+            </div>
           )}
+        </div>
+      )}
+      {spaceType === "user" && (
+        <div className="w-full flex flex-grow items-start px-5">
+          <ModeratorUserList />
         </div>
       )}
       {spaceType === "ingredient" && (
         <div className="w-full flex flex-grow items-start px-5">
-          {recommendedRecipes?.length === 0 ? (
-            <div className="grid grid-cols-2 sm:grid-cols-3 gap-4 w-full px-5">
-              {isLoading
-                ? Array.from({ length: skeletonCount }).map((_, index) => (
-                  <DisplayCard post={null} key={`skeleton-${index}`} />
-                ))
-                : recommendedRecipes?.map((post, index) => (
-                  <DisplayCard post={post} key={index} />
-                ))}
-            </div>
-          ) : (
-            <ModeratorIngredientList />
-          )}
+          <ModeratorIngredientList />
         </div>
       )}
     </div>

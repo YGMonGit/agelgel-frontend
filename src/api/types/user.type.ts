@@ -70,7 +70,7 @@ export interface IUser {
     full_name: string;
     phone_number: string;
     status: TStatus;
-    verified: boolean;
+    verified: EVerified;
 
     medical_condition: IMedicalCondition;
 
