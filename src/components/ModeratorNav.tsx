@@ -5,10 +5,10 @@ import IngredientIcon from "../assets/icons/ingredient-icon.png";
 
 interface ModeratorNavProps {
   spaceType: string;
-  setSpaceType: React.Dispatch<React.SetStateAction<string>>;
+  setSpaceType: React.Dispatch<React.SetStateAction<"recipe" | "user" | "ingredient">>;
 }
 
-function ModeratorNav({spaceType, setSpaceType}: ModeratorNavProps) {
+function ModeratorNav({ spaceType, setSpaceType }: ModeratorNavProps) {
   const getButtonClasses = (type: string) => {
     return "px-2 py-2 flex justify-center items-center gap-2";
   };
@@ -23,8 +23,8 @@ function ModeratorNav({spaceType, setSpaceType}: ModeratorNavProps) {
 
   return (
     <div className="w-full fixed mt-16 max-w-[800px] bg-white top-0 px-5 flex justify-between items-center gap-2 select-none my-2">
-      <button 
-        className={getButtonClasses("recipe")} 
+      <button
+        className={getButtonClasses("recipe")}
         onClick={() => setSpaceType("recipe")}
       >
         <img src={RecipeIcon} className="w-[16px]" alt="Recipe" />
@@ -33,8 +33,8 @@ function ModeratorNav({spaceType, setSpaceType}: ModeratorNavProps) {
           <span className={getUnderlineClasses("recipe")}></span>
         </p>
       </button>
-      <button 
-        className={getButtonClasses("user")} 
+      <button
+        className={getButtonClasses("user")}
         onClick={() => setSpaceType("user")}
       >
         <img src={UserIcon} className="w-[16px]" alt="User" />
@@ -43,8 +43,8 @@ function ModeratorNav({spaceType, setSpaceType}: ModeratorNavProps) {
           <span className={getUnderlineClasses("user")}></span>
         </p>
       </button>
-      <button 
-        className={getButtonClasses("ingredient")} 
+      <button
+        className={getButtonClasses("ingredient")}
         onClick={() => setSpaceType("ingredient")}
       >
         <img src={IngredientIcon} className="w-[16px]" alt="Ingredient" />

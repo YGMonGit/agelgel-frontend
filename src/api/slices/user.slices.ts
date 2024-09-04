@@ -1,6 +1,6 @@
 import agelgilAPI from "..";
 import { ERecipeStatus, IRecipe } from "../types/recipe.type";
-import { IUser, IUserSignUpFrom, IUserLogInFrom, IUserUpdateFrom, IModeratorUserUpdateSchema } from "../types/user.type";
+import { IUser, IUserSignUpFrom, IUserLogInFrom, IUserUpdateFrom, IModeratorUserUpdateSchema, EVerified } from "../types/user.type";
 
 const userApiSlice = agelgilAPI.injectEndpoints({
     endpoints: (builder) => ({
@@ -138,7 +138,7 @@ const userApiSlice = agelgilAPI.injectEndpoints({
                 }
             },
         }),
-        listUsers: builder.query<IUser[], { page: number; verified: boolean }>({
+        listUsers: builder.query<IUser[], { page: number; verified: EVerified }>({
             query: ({ page, verified }) => `/private/user/list/${page}/${verified}`,
             providesTags: (result) =>
                 result

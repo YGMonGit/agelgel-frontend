@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 
 import EmptyListIcon from "../../assets/images/empty-list.png";
 import IngredientCard from "../../components/IngredientCard";
@@ -7,6 +7,7 @@ import { useGetIngredientsQuery } from "../../api/slices/ingredient.slices";
 import { IoAdd } from "react-icons/io5";
 import { useNavigate } from "react-router-dom";
 import { moderatorAddIngredientUrl } from "../../assets/data";
+import SpoonacularClient from "../../api/SpoonacularClient";
 
 function ModeratorIngredientList() {
   const navigate = useNavigate();
@@ -15,6 +16,9 @@ function ModeratorIngredientList() {
     skip: 0,
     limit: 10,
   });
+
+  const [ingredientImages, setIngredientImages] = useState<string[]>([]);
+
 
   const {
     data: ingredientList,
@@ -26,6 +30,28 @@ function ModeratorIngredientList() {
     skip: pagination.skip,
     limit: pagination.limit,
   });
+
+  useEffect(() => {
+    if (ingredientList) {
+      const fetchIngredientImages = async () => {
+        let images = await Promise.all(
+          ingredientList.map(async (ingredient) => {
+            const res = await new SpoonacularClient().getIngredientsImages([
+              ingredient.name,
+            ]);
+            return res;
+          })
+        );
+        if (images.every((arr) => arr.length === 1 && arr[0] === undefined)) {
+          images = [];
+        }
+        setIngredientImages(images as any);
+      };
+
+      fetchIngredientImages();
+    }
+  }, [ingredientList]);
+
   const skeletonCount = isLoading
     ? pagination.limit
     : ingredientList?.length || 0;
@@ -35,11 +61,11 @@ function ModeratorIngredientList() {
         <div className="flex flex-col h-full justify-start items-center w-full pt-3 gap-2">
           {isLoading
             ? Array.from({ length: skeletonCount }).map((_, index) => (
-                <IngredientCard ingredient={null} key={`skeleton-${index}`} />
-              ))
+              <IngredientCard ingredient={null} key={`skeleton-${index}`} />
+            ))
             : ingredientList?.map((ingredient, index) => (
-                <IngredientCard ingredient={ingredient} key={index} />
-              ))}
+              <IngredientCard ingredientImage={ingredientImages[index]} ingredient={ingredient} key={index} />
+            ))}
         </div>
       ) : (
         <div className="w-full flex justify-center items-center flex-grow">

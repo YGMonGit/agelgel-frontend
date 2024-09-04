@@ -6,9 +6,10 @@ import { IIngredient } from "../api/types/ingredient.type";
 
 interface IngredientCardProps {
   ingredient: IIngredient | null;
+  ingredientImage?: string;
 }
 
-function IngredientCard({ ingredient }: IngredientCardProps) {
+function IngredientCard({ ingredient, ingredientImage }: IngredientCardProps) {
   if (!ingredient) {
     return (
       <div className="flex justify-start items-center p-2 w-full rounded-lg bg-neutral-100 leading-4 select-none gap-3">
@@ -26,7 +27,7 @@ function IngredientCard({ ingredient }: IngredientCardProps) {
   return (
     <div className="w-full flex justify-start items-center gap-2 py-2 bg-[#F6F6F6] px-3 rounded-lg">
       <img
-        src={IngredientIcon}
+        src={ingredientImage ?? IngredientIcon}
         className="w-[61px] p-3 aspect-square"
       />
       <div className="w-full flex-grow flex flex-col justify-center items-start">
