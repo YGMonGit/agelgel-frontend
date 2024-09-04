@@ -1,5 +1,4 @@
 import { IIngredient } from "./ingredient.type";
-import { IModerator } from "./moderator.type";
 import { IReview } from "./review.type";
 import { IMedicalCondition, IUser } from "./user.type";
 
@@ -11,6 +10,17 @@ export enum EPreferredMealTime {
     dessert = "dessert",
     other = "other",
 }
+
+export enum EPreferredMealTimeFilter {
+    all = "all",
+    breakfast = "breakfast",
+    lunch = "lunch",
+    dinner = "dinner",
+    snack = "snack",
+    dessert = "dessert",
+    other = "other",
+}
+
 export type TPreferredMealTime = "breakfast" | "lunch" | "dinner" | "snack" | "dessert" | "other";
 
 
@@ -28,10 +38,9 @@ export enum ERecipeStatus {
     rejected = "rejected",
 }
 export type TRecipeStatus = "verified" | "pending" | "rejected";
-export interface IngredientDetail {
-    ingredient: string | IIngredient;
-    name: string;
+export interface IngredientDetail extends IIngredient {
     amount: number;
+    unit: string;
 }
 
 export interface IngredientDetailWithUnit {
@@ -39,6 +48,12 @@ export interface IngredientDetailWithUnit {
     name: string;
     amount: number;
     unit: string;
+}
+
+export interface INewIngredientFrom {
+    ingredient: string,
+    amount: number,
+    unit: string
 }
 
 export interface IRecipe {
@@ -73,7 +88,7 @@ export interface IRecipe {
             full_name: string;
             profile_img: string;
         }
-        Comment: string;
+        comment: string;
     };
 
     user: {
@@ -83,6 +98,8 @@ export interface IRecipe {
     }
 
     hasBookedRecipe: boolean;
+    isModeratedRecipe: boolean;
+    ownsRecipe: boolean;
 
 
     createdAt: Date;
@@ -108,7 +125,7 @@ export interface INewRecipeFrom {
     preferredMealTime: EPreferredMealTime[];
     preparationDifficulty: TPreparationDifficulty;
     cookingTime: string;
-    ingredients: IngredientDetail[];
+    ingredients: INewIngredientFrom[]
     instructions: string;
     medical_condition: IMedicalCondition;
     youtubeLink?: string;

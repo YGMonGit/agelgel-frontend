@@ -1,5 +1,5 @@
 import agelgilAPI from "..";
-import { IIngredient } from "../types/ingredient.type";
+import { IIngredient, INewIngredientFrom, IngredientUpdateFrom } from "../types/ingredient.type";
 
 const ingredientApiSlice = agelgilAPI.injectEndpoints({
     endpoints: (builder) => ({
@@ -30,22 +30,37 @@ const ingredientApiSlice = agelgilAPI.injectEndpoints({
                     ]
                     : [{ type: 'Ingredient' as const, id: 'Ingredient' }],
         }),
-        // createIngredient: builder.mutation<IIngredient, INewIngredientFrom>({
-        //     query: (newIngredient) => ({
-        //         url: '/private/ingredients',
-        //         method: 'POST',
-        //         body: newIngredient,
-        //     }),
-        //     invalidatesTags: [{ type: 'Ingredient', id: 'Ingredient' }],
-        // }),
-        // updateIngredient: builder.mutation<IIngredient, { ingredientsId: string; updates: IngredientUpdateFrom }>({
-        //     query: ({ ingredientsId, updates }) => ({
-        //         url: `/private/ingredients/${ingredientsId}`,
-        //         method: 'PATCH',
-        //         body: updates,
-        //     }),
-        //     invalidatesTags: (result, error, { ingredientsId }) => result ? [{ type: 'Ingredient', id: ingredientsId }] : [],
-        // }),
+        getUniqueType: builder.query<string[], void>({
+            query: () => `/public/ingredients/unique/type`,
+            transformResponse: (response: { body: string[] }) => response.body,
+            providesTags: ['Ingredient'],
+        }),
+        getUniqueName: builder.query<string[], void>({
+            query: () => `/public/ingredients/unique/name`,
+            transformResponse: (response: { body: string[] }) => response.body,
+            providesTags: ['Ingredient'],
+        }),
+        getUniqueUnit: builder.query<string[], void>({
+            query: () => `/public/ingredients/unique/unitOptions`,
+            transformResponse: (response: { body: string[] }) => response.body,
+            providesTags: ['Ingredient'],
+        }),
+        createIngredient: builder.mutation<IIngredient, INewIngredientFrom>({
+            query: (newIngredient) => ({
+                url: '/private/ingredients/',
+                method: 'POST',
+                body: newIngredient,
+            }),
+            invalidatesTags: [{ type: 'Ingredient', id: 'Ingredient' }],
+        }),
+        updateIngredient: builder.mutation<IIngredient, { ingredientsId: string; updates: IngredientUpdateFrom }>({
+            query: ({ ingredientsId, updates }) => ({
+                url: `/private/ingredients/${ingredientsId}`,
+                method: 'PATCH',
+                body: updates,
+            }),
+            invalidatesTags: (result, error, { ingredientsId }) => result ? [{ type: 'Ingredient', id: ingredientsId }] : [],
+        }),
     }),
 });
 
@@ -53,6 +68,9 @@ export const {
     useGetIngredientByIdQuery,
     useGetIngredientsQuery,
     useGetIngredientByNameQuery,
-    // useCreateIngredientMutation,
-    // useUpdateIngredientMutation,
+    useGetUniqueTypeQuery,
+    useGetUniqueNameQuery,
+    useCreateIngredientMutation,
+    useUpdateIngredientMutation,
+    useGetUniqueUnitQuery,
 } = ingredientApiSlice

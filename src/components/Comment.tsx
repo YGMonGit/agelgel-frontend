@@ -16,7 +16,7 @@ interface ModeratorCommentProps {
       full_name: string;
       profile_img: string;
     }
-    Comment: string;
+    comment: string;
   };
 }
 
@@ -58,7 +58,7 @@ export function ModeratorComment({ moderator }: ModeratorCommentProps) {
       </div>
       <div className="flex flex-col justify-start items-start flex-grow">
         <h3 className="font-semibold mb-1">{moderator.moderator.full_name} <StarIcon className="text-yellow-400 w-4 h-4" /> </h3>
-        <h3 className="w-full leading-5 text-slate-500 text-[1rem]">{moderator.Comment}</h3>
+        <h3 className="w-full leading-5 text-slate-500 text-[1rem]">{moderator.comment}</h3>
       </div>
     </div>
   );

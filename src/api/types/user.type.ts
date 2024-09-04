@@ -5,6 +5,10 @@ export enum EStatus {
     disabled = "disabled",
     blocked = "blocked",
 }
+export enum EVerified {
+    pending = "pending",
+    verified = "verified",
+}
 
 export type TStatus = "active" | "disabled" | "blocked";
 
@@ -66,6 +70,7 @@ export interface IUser {
     full_name: string;
     phone_number: string;
     status: TStatus;
+    verified: EVerified;
 
     medical_condition: IMedicalCondition;
 
@@ -94,5 +99,10 @@ export interface IUserSignUpFrom {
 }
 
 export interface IUserUpdateFrom extends Partial<IUserSignUpFrom> {
+}
+
+export interface IModeratorUserUpdateSchema {
+    verified?: boolean;
+    status?: EStatus;
 }
 

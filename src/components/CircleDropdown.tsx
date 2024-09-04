@@ -1,17 +1,33 @@
 import React, { useState, useRef, useEffect } from "react";
-import { useNavigate } from "react-router-dom";
-import { mySpaceUrl } from "../assets/data";
+import { useLocation, useNavigate } from "react-router-dom";
+import { homeUrl, moderatorHomeUrl, moderatorSpaceUrl, moderatorWelcomeUrl, mySpaceUrl, searchUrl } from "../assets/data";
 import { useGetUserQuery, useLogOutMutation } from "../api/slices/user.slices";
-import { loadingUrl } from "../assets/data";
-
+import { useGetModeratorQuery, useModeratorIogOutMutation } from "../api/slices/moderator.slices";
+import { welcomeUrl } from "../assets/data";
 
 function CircleDropdown() {
   const navigate = useNavigate();
+  const location = useLocation();
   const [isOpen, setIsOpen] = useState<boolean>(false);
   const dropdownRef = useRef<HTMLDivElement>(null);
 
-  const { data: user } = useGetUserQuery();
+  const [user, setUser] = useState<any>(null);
+  const { data: _user } = useGetUserQuery({} as any, { skip: !location.pathname.startsWith("/user") });
+  const { data: moderator } = useGetModeratorQuery({} as any, { skip: !location.pathname.startsWith("/moderator") });
+
+  useEffect(() => {
+    if (location.pathname.startsWith("/user")) {
+      setUser(_user);
+    } else if (location.pathname.startsWith("/moderator")) {
+      setUser(moderator);
+    }
+  }, [location, moderator, _user]);
+
+
+
+
   const [logOut] = useLogOutMutation();
+  const [ModeratorLogOut] = useModeratorIogOutMutation();
 
 
   const toggleDropdown = () => {
@@ -34,12 +50,17 @@ function CircleDropdown() {
   return (
     <div className="relative">
       <div
-        className="bg-gray-100 rounded-full w-9 h-9 flex justify-center items-center cursor-pointer"
+        className="bg-gray-100 rounded-full flex justify-center items-center cursor-pointer"
         onClick={toggleDropdown}
       >
         {
           user?.profile_img ? (
-            <img src={user.profile_img} alt="profile" className="w-8 h-8 rounded-full" />
+            <img src={user.profile_img} alt="profile" style={{
+              objectFit: "cover",
+              objectPosition: "center",
+              height: "40px",
+              width: "40px",
+            }} className="w-8 h-8 rounded-full border border-[#15803d]" />
           ) : (
             <div className="w-8 h-8 rounded-full bg-gray-300 flex justify-center items-center text-white text-[1.6rem] font-semibold">
               {user?.first_name[0]} {user?.last_name[0]}
@@ -57,15 +78,24 @@ function CircleDropdown() {
               <p className="text-[.9rem] font-semibold">{user?.first_name}</p>
               <p className="text-[.8rem] text-slate-500 -mt-1">{user?.email}</p>
             </li>
-            <li className="hover:bg-gray-100 text-slate-500 rounded-md p-1 px-3 cursor-pointer" onClick={() => navigate(mySpaceUrl)}>
+            <li className="hover:bg-gray-100 text-slate-500 rounded-md p-1 px-3 cursor-pointer" onClick={() => navigate(location.pathname.startsWith("/moderator") ? moderatorSpaceUrl : mySpaceUrl)}>
               Recipes
             </li>
-            <li className="hover:bg-gray-100 text-slate-500 rounded-md p-1 px-3 cursor-pointer">
-              Health condition
-            </li>
+            {(location.pathname === homeUrl || location.pathname === searchUrl) && (
+              <li className="hover:bg-gray-100 text-slate-500 rounded-md p-1 px-3 cursor-pointer">
+                Health condition
+              </li>
+            )}
             <li className="hover:bg-gray-100 rounded-md p-1 px-3 cursor-pointer text-red-700" onClick={async () => {
-              await logOut().unwrap();
-              navigate(loadingUrl);
+              if (location.pathname.startsWith("/user")) {
+                await logOut().unwrap();
+                navigate(welcomeUrl);
+              }
+              else if (location.pathname.startsWith("/moderator")) {
+                await ModeratorLogOut().unwrap();
+                navigate(moderatorWelcomeUrl);
+              }
+
             }}>
               Logout
             </li>

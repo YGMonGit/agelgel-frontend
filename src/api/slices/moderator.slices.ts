@@ -38,8 +38,8 @@ const moderatorApiSlice = agelgilAPI.injectEndpoints({
                     const authorizationToken = meta?.response?.headers.get("Authorization");
                     const refreshToken = meta?.response?.headers.get("RefreshToken");
                     if (authorizationToken && refreshToken) {
-                        localStorage.setItem('agelgilAuthorizationToken', authorizationToken);
-                        localStorage.setItem('agelgilRefreshToken', refreshToken);
+                        localStorage.setItem('agelgilAuthorizationToken', authorizationToken.split("Bearer ")[1].trim());
+                        localStorage.setItem('agelgilRefreshToken', refreshToken.split("Bearer ")[1].trim());
                     }
                 } catch (error) {
                     console.error('Failed to refresh token:', error);
@@ -60,8 +60,8 @@ const moderatorApiSlice = agelgilAPI.injectEndpoints({
                     const authorizationToken = meta?.response?.headers.get("Authorization");
                     const refreshToken = meta?.response?.headers.get("RefreshToken");
                     if (authorizationToken && refreshToken) {
-                        localStorage.setItem('agelgilAuthorizationToken', authorizationToken.split("Bearer")[1].trim());
-                        localStorage.setItem('agelgilRefreshToken', refreshToken.split("Bearer")[1].trim());
+                        localStorage.setItem('agelgilAuthorizationToken', authorizationToken.split("Bearer ")[1].trim());
+                        localStorage.setItem('agelgilRefreshToken', refreshToken.split("Bearer ")[1].trim());
                     }
                 } catch (error) {
                     console.error('Failed to refresh token:', error);
@@ -99,6 +99,7 @@ const moderatorApiSlice = agelgilAPI.injectEndpoints({
             invalidatesTags: ['Moderator'],
             onQueryStarted: async (_, { queryFulfilled }) => {
                 try {
+                    await queryFulfilled;
                     localStorage.removeItem('agelgilAuthorizationToken');
                     localStorage.removeItem('agelgilRefreshToken');
                 } catch (error) {
@@ -108,14 +109,15 @@ const moderatorApiSlice = agelgilAPI.injectEndpoints({
         }),
         updateRecipeStatus: builder.mutation<IRecipe, { recipeId: string; updates: IModeratorRecipeUpdateFrom }>({
             query: ({ recipeId, updates }) => ({
-                url: `/moderator/updateRecipeStatus/${recipeId}`,
+                url: `/private/moderator/updateRecipeStatus/${recipeId}`,
                 method: 'PATCH',
                 body: updates,
             }),
             invalidatesTags: (result, _, { recipeId }) => result ? [{ type: 'Recipe', id: recipeId }] : [],
+            transformResponse: (response: { body: IRecipe }) => response.body,
         }),
         moderatedRecipes: builder.query<IRecipe[], { status: ERecipeStatus, skip: number; limit: number }>({
-            query: ({ status, skip, limit }) => `/moderator/recipes/${status}?skip=${skip}&limit=${limit}`,
+            query: ({ status, skip, limit }) => `/private/moderator/moderatedRecipes/${status}/${skip}/${limit}`,
             providesTags: (result, _, { status }) => result ? [{ type: 'Recipe', status }] : [],
             transformResponse: (response: { body: IRecipe[] }) => response.body,
         }),

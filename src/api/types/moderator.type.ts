@@ -36,6 +36,7 @@ export interface IModeratorLogInFrom {
 export interface IModeratorSignUpFrom {
     email: string;
     password: string;
+    confirm_password: string;
     first_name: string;
     last_name: string;
     phone_number: string;
@@ -48,7 +49,7 @@ export interface IModeratorUpdateFrom extends Partial<IModeratorSignUpFrom> {
 
 export interface IModeratorRecipeUpdateFrom {
     status: TRecipeStatus;
-    Comment: string;
+    comment: string;
 }
 
 

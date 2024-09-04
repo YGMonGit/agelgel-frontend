@@ -1,5 +1,5 @@
 import agelgilAPI from "..";
-import { INewRecipeFrom, INutritionData, IRecipe, IRecipeSearchFrom, IRecipeUpdateFrom } from "../types/recipe.type";
+import { EPreferredMealTime, EPreferredMealTimeFilter, INewRecipeFrom, INutritionData, IRecipe, IRecipeSearchFrom, IRecipeUpdateFrom } from "../types/recipe.type";
 
 const recipeApiSlice = agelgilAPI.injectEndpoints({
     endpoints: (builder) => ({
@@ -9,15 +9,20 @@ const recipeApiSlice = agelgilAPI.injectEndpoints({
             providesTags: (result, error, recipeId) => [{ type: 'Recipe', id: recipeId }],
         }),
         getPrivateRecipeById: builder.query<IRecipe, string>({
-            query: (recipeId) => `/private/recipe/${recipeId}`,
+            query: (recipeId) => `/private/recipe/details/user/${recipeId}`,
+            transformResponse: (response: { body: IRecipe }) => response.body,
+            providesTags: (result, error, recipeId) => [{ type: 'Recipe', id: recipeId }],
+        }),
+        getModeratorRecipeById: builder.query<IRecipe, string>({
+            query: (recipeId) => `/private/recipe/details/moderator/${recipeId}`,
             transformResponse: (response: { body: IRecipe }) => response.body,
             providesTags: (result, error, recipeId) => [{ type: 'Recipe', id: recipeId }],
         }),
         getRecipeCarbs: builder.query<INutritionData, string>({
             query: (recipeId) => `/public/recipe/carbs/${recipeId}`,
         }),
-        getRecipes: builder.query<IRecipe[], { skip: number; limit: number }>({
-            query: ({ skip, limit }) => `/public/recipe/list/${skip}/${limit}`,
+        getRecipes: builder.query<IRecipe[], { skip: number; limit: number, filter: string }>({
+            query: ({ skip, limit, filter }) => `/public/recipe/list/${filter}/${skip}/${limit}`,
             transformResponse: (response: { body: IRecipe[] }) => response.body,
             providesTags: (result) =>
                 result
@@ -27,9 +32,35 @@ const recipeApiSlice = agelgilAPI.injectEndpoints({
                     ]
                     : [{ type: 'Recipe' as const, id: 'Recipe-LIST' }],
         }),
-        searchRecipes: builder.mutation<IRecipe[], { page: number; form: IRecipeSearchFrom }>({
+        getModeratorRecipes: builder.query<IRecipe[], { skip: number; limit: number, filter: string }>({
+            query: ({ skip, limit, filter }) => `/private/recipe/moderator/list/${skip}/${limit}/${filter}`,
+            transformResponse: (response: { body: IRecipe[] }) => response.body,
+            providesTags: (result) =>
+                result
+                    ? [
+                        ...result.map((recipe) => ({ type: 'Recipe' as const, id: recipe._id })),
+                        { type: 'Recipe' as const, id: 'Recipe-LIST' },
+                    ]
+                    : [{ type: 'Recipe' as const, id: 'Recipe-LIST' }],
+        }),
+        userSearchRecipes: builder.mutation<IRecipe[], { page: number; form: IRecipeSearchFrom }>({
             query: ({ page, form }) => ({
-                url: `/public/recipe/search/${page}`,
+                url: `/public/recipe/user/search/${page}`,
+                method: 'POST',
+                body: form,
+            }),
+            transformResponse: (response: { body: IRecipe[] }) => response.body,
+            invalidatesTags: (result) =>
+                result
+                    ? [
+                        ...result.map((recipe) => ({ type: 'Recipe' as const, id: recipe._id })),
+                        { type: 'Recipe' as const, id: 'Recipe-SEARCH' },
+                    ]
+                    : [{ type: 'Recipe' as const, id: 'Recipe-SEARCH' }],
+        }),
+        moderatorSearchRecipes: builder.mutation<IRecipe[], { page: number; form: IRecipeSearchFrom }>({
+            query: ({ page, form }) => ({
+                url: `/public/recipe/moderator/search/${page}`,
                 method: 'POST',
                 body: form,
             }),
@@ -87,9 +118,12 @@ const recipeApiSlice = agelgilAPI.injectEndpoints({
 export const {
     useGetRecipeByIdQuery,
     useGetPrivateRecipeByIdQuery,
+    useGetModeratorRecipeByIdQuery,
     useGetRecipeCarbsQuery,
     useGetRecipesQuery,
-    useSearchRecipesMutation,
+    useGetModeratorRecipesQuery,
+    useUserSearchRecipesMutation,
+    useModeratorSearchRecipesMutation,
     useCreateRecipeMutation,
     useUpdateRecipeMutation,
     useRecommendationQuery,

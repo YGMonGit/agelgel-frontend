@@ -1,5 +1,6 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { FaStarOfLife } from "react-icons/fa6";
+import { IIngredient } from '../api/types/ingredient.type';
 
 interface DropdownInputProps {
   usedFor: string;
@@ -9,7 +10,7 @@ interface DropdownInputProps {
   onChange: any
   onClick: any;
   validationClass?: string;
-  data: any[];
+  data: IIngredient[];
   mustFill?: boolean;
   register?: any
   errors?: any
@@ -112,11 +113,11 @@ const DropdownInput: React.FC<DropdownInputProps> = ({
             {filteredOptions.map((option, index) => (
               <li
                 key={index}
-                id={option.id}
+                id={option._id}
                 className="px-4 py-2 hover:bg-gray-100 cursor-pointer"
                 onClick={() => handleOptionClick(option)}
               >
-                {option.name}
+                {option.name}  ({option.localName})
               </li>
             ))}
             <li

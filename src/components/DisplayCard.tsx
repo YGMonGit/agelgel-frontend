@@ -1,9 +1,9 @@
-import React from "react";
+import React, { useRef } from "react";
 import Rating from '@mui/material/Rating';
 import { styled } from '@mui/system';
 import { Chip } from "@mui/material";
-import { useNavigate } from "react-router-dom";
-import { recipeDetailUrl } from "../assets/data";
+import { useLocation, useNavigate } from "react-router-dom";
+import { moderatorRecipeDetailUrl, recipeDetailUrl } from "../assets/data";
 import { IRecipeCard } from "../api/types/recipe.type";
 import { Skeleton } from "../components/ui/skeleton";
 
@@ -17,10 +17,19 @@ interface DisplayCardProps {
 
 function DisplayCard({ post }: DisplayCardProps) {
   const navigate = useNavigate();
-
+  const location = useLocation();
+  const scrollableDivRef = useRef<HTMLDivElement>(null);
   const goToDetailedPage = () => {
     if (post) {
-      navigate(`${recipeDetailUrl}/${post._id}`);
+      console.log(location.pathname);
+      
+      navigate(`${location.pathname.startsWith("/moderator") ? moderatorRecipeDetailUrl : recipeDetailUrl}/${post._id}`);
+    }
+  };
+  const handleWheel = (event: React.WheelEvent<HTMLDivElement>) => {
+    const wheelDelta = Math.max(-1, Math.min(1, event.deltaY || -event.detail));
+    if (scrollableDivRef.current) {
+      scrollableDivRef.current.scrollLeft += wheelDelta * 30;
     }
   };
 
@@ -38,7 +47,7 @@ function DisplayCard({ post }: DisplayCardProps) {
   }
 
   return (
-    <div className="flex flex-col flex-grow justify-start items-start p-2 w-[42vw] sm:w-[30vw] max-w-[245px] rounded-md leading-4 select-none shadow-xl bg-neutral-100 bg-green-40 h-full"
+    <div className="flex flex-col flex-grow justify-start items-start p-2 w-[42vw] sm:w-[30vw] max-w-[245px] rounded-md leading-4 select-none shadow-xl h-full border border-[#63796b33] cursor-pointer"
       onClick={goToDetailedPage}>
       <img src={post.imgs[0]} className="w-full aspect-square rounded-t-md" alt="pic" />
       <h2 className="text-[.8rem] mt-3 font-bold whitespace-pre-wrap overflow-hidden line-clamp-1">{post.name}</h2>
@@ -49,9 +58,15 @@ function DisplayCard({ post }: DisplayCardProps) {
       <p className="text-[.67rem] text-slate-500 whitespace-pre-wrap overflow-hidden line-clamp-2 flex-grow">{post.description}</p>
       <div className="flex justify-start items-center w-full gap-1">
         <p className="text-[.8rem] text-slate-400 italic leading-none ml-1 mt-4 mb-2">for </p>
-        {post.preferredMealTime.map((mealTime, index) => (
-          <h4 key={index} className="bg-green-100 px-2 py-[1px] text-[.7rem] font-semibold rounded-[6px] mt-4 mb-2">{mealTime}</h4>
-        ))}
+        <div className="flex justify-start items-center gap-1 overflow-x-auto"
+          style={{ scrollbarWidth: "none", msOverflowStyle: "none" }}
+          ref={scrollableDivRef}
+          onWheel={handleWheel}
+        >
+          {post.preferredMealTime.map((mealTime, index) => (
+            <h4 key={index} className="bg-green-100 px-2 py-[1px] text-[.7rem] font-semibold rounded-[6px] mt-4 mb-2">{mealTime}</h4>
+          ))}
+        </div>
       </div>
     </div>
   );
