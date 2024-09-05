@@ -27,6 +27,7 @@ export const moderatorSearchUrl = "/moderator/search";
 export const moderatorRecipeDetailUrl = "/moderator/recipe-detail";
 export const moderatorSpaceUrl = "/moderator/space";
 export const moderatorAddIngredientUrl = "/moderator/add-ingredient";
+export const moderatorEditIngredientUrl = "/moderator/edit-ingredient";
 export const moderatorWelcomeUrl = "/moderator";
 
 

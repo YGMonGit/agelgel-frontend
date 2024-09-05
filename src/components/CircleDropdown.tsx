@@ -71,7 +71,7 @@ function CircleDropdown() {
       {isOpen && (
         <div
           ref={dropdownRef}
-          className="absolute top-10 right-0 bg-white shadow-lg border border-gray-300 rounded-lg py-2 w-[200px]"
+          className="absolute top-10 right-0 bg-white shadow-lg border border-gray-300 rounded-lg py-2 w-[200px] z-50"
         >
           <ul className="space-y-1">
             <li className="hover:bg-gray-100 p-1 px-3 cursor-pointer flex flex-col justify-center items-start border-b border-gray-400">

@@ -99,68 +99,62 @@ function DetailNavDropdown() {
           className="absolute top-10 right-0 bg-white shadow-lg border border-gray-300 rounded-lg py-2 w-[110px]"
         >
           <ul className="space-y-1">
-            <Drawer>
-              <DrawerTrigger className="w-full">
-                <li className="hover:bg-gray-100 text-slate-500 w-full text-start p-1 px-3 cursor-pointer">
-                  Share
-                </li>
-              </DrawerTrigger>
-              <DrawerContent>
-                <DrawerHeader>
-                  <DrawerTitle className="text-[1.5rem] leading-5 font-bold">
-                    Share
-                  </DrawerTitle>
-                  <DrawerDescription className="italic text-slate-400">
-                    Share recipe using
-                  </DrawerDescription>
-                </DrawerHeader>
-                <DrawerFooter>
-                  <div style={{ height: "auto", margin: "0 auto", maxWidth: 100, width: "100%" }}>
-                    <QRCode
-                      size={256}
-                      style={{ height: "auto", maxWidth: "100%", width: "100%" }}
-                      value={value}
-                      viewBox={`0 0 256 256`}
-                    />
-                  </div>
+          <Drawer>
+      <DrawerTrigger className="w-full">
+        <li className="hover:bg-gray-100 text-slate-500 w-full text-start p-1 px-3 cursor-pointer">
+          Share
+        </li>
+      </DrawerTrigger>
+      <DrawerContent>
+        <DrawerHeader>
+          <DrawerTitle className="text-[1.5rem] leading-5 font-bold">
+            Share
+          </DrawerTitle>
+          <DrawerDescription className="italic text-slate-400">
+            Share recipe using
+          </DrawerDescription>
+        </DrawerHeader>
+        <DrawerFooter>
+          <div style={{ height: "auto", margin: "0 auto", maxWidth: 100, width: "100%" }}>
+            <QRCode
+              size={256}
+              style={{ height: "auto", maxWidth: "100%", width: "100%" }}
+              value={value}
+              viewBox={`0 0 256 256`}
+            />
+          </div>
 
-                  <div className=" w-full flex flex-row justify-center items-center gap-3 mb-3 pb-2 border-b">
-                    <button type="button">
-                      <ClipboardIcon className="w-[30px] text-[#0077B5]" onClick={
-                        () => {
-                          navigator.clipboard.writeText(
-                            `${recipe?.shareableLink}`
-                          );
-                        }
-                      } />
-                    </button>
-                    <button type="button">
-                      <a href={`https://t.me/share/url?url=${recipe?.shareableLink}&text=${recipe?.name}`} target="_blank" rel="noreferrer">
-                        <img src={telegramLogo} alt="pic" className="w-[30px]" />
-                      </a>
-                    </button>
-                    <button>
-                      <a href={`https://www.facebook.com/sharer/sharer.php?u=${recipe?.shareableLink}`} target="_blank" rel="noreferrer">
-                        <img src={facebookLogo} alt="pic" className="w-[30px]" />
-                      </a>
-                    </button>
-                    <button>
-                      <a href={`https://api.whatsapp.com/send?text=${recipe?.shareableLink}`} target="_blank" rel="noreferrer">
-                        <img src={whatsappLogo} alt="pic" className="w-[30px]" />
-                      </a>
-                    </button>
-                    {/* <button>
-                      <img src={shareLogo} alt="pic" className="w-[50px]" />
-                    </button> */}
-                  </div>
-                  <DrawerClose>
-                    <Button variant="outline" className="w-[60%]">
-                      Cancel
-                    </Button>
-                  </DrawerClose>
-                </DrawerFooter>
-              </DrawerContent>
-            </Drawer>
+          <div className="w-full flex flex-row justify-center items-center gap-3 mb-3 pb-2 border-b">
+            <button type="button" onClick={() => {
+              navigator.clipboard.writeText(`${recipe?.shareableLink}`);
+              toggleDropdown();
+            }}>
+              <ClipboardIcon className="w-[30px] text-[#0077B5]" />
+            </button>
+            <button type="button">
+              <a href={`https://t.me/share/url?url=${recipe?.shareableLink}&text=${recipe?.name}`}  target="_blank" rel="noopener noreferrer">
+                <img src="/api/placeholder/30/30" alt="Telegram" className="w-[30px]" />
+              </a>
+            </button>
+            <button>
+              <a href={`https://www.facebook.com/sharer/sharer.php?u=${recipe?.shareableLink}`} target="_blank" rel="noreferrer">
+                <img src="/api/placeholder/30/30" alt="Facebook" className="w-[30px]" />
+              </a>
+            </button>
+            <button>
+              <a href={`https://api.whatsapp.com/send?text=${recipe?.shareableLink}`} target="_blank" rel="noreferrer">
+                <img src="/api/placeholder/30/30" alt="WhatsApp" className="w-[30px]" />
+              </a>
+            </button>
+          </div>
+          <DrawerClose>
+            <Button variant="outline" className="w-[60%]">
+              Cancel
+            </Button>
+          </DrawerClose>
+        </DrawerFooter>
+      </DrawerContent>
+    </Drawer>
 
             {
               recipesLoading ? (

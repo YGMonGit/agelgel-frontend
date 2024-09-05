@@ -33,9 +33,11 @@ import {
   moderatorRecipeDetailUrl,
   moderatorSpaceUrl,
   moderatorAddIngredientUrl,
+  moderatorEditIngredientUrl,
   moderatorWelcomeUrl,
 } from "./assets/data";
 import ModeratorAddIngredient from "./pages/Moderator/ModeratorAddIngredient";
+import ModeratorEditIngredient from "./pages/Moderator/ModeratorEditIngredient";
 
 // ... (other imports remain the same)
 
@@ -200,6 +202,14 @@ function App() {
                 element={
                   <NavLayout>
                     <ModeratorAddIngredient />
+                  </NavLayout>
+                }
+              />
+              <Route
+                path={`${moderatorEditIngredientUrl}/:id`}
+                element={
+                  <NavLayout>
+                    <ModeratorEditIngredient />
                   </NavLayout>
                 }
               />
