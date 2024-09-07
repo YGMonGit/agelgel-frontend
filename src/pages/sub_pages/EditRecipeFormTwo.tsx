@@ -21,8 +21,14 @@ interface NewRecipeFormTwoProps {
   setError: any;
 }
 
-function NewRecipeFormTwo({ setFormNumber, ingredientList, setIngredientList, setIngredients, register, errors, setError }: NewRecipeFormTwoProps) {
+function EditRecipeFormTwo({ setFormNumber, ingredientList, setIngredientList, setIngredients, register, errors, setError }: NewRecipeFormTwoProps) {
+  // alert("Hello");
 
+  console.log({ingredientList});
+  // console.log("Hello");
+  
+  
+  
   // ingredient search key
   const [ingredientSearch, setIngredientSearch] = useState("");
 
@@ -40,13 +46,21 @@ function NewRecipeFormTwo({ setFormNumber, ingredientList, setIngredientList, se
 
   // selected ingredient
   const [ingredient, setIngredient] = useState<IIngredient | null>(null);
-  console.log({ ingredient });
+  console.log("Helloo");
+  
+  // console.log({ ingredient });
 
   // selected ingredient quantity
   const [ingredientQuantity, setIngredientQuantity] = useState(0);
 
   // to be displayed ingredient list [string]
-  const [_IngredientList, set_IngredientList] = useState<string[]>([]);
+  const [_IngredientList, set_IngredientList] = useState<string[]>(ingredientList.map((ingredient, index) => {
+    return `${ingredient.name}, ${ingredientQuantity} ${selectedUnit}`;
+  }));
+  console.log("Hello");
+  
+  console.log({_IngredientList});
+  
 
   // on user typing ingredient name
   const onIngredientChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -192,4 +206,4 @@ function NewRecipeFormTwo({ setFormNumber, ingredientList, setIngredientList, se
   );
 }
 
-export default NewRecipeFormTwo;
+export default EditRecipeFormTwo;

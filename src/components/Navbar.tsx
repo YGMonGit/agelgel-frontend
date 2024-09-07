@@ -24,9 +24,11 @@ import {
   moderatorSpaceUrl,
   moderatorAddIngredientUrl,
   moderatorEditIngredientUrl,
+  personalDataUrl,
 } from "../assets/data";
 
 import { SlClose, SlArrowLeft } from "react-icons/sl";
+import { BiSolidUserDetail } from "react-icons/bi";
 
 import {
   AlertDialog,
@@ -49,6 +51,17 @@ function Navbar() {
     if (location.pathname === homeUrl || location.pathname === moderatorHomeUrl) {
       return (
         <div className="flex justify-center items-center gap-2">
+          {location.pathname === homeUrl && (
+            <NavLink
+              to={personalDataUrl}
+              className="w-9 h-9 border border-content-color flex justify-center items-center rounded-full text-[2rem] text-content-color"
+              onClick={() => {
+                window.scrollTo({ top: 0 });
+              }}
+            >
+              <BiSolidUserDetail width={25} height={25} className="text-[1.3rem]" />
+            </NavLink>
+          )}
           <NavLink
             to={location.pathname === homeUrl ? searchUrl : moderatorSearchUrl}
             className="w-9 h-9 bg-content-color flex justify-center items-center rounded-full text-[2rem] text-white"
@@ -168,9 +181,10 @@ function Navbar() {
       location.pathname.startsWith(editPostUrl) ||
       location.pathname.startsWith(editUserUrl) ||
       location.pathname === mySpaceUrl ||
+      location.pathname === personalDataUrl ||
       location.pathname === moderatorSpaceUrl ||
       location.pathname === moderatorAddIngredientUrl ||
-      location.pathname.startsWith(moderatorEditIngredientUrl)
+      location.pathname.startsWith(moderatorEditIngredientUrl) 
     ) {
       return (
         <NavLink

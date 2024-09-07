@@ -31,14 +31,16 @@ import facebookLogo from "../assets/icons/facebook.png";
 import whatsappLogo from "../assets/icons/whatsapp.png";
 import shareLogo from "../assets/icons/share.png";
 import { useGetPrivateRecipeByIdQuery } from "../api/slices/recipe.slices";
-import { useLocation, useParams } from "react-router-dom";
+import { Navigate, useLocation, useNavigate, useParams } from "react-router-dom";
 import ClipLoader from "react-spinners/ClipLoader";
 import { ClipboardIcon } from "@radix-ui/react-icons";
+import { editPostUrl } from "../assets/data";
 
 function DetailNavDropdown() {
   const rID = useParams();
   const { data: recipe, isLoading: recipesLoading } = useGetPrivateRecipeByIdQuery(String(rID["id"]));
   const location = useLocation();
+  const navigate = useNavigate();
 
 
   const [isOpen, setIsOpen] = useState<boolean>(false);
@@ -84,6 +86,10 @@ function DetailNavDropdown() {
     console.log("Share");
     toggleDropdown();
   };
+
+  const goToEdit = () => {
+    navigate(`${editPostUrl}/${String(rID["id"])}`);
+  }
 
   return (
     <div className="relative">
@@ -163,7 +169,7 @@ function DetailNavDropdown() {
                 <>
                   {
                     location.pathname.startsWith("/user") && recipe?.ownsRecipe ? (
-                      <li className="hover:bg-gray-100 text-slate-500 p-1 px-3 cursor-pointer">
+                      <li className="hover:bg-gray-100 text-slate-500 p-1 px-3 cursor-pointer" onClick={goToEdit}>
                         Edit
                       </li>
                     ) : (

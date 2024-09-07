@@ -19,6 +19,8 @@ export const postUrl = "/user/post";
 export const editPostUrl = "/user/edit-post";
 export const mySpaceUrl = "/user/my-space";
 export const welcomeUrl = "/user";
+// export const weightInputUrl = "/user/add-weight";
+export const personalDataUrl = "/user/personal-data";
 
 export const moderatorSignUpUrl = "/moderator/sign-up";
 export const moderatorLoginUrl = "/moderator/login";

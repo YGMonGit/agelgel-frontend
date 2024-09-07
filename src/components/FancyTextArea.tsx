@@ -1,19 +1,26 @@
 import React, { useState, useRef, useEffect } from 'react';
-import { Box, FormControl, FormLabel, IconButton, Menu, MenuItem, ListItemDecorator } from '@mui/joy';
+import { Box, FormControl, IconButton } from '@mui/joy';
 import { MdFormatBold, MdOutlineFormatItalic, MdOutlineFormatListBulleted, MdOutlineFormatListNumbered } from "react-icons/md";
 
-export default function FancyTextArea({ onChange, errors, register }: { onChange: (html: string) => void, errors: any, register: any }) {
+interface FancyTextAreaProps {
+  onChange: (html: string) => void;
+  errors: any;
+  register: any;
+  instruction: string; // Add the instruction prop
+}
+
+export default function FancyTextArea({ onChange, errors, register, instruction }: FancyTextAreaProps) {
   const [fontWeight, setFontWeight] = useState<'200' | 'normal' | 'bold'>('normal');
-  const [anchorEl, setAnchorEl] = useState<HTMLElement | null>(null);
   const editorRef = useRef<HTMLDivElement>(null);
 
   const errorStyle = "text-[.8rem] text-red-400";
 
   useEffect(() => {
     if (editorRef.current) {
+      editorRef.current.innerHTML = instruction; // Set the initial value from the instruction prop
       editorRef.current.focus();
     }
-  }, []);
+  }, [instruction]); // Run this effect when instruction changes
 
   const updateContent = () => {
     if (editorRef.current) {
@@ -27,14 +34,7 @@ export default function FancyTextArea({ onChange, errors, register }: { onChange
       const range = selection.getRangeAt(0);
       const listElement = document.createElement(listType);
       const listItem = document.createElement('li');
-      if(listType === "ul"){
-        listElement.className = "list-disc px-7"
-        // listItem.className = "list-disc"
-      } else {
-        listElement.className = "list-decimal px-7"
-        // listItem.className = "list-decimal"
-
-      }
+      listElement.className = listType === 'ul' ? "list-disc px-7" : "list-decimal px-7";
       listItem.appendChild(document.createTextNode('\u00A0')); // Add a non-breaking space
       listElement.appendChild(listItem);
       range.insertNode(listElement);
@@ -94,27 +94,12 @@ export default function FancyTextArea({ onChange, errors, register }: { onChange
         onInput={handleInput}
         className="rounded-xl border border-neutral-300 min-h-[130px] p-1 font-inherit text-inherit focus:outline-none focus:border-primary-500"
       >
-        {/* <div className="space-y-2">
-          <div className="space-x-1">
-            <span className="font-bold">Bold</span>
-            <span className="italic">Italic</span>
-          </div>
-          <ul className="list-disc pl-4">
-            <li>Bullet Point 1</li>
-            <li>Bullet Point 2</li>
-          </ul>
-          <ol className="list-decimal pl-4">
-            <li>Numbered List 1</li>
-            <li>Numbered List 2</li>
-          </ol>
-        </div> */}
       </Box>
       <div className="flex justify-start items-center gap-1 pt-1 h-[30px]">
         <IconButton
           variant="plain"
           color="neutral"
           onClick={() => applyStyle('bold')}
-          className="bg-blue-500"
         >
           <MdFormatBold className="text-content-color text-[1.2rem]" />
         </IconButton>
