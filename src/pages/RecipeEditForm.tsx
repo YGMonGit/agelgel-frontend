@@ -65,11 +65,10 @@ function RecipeEditForm() {
 
   const [instructions, setInstructions] = useState("");
   const { uploadFile, loading } = useFileUpload();
-  const [imageUrls, setImageUrls] = useState<string[]>([]);
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
 
-  console.log({ newImages });
-  console.log({ defaultImages });
+  console.log({ ingredientList });
+
 
 
   const {
@@ -97,8 +96,8 @@ function RecipeEditForm() {
   });
 
   useEffect(() => {
-    replaceIngredients(ingredients as any);
-  }, [ingredients, replaceIngredients]);
+    replaceIngredients(ingredientList as any);
+  }, [ingredientList, replaceIngredients]);
 
   useEffect(() => {
     setValue("instructions", instructions);
@@ -155,7 +154,6 @@ function RecipeEditForm() {
   };
 
   async function EditRecipe(recipe: IRecipeUpdateFrom) {
-    console.log("hello");
 
     try {
       console.log({ newImages });
@@ -252,9 +250,23 @@ function RecipeEditForm() {
       setDifficulty(recipe.preparationDifficulty);
       setValue("cookingTime", recipe.cookingTime);
       setTime(recipe.cookingTime);
-      setValue("ingredients", recipe.ingredients);
-      console.log({ one: recipe.ingredients });
-      setIngredientList(recipe.ingredients);
+
+      setValue("ingredients", recipe.ingredients.map((ingredient: any) => {
+        return {
+          ingredient: ingredient._id,
+          name: ingredient.name,
+          amount: ingredient.amount,
+          unit: ingredient.unit
+        };
+      }));
+      setIngredientList(recipe.ingredients.map((ingredient: any) => {
+        return {
+          ingredient: ingredient._id,
+          name: ingredient.name,
+          amount: ingredient.amount,
+          unit: ingredient.unit
+        };
+      }));
 
       setValue("youtubeLink", recipe.youtubeLink);
       setYouTubeLink(recipe.youtubeLink);
@@ -279,6 +291,7 @@ function RecipeEditForm() {
       />
       {formNumber === 1 && (
         <EditRecipeFormOne
+          control={control}
           youTubeLink={youTubeLink}
           setYouTubeLink={setYouTubeLink}
           setFormNumber={setFormNumber}

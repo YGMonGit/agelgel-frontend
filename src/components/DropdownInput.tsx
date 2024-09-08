@@ -96,7 +96,7 @@ const DropdownInput: React.FC<DropdownInputProps> = ({
       </label>
       <input
         className={`w-full py-[10px] bg-[#F9FAFB] leading-none text-[1rem] px-4 border outline-none rounded-lg border-[#D1D5DB]`}
-        {...register(usedFor)}
+        // {...register(usedFor)}
         type="text"
         id={usedFor}
         name={usedFor}

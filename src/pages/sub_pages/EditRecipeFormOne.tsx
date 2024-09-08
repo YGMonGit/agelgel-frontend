@@ -6,6 +6,7 @@ import Choice from "../../components/Choice";
 import WideLink from "../../components/WideLink";
 import { EPreferredMealTime, EPreparationDifficulty } from "../../api/types/recipe.type";
 import ImageEditInput from "../../components/ImageEditInput";
+import { Controller } from "react-hook-form";
 
 interface EditRecipeFormOneProps {
   setFormNumber: React.Dispatch<React.SetStateAction<number>>;
@@ -31,6 +32,7 @@ interface EditRecipeFormOneProps {
   handleImageChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
   handleRemoveImage: (index: number) => void;
   handleRemoveNewImage: (index: number) => void;
+  control: any;
 }
 
 function EditRecipeFormOne({
@@ -56,7 +58,8 @@ function EditRecipeFormOne({
   youTubeLink,
   handleImageChange,
   handleRemoveImage,
-  handleRemoveNewImage
+  handleRemoveNewImage,
+  control,
 }: EditRecipeFormOneProps) {
   const onRecipeNameChange = (e: React.ChangeEvent<HTMLInputElement>) =>
     setRecipeName(e.target.value);
@@ -71,8 +74,6 @@ function EditRecipeFormOne({
 
   const errorStyle = "text-[.8rem] text-red-400";
 
-  console.log({youTubeLink});
-  
 
   return (
     <div className="w-full flex-col justify-start items-start mt-2">
@@ -128,16 +129,24 @@ function EditRecipeFormOne({
         setValues={setDifficulty}
         multiSelect={false}
       />
-      <Input
-        type="number"
-        label="Cooking Time"
-        placeholder="cookingTime"
-        value={time}
-        onChange={onTimeChange}
-        instruction="In minutes."
-        register={register}
-        errors={errors.cookingTime}
+      <Controller
+        control={control}
+        name="cookingTime"
+        defaultValue={time}
+        render={({ field }) => (
+          <Input
+            type="number"
+            label="Cooking Time"
+            placeholder="cookingTime"
+            value={field.value}
+            onChange={field.onChange}
+            instruction="In minutes."
+            // register={register}
+            errors={errors.cookingTime}
+          />
+        )}
       />
+      {/*  */}
       <div className="w-full px-5">
         <WideLink label="Next" color="bg-content-color" clickAction={onNextClick} />
       </div>
