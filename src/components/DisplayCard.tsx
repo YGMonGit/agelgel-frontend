@@ -47,7 +47,7 @@ function DisplayCard({ post }: DisplayCardProps) {
   }
 
   return (
-    <div className="flex flex-col flex-grow justify-start items-start p-2 w-[42vw] sm:w-[30vw] max-w-[245px] rounded-md leading-4 select-none shadow-xl h-full border border-[#63796b33] cursor-pointer"
+    <div className="flex flex-col flex-grow justify-start items-start p-2 min-w-[150px] w-[42vw] sm:w-[30vw] max-w-[245px] rounded-md leading-4 select-none shadow-xl h-full border border-[#63796b33] cursor-pointer"
       onClick={goToDetailedPage}>
       <img src={post.imgs[0]} className="w-full aspect-square rounded-t-md" alt="pic" />
       <h2 className="text-[.8rem] mt-3 font-bold whitespace-pre-wrap overflow-hidden line-clamp-1">{post.name}</h2>

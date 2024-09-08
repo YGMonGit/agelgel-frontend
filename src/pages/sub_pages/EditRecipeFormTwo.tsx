@@ -9,6 +9,7 @@ import DropdownInput from "../../components/DropdownInput";
 import { IIngredient } from "@/src/api/types/ingredient.type";
 import { INewIngredientFrom, IngredientDetailWithUnit } from "@/src/api/types/recipe.type";
 import { FormControl, InputLabel, MenuItem, Select } from "@mui/material";
+import Ingredient from "../../components/Ingredient";
 
 interface NewRecipeFormTwoProps {
   setFormNumber: React.Dispatch<React.SetStateAction<number>>;
@@ -85,6 +86,7 @@ function EditRecipeFormTwo({ setFormNumber, ingredientList, setIngredientList, s
       const newIngredient = `${ingredient.name}, ${ingredientQuantity} ${selectedUnit}`;
       set_IngredientList([..._IngredientList, newIngredient]);
       setIngredient(null);
+      setSelectedUnit(null);
       setIngredientQuantity(0);
       setIngredientSearch("");
     } else {
@@ -103,13 +105,6 @@ function EditRecipeFormTwo({ setFormNumber, ingredientList, setIngredientList, s
 
   return (
     <div className="w-full flex-grow flex flex-col justify-start items-start mt-2">
-      <ChipsList
-        label="Added Ingredients"
-        detail="Make sure to not forget anything!"
-        selectedConditions={ingredientList}
-        setSelectedConditions={setIngredientList}
-
-      />
       <DropdownInput
         boxLabel="Select Ingredient"
         data={ingredientSearch.length == 0 ? ingredientsQuery || [] : ingredients || []}
@@ -126,19 +121,18 @@ function EditRecipeFormTwo({ setFormNumber, ingredientList, setIngredientList, s
         register={register}
         errors={errors && errors.ingredients}
       />
-      <div className="w-full px-5 flex flex-col justify-start items-start flex-grow mt-5">
+      <div className="w-full px-5 flex flex-col justify-start items-start flex-grow my-5">
         <label htmlFor="ingredientQuantity" className="text-[1rem] font-semibold">
           Ingredient Quantity
         </label>
-        <div className="flex w-full justify-start items-start outline-none my-2 gap-2">
-          <div className="flex justify-start items-start border rounded-lg outline-none border-gray-300 h-full">
+        <div className="flex flex-wrap w-full justify-start items-start outline-none my-2 gap-2">
+          <div className="flex flex-grow justify-start items-start border rounded-lg outline-none border-gray-300 h-[40px]">
             <button
-              className="h-full w-[40px] bg-content-color rounded-l-lg flex justify-center items-center text-white text-[1.3rem]"
+              className="h-full w-[40px] bg-content-color rounded-l-lg flex justify-center items-center text-white text-[1.2rem]"
               onClick={() => setIngredientQuantity(Math.max(ingredientQuantity - 1, 0))}
             >
               <MdRemove />
             </button>
-
 
             <input
               type="text"
@@ -149,12 +143,12 @@ function EditRecipeFormTwo({ setFormNumber, ingredientList, setIngredientList, s
               onChange={onIngredientQuantityChange}
               autoComplete="off"
               required
-              className="w-[65px] text-center h-full bg-[#F9FAFB] text-[1rem] border-x outline-none border-gray-300"
+              className="w-[65px] flex-grow text-center h-full bg-[#F9FAFB] text-[1rem] border-x outline-none border-gray-300"
             />
             {errors && errors.ingredients && <p className="text-[.8rem] text-red-400">{errors.ingredients.amount?.message}</p>}
             <button
               type="button"
-              className="h-full w-[40px] bg-content-color rounded-r-lg flex justify-center items-center text-white text-[1.3rem]"
+              className="h-full w-[40px] bg-content-color rounded-r-lg flex justify-center items-center text-white text-[1.2rem]"
               onClick={() => setIngredientQuantity(ingredientQuantity + 1)}
             >
               <MdAdd />
@@ -162,41 +156,74 @@ function EditRecipeFormTwo({ setFormNumber, ingredientList, setIngredientList, s
 
 
           </div>
-            <FormControl variant="outlined" className="flex-grow">
-              <InputLabel id="demo-simple-select-outlined-label">Unit</InputLabel>
-              <Select
-                labelId="demo-simple-select-outlined-label"
-                id="demo-simple-select-outlined"
-                value={selectedUnit ?? ''}
-                placeholder="select ingredient"
-                name="ingredients.unit"
-                onChange={(e) => { console.log({ val: e.target.value }); setSelectedUnit(e.target.value as string) }}
-                label="Unit"
-                fullWidth
-                sx={{ minWidth: "100px", borderColor: "#0E9F6E" }}
-              >
-                {
-
-                  ingredient?.unitOptions.map((unit, index) => (
-                    <MenuItem key={index} value={unit}>{unit}</MenuItem>
-                  ))
-
+          <FormControl
+            variant="outlined"
+            sx={{
+              borderRadius: "0.75rem",
+              backgroundColor: "#F9FAFB",
+              "& .MuiOutlinedInput-root": {
+                borderRadius: "0.5rem",
+                "& fieldset": {
+                  borderColor: "#D1D5DB",
+                },
+                "&:hover fieldset": {
+                  borderColor: "#D1D5DB",
+                },
+                "&.Mui-focused fieldset": {
+                  border: "1px solid #D1D5DB",
+                },
+              },
+            }}
+            className="flex-grow h-[40px]"
+          >
+            <Select
+              id="demo-simple-select-outlined"
+              value={selectedUnit ?? ''}
+              placeholder="Unit"
+              displayEmpty
+              name="ingredients.unit"
+              onChange={(e) => {
+                console.log({ val: e.target.value });
+                setSelectedUnit(e.target.value as string);
+              }}
+              fullWidth
+              sx={{
+                minWidth: "100px",
+                borderColor: "#0E9F6E",
+                height: "40px",
+              }}
+              renderValue={(selected) => {
+                if (!selected) {
+                  return <span className="text-slate-400 text-[.9rem]">Unit</span>;
                 }
-              </Select>
-              {errors && errors.ingredients && <p className="text-[.8rem] text-red-400">{errors.ingredients.unit?.message}</p>}
-
-            </FormControl>
+                return selected;
+              }}
+            >
+              {ingredient?.unitOptions.map((unit, index) => (
+                <MenuItem key={index} value={unit}>
+                  {unit}
+                </MenuItem>
+              ))}
+            </Select>
+            {errors && errors.ingredients && (
+              <p className="text-[.8rem] text-red-400">
+                {errors.ingredients.unit?.message}
+              </p>
+            )}
+          </FormControl>
           <button
             type="button"
-            className="h-full flex-gr px-3 rounded-md flex justify-center items-center border border-content-color bg-content-color text-white text-[.85rem] leading-none"
+            className="h-[40px] flex-grow flex-gr px-3 gap-1 rounded-md flex justify-center items-center border border-content-color bg-content-color text-white text-[.85rem] leading-none"
             onClick={handleAddIngredient}
           >
-            <MdAdd className="text-[1.5rem]" /> ADD
+            <MdAdd className="text-[1rem]" /> ADD
           </button>
         </div>
-        <p className="text-[.9rem] text-slate-400">
-          In grams or milliliters.
+        <p className="text-[.9rem] text-slate-400 -mt-2 mb-4">
+          Ingredient quantity and measurement unit.
         </p>
+        <p className="text-[1.1rem] font-semibold mb-1 select-none">Ingredient List</p>
+        <Ingredient selectedConditions={ingredientList} setSelectedConditions={setIngredientList} />
       </div>
       <div className="w-full px-5 flex justify-center items-end gap-2">
         <WideLink label="Back" color="bg-white" outline={true} clickAction={onBackClick} />
