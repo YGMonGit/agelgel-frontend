@@ -54,8 +54,10 @@ function RecipeEditForm() {
     EPreparationDifficulty.easy
   );
   const [time, setTime] = useState<number>(0);
-  const [images, setImages] = useState<string[]>([]);
+
+  const [defaultImages, setDefaultImages] = useState<string[]>([]);
   const [newImages, setNewImages] = useState<File[]>([]);
+
   const [removedImages, setRemovedImages] = useState<string[]>([]);
 
   const [ingredientList, setIngredientList] = useState<IngredientDetailWithUnit[]>([]);
@@ -66,9 +68,9 @@ function RecipeEditForm() {
   const [imageUrls, setImageUrls] = useState<string[]>([]);
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
 
-  console.log({newImages});
-  console.log({images});
-  
+  console.log({ newImages });
+  console.log({ defaultImages });
+
 
   const {
     register,
@@ -86,8 +88,8 @@ function RecipeEditForm() {
     },
   });
 
-  console.log({errors, values: getValues()});
-  
+  console.log({ errors, values: getValues() });
+
 
   const { replace: replaceIngredients } = useFieldArray({
     control,
@@ -131,17 +133,20 @@ function RecipeEditForm() {
   const navigate = useNavigate();
 
   const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    if (e.target.files) {
-      const filesArray = Array.from(e.target.files);
-      console.log(filesArray);
-      
-      setNewImages((prevNewImages) => [...prevNewImages, ...filesArray]);
+    let files: FileList | null = null;
+    files = e.target.files;
+
+    if (files) {
+      const AFiles = Array.from(files)
+      setValue("imgs", AFiles as any);
+      // const newImages = AFiles.map(file => URL.createObjectURL(file));
+      setNewImages(prevImages => [...prevImages, ...AFiles]);
     }
   };
 
   const handleRemoveImage = (index: number) => {
-    const removedImage = images[index];
-    setImages((prevImages) => prevImages.filter((_, i) => i !== index));
+    const removedImage = defaultImages[index];
+    setDefaultImages((prevImages) => prevImages.filter((_, i) => i !== index));
     setRemovedImages((prevRemoved) => [...prevRemoved, removedImage]);
   };
 
@@ -151,26 +156,25 @@ function RecipeEditForm() {
 
   async function EditRecipe(recipe: IRecipeUpdateFrom) {
     console.log("hello");
-    
-    try {
-      console.log({newImages});
-      
-      const uploadedNewImages = await Promise.all(
-        newImages.map((file) => uploadFile(file))
-      );
 
-      const updatedImageUrls = [
-        ...images.filter((img) => !removedImages.includes(img)),
-        ...uploadedNewImages.filter((url): url is string => url !== undefined),
-      ];
-      console.log({updatedImageUrls});
-      
+    try {
+      console.log({ newImages });
+      console.log({ defaultImages });
+
+      const files = recipe.imgs;
+      const fileUrls: string[] = [];
+      for (let i = 0; i < files.length; i++) {
+        const file = files[i];
+        let fileUrl = await uploadFile(file as any);
+        if (fileUrl) fileUrls.push(fileUrl);
+      }
+
 
       await updateRecipe({
         recipeId: String(rID.id),
         updates: {
           ...recipe,
-          imgs: updatedImageUrls,
+          imgs: [...defaultImages, ...fileUrls],
           preparationDifficulty: difficulty,
           preferredMealTime: mealTime,
           medical_condition: {
@@ -240,8 +244,8 @@ function RecipeEditForm() {
       setRecipeName(recipe.name);
       setValue("description", recipe.description);
       setDescription(recipe.description || "");
-      setValue("imgs", recipe.imgs);
-      setImages(recipe.imgs);
+      setValue("imgs", []);
+      setDefaultImages(recipe.imgs);
       setValue("preferredMealTime", recipe.preferredMealTime);
       setMealTime(recipe.preferredMealTime);
       setValue("preparationDifficulty", recipe.preparationDifficulty);
@@ -249,9 +253,9 @@ function RecipeEditForm() {
       setValue("cookingTime", recipe.cookingTime);
       setTime(recipe.cookingTime);
       setValue("ingredients", recipe.ingredients);
-      console.log({one: recipe.ingredients});
+      console.log({ one: recipe.ingredients });
       setIngredientList(recipe.ingredients);
-      
+
       setValue("youtubeLink", recipe.youtubeLink);
       setYouTubeLink(recipe.youtubeLink);
 
@@ -279,10 +283,10 @@ function RecipeEditForm() {
           setYouTubeLink={setYouTubeLink}
           setFormNumber={setFormNumber}
           recipeName={recipeName}
-          images={images}
+          images={defaultImages}
           newImages={newImages}
           setNewImages={setNewImages}
-          setImages={setImages}
+          setImages={setDefaultImages}
           setRecipeName={setRecipeName}
           description={description}
           setDescription={setDescription}

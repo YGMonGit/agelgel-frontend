@@ -25,8 +25,7 @@ const ImageEditInput = ({
   handleRemoveImage,
   handleRemoveNewImage
 }: ImageEditInputProps) => {
-  console.log("hello");
-  
+
   const handleDragOver = useCallback((e: React.DragEvent<HTMLDivElement>) => {
     e.preventDefault();
     e.stopPropagation();
@@ -36,14 +35,16 @@ const ImageEditInput = ({
     e.preventDefault();
     e.stopPropagation();
     const files = e.dataTransfer.files;
-    console.log({files});
-    
+    console.log({ files });
+
     if (files) {
       const newFiles = Array.from(files);
       setNewImages(prevNewImages => {
-        console.log({newImage: [...prevNewImages, ...newFiles]});
-        
-        return [...prevNewImages, ...newFiles]});
+        console.log("handleDrop")
+        console.log({ newImage: [...prevNewImages, ...newFiles] });
+        return [...prevNewImages, ...newFiles]
+      });
+
       setValue("imgs", [...newImages, ...newFiles]);
       const newImageUrls = newFiles.map(file => URL.createObjectURL(file));
       setImages(prevImages => [...prevImages, ...newImageUrls]);

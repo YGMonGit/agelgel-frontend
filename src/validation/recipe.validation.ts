@@ -34,7 +34,7 @@ export const editRecipeSchema = z.object({
     // cookingTime: z.string().min(1, "Cooking time is required"),
     cookingTime: z.number().int().min(0).optional(),
     description: z.string().min(1, "Description is required"),
-    imgs: z.array(z.instanceof(File)).nonempty("At least one image is required")
+    imgs: z.array(z.instanceof(File))
         .refine((file: File[]) => file.every((f) => f.size <= MAX_FILE_SIZE), `Max image size is 5MB.`)
         .refine(
             (file: File[]) => file.every((f) => ACCEPTED_IMAGE_TYPES.includes(f.type)),
