@@ -111,6 +111,13 @@ const recipeApiSlice = agelgilAPI.injectEndpoints({
                     ]
                     : [{ type: 'Recipe' as const, id: 'Recipe-LIST' }],
         }),
+        removeRecipe: builder.mutation<void, string>({
+            query: (recipeId) => ({
+                url: `/private/recipe/remove/${recipeId}`,
+                method: 'DELETE',
+            }),
+            invalidatesTags: (result, error, recipeId) => [{ type: 'Recipe', id: recipeId }],
+        }),
     }),
 
 });
@@ -128,4 +135,5 @@ export const {
     useUpdateRecipeMutation,
     useRecommendationQuery,
     useSimilarQuery,
+    useRemoveRecipeMutation,
 } = recipeApiSlice
