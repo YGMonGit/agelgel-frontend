@@ -62,10 +62,61 @@ export interface IRecipe {
     description?: string;
     imgs: string[];
     category: string;
-    preferredMealTime: TPreferredMealTime[];
-    preparationDifficulty: TPreparationDifficulty;
+    preferredMealTime: EPreferredMealTime[];
+    preparationDifficulty: EPreparationDifficulty;
     cookingTime: number;
     ingredients: IngredientDetail[];
+    instructions: string;
+    youtubeLink?: string;
+
+    rating: number;
+    reviews: string[] | IReview[];
+    totalReviews: number;
+
+
+    status: TRecipeStatus;
+
+    medical_condition: IMedicalCondition;
+
+    nutrition: INutritionData;
+
+    shareableLink: string;
+
+    moderator?: {
+        moderator: {
+            moderator: string;
+            full_name: string;
+            profile_img: string;
+        }
+        comment: string;
+    };
+
+    user: {
+        user: string | IUser;
+        full_name: string;
+        profile_img: string;
+    }
+
+    hasBookedRecipe: boolean;
+    isModeratedRecipe: boolean;
+    ownsRecipe: boolean;
+
+
+    createdAt: Date;
+    updatedAt: Date;
+}
+
+export interface IRecipeToEdit {
+    _id: string;
+    name: string;
+    description?: string;
+    imgs: string[];
+    category: string;
+    preferredMealTime: EPreferredMealTime[];
+    preparationDifficulty: EPreparationDifficulty;
+    cookingTime: number;
+    ingredients: IngredientDetailWithUnit[];
+    // ingredients: IngredientDetail[];
     instructions: string;
     youtubeLink?: string;
 
@@ -131,7 +182,17 @@ export interface INewRecipeFrom {
     youtubeLink?: string;
 }
 
-export interface IRecipeUpdateFrom extends Partial<INewRecipeFrom> {
+export interface IRecipeUpdateFrom {
+    name: string;
+    description?: string;
+    imgs: string[];
+    preferredMealTime: EPreferredMealTime[];
+    preparationDifficulty: EPreparationDifficulty;
+    cookingTime: number;
+    ingredients: IngredientDetailWithUnit[];
+    instructions: string;
+    medical_condition: IMedicalCondition;
+    youtubeLink?: string;
 }
 
 export interface IRecipeSearchFrom {

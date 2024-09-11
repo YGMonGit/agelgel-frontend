@@ -30,16 +30,19 @@ import telegramLogo from "../assets/icons/tg-logo.png";
 import facebookLogo from "../assets/icons/facebook.png";
 import whatsappLogo from "../assets/icons/whatsapp.png";
 import shareLogo from "../assets/icons/share.png";
-import { useGetPrivateRecipeByIdQuery } from "../api/slices/recipe.slices";
-import { useLocation, useParams } from "react-router-dom";
+import { useGetPrivateRecipeByIdQuery, useRemoveRecipeMutation } from "../api/slices/recipe.slices";
+import { Navigate, useLocation, useNavigate, useParams } from "react-router-dom";
 import ClipLoader from "react-spinners/ClipLoader";
 import { ClipboardIcon } from "@radix-ui/react-icons";
+import { editPostUrl } from "../assets/data";
 
 function DetailNavDropdown() {
   const rID = useParams();
   const { data: recipe, isLoading: recipesLoading } = useGetPrivateRecipeByIdQuery(String(rID["id"]));
   const location = useLocation();
+  const navigate = useNavigate();
 
+  const [removeRecipe] = useRemoveRecipeMutation();
 
   const [isOpen, setIsOpen] = useState<boolean>(false);
   const dropdownRef = useRef<HTMLDivElement>(null);
@@ -85,6 +88,10 @@ function DetailNavDropdown() {
     toggleDropdown();
   };
 
+  const goToEdit = () => {
+    navigate(`${editPostUrl}/${String(rID["id"])}`);
+  }
+
   return (
     <div className="relative">
       <div
@@ -124,34 +131,28 @@ function DetailNavDropdown() {
                     />
                   </div>
 
-                  <div className=" w-full flex flex-row justify-center items-center gap-3 mb-3 pb-2 border-b">
-                    <button type="button">
-                      <ClipboardIcon className="w-[30px] text-[#0077B5]" onClick={
-                        () => {
-                          navigator.clipboard.writeText(
-                            `${recipe?.shareableLink}`
-                          );
-                        }
-                      } />
+                  <div className="w-full flex flex-row justify-center items-center gap-3 mb-3 pb-2 border-b">
+                    <button type="button" onClick={() => {
+                      navigator.clipboard.writeText(`${recipe?.shareableLink}`);
+                      toggleDropdown();
+                    }}>
+                      <ClipboardIcon className="w-[30px] text-[#0077B5]" />
                     </button>
                     <button type="button">
-                      <a href={`https://t.me/share/url?url=${recipe?.shareableLink}&text=${recipe?.name}`} target="_blank" rel="noreferrer">
-                        <img src={telegramLogo} alt="pic" className="w-[30px]" />
+                      <a href={`https://t.me/share/url?url=${recipe?.shareableLink}&text=${recipe?.name}`} target="_blank" rel="noopener noreferrer">
+                        <img src="/api/placeholder/30/30" alt="Telegram" className="w-[30px]" />
                       </a>
                     </button>
                     <button>
                       <a href={`https://www.facebook.com/sharer/sharer.php?u=${recipe?.shareableLink}`} target="_blank" rel="noreferrer">
-                        <img src={facebookLogo} alt="pic" className="w-[30px]" />
+                        <img src="/api/placeholder/30/30" alt="Facebook" className="w-[30px]" />
                       </a>
                     </button>
                     <button>
                       <a href={`https://api.whatsapp.com/send?text=${recipe?.shareableLink}`} target="_blank" rel="noreferrer">
-                        <img src={whatsappLogo} alt="pic" className="w-[30px]" />
+                        <img src="/api/placeholder/30/30" alt="WhatsApp" className="w-[30px]" />
                       </a>
                     </button>
-                    {/* <button>
-                      <img src={shareLogo} alt="pic" className="w-[50px]" />
-                    </button> */}
                   </div>
                   <DrawerClose>
                     <Button variant="outline" className="w-[60%]">
@@ -169,7 +170,7 @@ function DetailNavDropdown() {
                 <>
                   {
                     location.pathname.startsWith("/user") && recipe?.ownsRecipe ? (
-                      <li className="hover:bg-gray-100 text-slate-500 p-1 px-3 cursor-pointer">
+                      <li className="hover:bg-gray-100 text-slate-500 p-1 px-3 cursor-pointer" onClick={goToEdit}>
                         Edit
                       </li>
                     ) : (
@@ -203,7 +204,18 @@ function DetailNavDropdown() {
                         <AlertDialogCancel className="text-[1.2rem] h-[56px] rounded-xl">
                           No, I've changed my mind
                         </AlertDialogCancel>
-                        <AlertDialogAction className="text-[1.2rem] h-[56px] bg-red-700 rounded-xl">
+                        <AlertDialogAction className="text-[1.2rem] h-[56px] bg-red-700 rounded-xl"
+                          onClick={async () => {
+                            try {
+                              console.log('Recipe ID:', rID["id"]);
+                              await removeRecipe(String(rID["id"])).unwrap();
+                              console.log('Recipe removed successfully');
+                              navigate(-1);
+                            } catch (error) {
+                              console.error('Error removing recipe:', error);
+                            }
+                          }}
+                        >
                           Yes, delete it
                         </AlertDialogAction>
                       </AlertDialogFooter>

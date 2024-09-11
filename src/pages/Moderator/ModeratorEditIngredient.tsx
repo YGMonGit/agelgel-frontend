@@ -4,18 +4,23 @@ import React, { useEffect, useState } from "react";
 import { EChronicDisease } from "../../api/types/user.type";
 import WideButton from "../../components/WideButton";
 import PageHeader from "../../components/PageHeader";
-import {
-  INewIngredientFrom
-} from "../../api/types/ingredient.type";
+import { INewIngredientFrom } from "../../api/types/ingredient.type";
 import { Controller, useFieldArray, useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { newIngredientSchema } from "../../validation/ingredient.validation";
-import { useGetUniqueTypeQuery, useGetUniqueUnitQuery, useCreateIngredientMutation } from "../../api/slices/ingredient.slices";
+import {
+  useGetUniqueTypeQuery,
+  useGetUniqueUnitQuery,
+  useUpdateIngredientMutation,
+  useGetIngredientByIdQuery,
+} from "../../api/slices/ingredient.slices";
 import ChipsBox from "../../components/ChipsBoxTwo";
 import ClipLoader from "react-spinners/ClipLoader";
 import { FormControl, InputLabel, MenuItem, Select } from "@mui/material";
+import { useParams } from "react-router-dom";
 
-function ModeratorAddIngredient() {
+function ModeratorEditIngredient() {
+  const iID = useParams();
   const [ingredientName, setIngredientName] = useState("");
   const [ingredientAmharicName, setIngredientAmharicName] = useState("");
   const [type, setType] = useState("");
@@ -23,7 +28,9 @@ function ModeratorAddIngredient() {
 
   const { data: types, isLoading: typesLoading } = useGetUniqueTypeQuery();
   const { data: units, isLoading: unitsLoading } = useGetUniqueUnitQuery();
-  const [createIngredient, { isLoading }] = useCreateIngredientMutation();
+  const [updateIngredient, { isLoading }] = useUpdateIngredientMutation();
+
+  const { data: ingredient } = useGetIngredientByIdQuery(String(iID.id));
 
   const {
     register,
@@ -37,25 +44,37 @@ function ModeratorAddIngredient() {
     resolver: zodResolver(newIngredientSchema),
   });
 
+  useEffect(() => {
+    if (ingredient) {
+      setValue("localName", ingredient.localName);
+      setIngredientAmharicName(ingredient.localName);
+      setValue("name", ingredient.name);
+      setIngredientName(ingredient.name);
+      setValue("type", ingredient.type);
+      setType(ingredient.type);
+      setValue("unitOptions", ingredient.unitOptions);
+      setUnitOptions(ingredient.unitOptions);
+    }
+  }, [ingredient]);
+
   console.log({ errors });
   console.log({ getValues: getValues() });
 
-
   const submit = async (data: INewIngredientFrom) => {
     try {
-      await createIngredient(data).unwrap();
-
+      await updateIngredient({
+        ingredientsId: String(iID.id),
+        updates: data,
+      }).unwrap();
     } catch (error: any) {
       if (!error.data.error) return;
       const err = error.data.error;
       console.log({ err });
-      if (err.type === "validation")
-        setError(err.attr, { message: err.msg });
+      if (err.type === "validation") setError(err.attr, { message: err.msg });
     }
-  }
+  };
 
   const errorStyle = "text-[.8rem] text-red-400";
-
 
   useEffect(() => {
     setValue("unitOptions", unitOptions);
@@ -73,9 +92,12 @@ function ModeratorAddIngredient() {
     setType(e.target.value);
 
   return (
-    <form className="w-full flex flex-col flex-grow justify-start items-center" onSubmit={handleSubmit(submit)}>
+    <form
+      className="w-full flex flex-col flex-grow justify-start items-center"
+      onSubmit={handleSubmit(submit)}
+    >
       <div className="w-full pb-2">
-        <PageHeader header="Add Ingredient" detail="Enter new ingredient here." />
+        <PageHeader header="Edit Ingredient" detail="Update ingredient here." />
       </div>
       <Input
         label="Ingredient Name (English)"
@@ -155,23 +177,27 @@ function ModeratorAddIngredient() {
 
       <div className="w-full px-5 mb-4 mt-auto">
         {isLoading ? (
-          <WideButton label={
-            <div className="flex justify-center items-center w-full h-full gap-2">
-              <ClipLoader
-                color={"white"}
-                size={15}
-                aria-label="Loading Spinner"
-                data-testid="loader"
-              />
-              <p className="text-white text-[1.1rem] italic">loading ...</p>
-            </div>
-          } color="bg-content-color" disable={true} />
+          <WideButton
+            label={
+              <div className="flex justify-center items-center w-full h-full gap-2">
+                <ClipLoader
+                  color={"white"}
+                  size={15}
+                  aria-label="Loading Spinner"
+                  data-testid="loader"
+                />
+                <p className="text-white text-[1.1rem] italic">loading ...</p>
+              </div>
+            }
+            color="bg-content-color"
+            disable={true}
+          />
         ) : (
-          <WideButton label="Add Ingredient" color="bg-content-color" />
+          <WideButton label="Edit Ingredient" color="bg-content-color" />
         )}
       </div>
     </form>
   );
 }
 
-export default ModeratorAddIngredient;
+export default ModeratorEditIngredient;

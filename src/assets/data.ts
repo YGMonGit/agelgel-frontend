@@ -19,6 +19,8 @@ export const postUrl = "/user/post";
 export const editPostUrl = "/user/edit-post";
 export const mySpaceUrl = "/user/my-space";
 export const welcomeUrl = "/user";
+// export const weightInputUrl = "/user/add-weight";
+export const personalDataUrl = "/user/personal-data";
 
 export const moderatorSignUpUrl = "/moderator/sign-up";
 export const moderatorLoginUrl = "/moderator/login";
@@ -27,6 +29,7 @@ export const moderatorSearchUrl = "/moderator/search";
 export const moderatorRecipeDetailUrl = "/moderator/recipe-detail";
 export const moderatorSpaceUrl = "/moderator/space";
 export const moderatorAddIngredientUrl = "/moderator/add-ingredient";
+export const moderatorEditIngredientUrl = "/moderator/edit-ingredient";
 export const moderatorWelcomeUrl = "/moderator";
 
 

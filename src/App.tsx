@@ -33,9 +33,16 @@ import {
   moderatorRecipeDetailUrl,
   moderatorSpaceUrl,
   moderatorAddIngredientUrl,
+  moderatorEditIngredientUrl,
   moderatorWelcomeUrl,
+  editPostUrl,
+  personalDataUrl,
 } from "./assets/data";
 import ModeratorAddIngredient from "./pages/Moderator/ModeratorAddIngredient";
+import ModeratorEditIngredient from "./pages/Moderator/ModeratorEditIngredient";
+import RecipeEditForm from "./pages/RecipeEditForm";
+import WeightInput from "./pages/WeightInput";
+import PersonalData from "./pages/PersonalData";
 
 // ... (other imports remain the same)
 
@@ -124,6 +131,14 @@ function App() {
               }
             />
             <Route
+              path={`${editPostUrl}/:id`}
+              element={
+                <NavLayout>
+                  <RecipeEditForm />
+                </NavLayout>
+              }
+            />
+            <Route
               path={mySpaceUrl}
               element={
                 <NavLayout>
@@ -131,14 +146,14 @@ function App() {
                 </NavLayout>
               }
             />
-            {/* <Route
-              path={moderatorAddIngredientUrl}
+            <Route
+              path={personalDataUrl}
               element={
                 <NavLayout>
-                  <ModeratorAddIngredient />
+                  <PersonalData />
                 </NavLayout>
               }
-            /> */}
+            />
           </Route>
 
           {/* Moderator routes */}
@@ -200,6 +215,14 @@ function App() {
                 element={
                   <NavLayout>
                     <ModeratorAddIngredient />
+                  </NavLayout>
+                }
+              />
+              <Route
+                path={`${moderatorEditIngredientUrl}/:id`}
+                element={
+                  <NavLayout>
+                    <ModeratorEditIngredient />
                   </NavLayout>
                 }
               />

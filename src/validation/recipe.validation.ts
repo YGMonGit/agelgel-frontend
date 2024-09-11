@@ -30,6 +30,32 @@ export const newRecipeSchema = z.object({
     }),
 });
 
+export const editRecipeSchema = z.object({
+    // cookingTime: z.string().min(1, "Cooking time is required"),
+    cookingTime: z.number().int().min(0).optional(),
+    description: z.string().min(1, "Description is required"),
+    imgs: z.array(z.instanceof(File))
+        .refine((file: File[]) => file.every((f) => f.size <= MAX_FILE_SIZE), `Max image size is 5MB.`)
+        .refine(
+            (file: File[]) => file.every((f) => ACCEPTED_IMAGE_TYPES.includes(f.type)),
+            "Only .jpg, .jpeg, .png, and .webp formats are supported."
+        ),
+    instructions: z.string().min(1, "Instructions are required"),
+    name: z.string().min(1, "Recipe name is required"),
+    preferredMealTime: z.array(z.nativeEnum(EPreferredMealTime)).nonempty(),
+    ingredients: z.array(z.object({
+        ingredient: z.string().min(1, "Ingredient is required"),
+        unit: z.string().min(1, "Ingredient unit is required"),
+        amount: z.number().nonnegative().min(1, "Amount must be a positive number"),
+    })),
+    youtubeLink: z.string().url().optional(),
+    medical_condition: z.object({
+        chronicDiseases: z.array(z.nativeEnum(EChronicDisease)).nonempty("At least one chronic disease is required"),
+        dietary_preferences: z.array(z.nativeEnum(EDietaryPreferences)).nonempty("At least one dietary preference is required"),
+        allergies: z.array(z.nativeEnum(EAllergies)).nonempty("At least one allergy is required"),
+    }),
+});
+
 export const searchRecipeSchema = z.object({
     preferredMealTime: z.array(z.nativeEnum(EPreferredMealTime)).optional(),
     name: z.string().optional(),

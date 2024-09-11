@@ -4,6 +4,7 @@ import { useParams } from "react-router-dom";
 import { HiOutlineBookmark, HiMiniBookmark } from "react-icons/hi2";
 import { GoDotFill } from "react-icons/go";
 import { BsFillPersonCheckFill } from "react-icons/bs";
+import { MdVerified } from "react-icons/md";
 
 import { LuClock9 } from "react-icons/lu";
 import { IoSpeedometerOutline } from "react-icons/io5";
@@ -44,10 +45,11 @@ import { set } from "react-hook-form";
 import CircularProgress from "../components/CircularProgress";
 import { HiFire } from "react-icons/hi";
 import DisplayCard from "../components/DisplayCard";
-import { useToggleBookedRecipeMutation } from "../api/slices/user.slices";
+import { useGetUserByIdQuery, useToggleBookedRecipeMutation } from "../api/slices/user.slices";
 import ClipLoader from "react-spinners/ClipLoader";
 import FilterBarActive from "../components/FilterBarActive";
 import { getCalorieColor, getCarbsColor, getFatColor, getFiberColor, getProteinColor } from "../assets/data";
+import PieChart from "../components/PieChart";
 
 const StyledRating = styled(Rating)({
   fontSize: "1rem",
@@ -107,7 +109,7 @@ function RecipeDetail() {
     ),
   };
 
-  const { data: recipe, isLoading: recipesLoading } =
+  const { data: recipe, isLoading: recipesLoading, isSuccess: recipeSuccess } =
     useGetPrivateRecipeByIdQuery(String(rID.id));
   const [reviewsPagination, setReviewsPagination] = useState({
     skip: 0,
@@ -184,7 +186,10 @@ function RecipeDetail() {
 
   const onNewCommentChange = (e: React.ChangeEvent<HTMLInputElement>) =>
     setNewComment(e.target.value);
-
+  
+  const { data: user } =
+  useGetUserByIdQuery(String(recipe?.user.user)); 
+  
   if (!recipe) {
     return (
       <div className="w-full h-full max-w-[800px] px-5 flex flex-col justify-start items-start gap-3">
@@ -205,6 +210,28 @@ function RecipeDetail() {
   }
 
   if (recipe) {
+    console.log({recipe});
+
+    let caloryInGram = recipe.nutrition.calories *  0.129598;
+
+    const pieChartData ={
+      labels: ["Calorie", "Protein", "Fat", "Carbs", "Fiber"],
+      datasets: [
+        {
+          label: "Nutrition",
+          data: [caloryInGram, recipe.nutrition.protein_g, recipe.nutrition.fat_total_g, recipe.nutrition.carbohydrates_total_g, recipe.nutrition.fiber_g],
+          backgroundColor: [
+            "rgba(255, 99, 132, 0.9)",
+            "rgba(54, 162, 235, 0.9)",
+            "rgba(255, 206, 86, 0.9)",
+            "rgba(75, 192, 192, 0.9)",
+            "rgba(153, 102, 255, 0.9)",
+          ],
+          hoverOffset: 4,
+        },
+      ],
+    };
+    
     return (
       <div className="w-full max-w-[800px] px-5 flex flex-col justify-start items-center">
         <div className=" bg-neutral-100 my-5 slide-container bg-custom-content-bg w-full max-w-[500px]">
@@ -241,7 +268,9 @@ function RecipeDetail() {
               {recipe.user.full_name}
             </p>
           </div>
-          <BsFillPersonCheckFill className="text-content-color text-[1.5rem]" />
+          {user && user.verified === "verified" && (
+            <MdVerified className="text-content-color text-[1.5rem]" />
+          )}
         </div>
         <div className="w-full flex justify-between items-center mt-6">
           <h2 className="text-[1.3rem] font-bold">{recipe.name}</h2>
@@ -340,7 +369,11 @@ function RecipeDetail() {
 
         <div className="w-full flex flex-col justify-start items-start mt-5">
           <h3 className="font-semibold mb-1">Macro-nutrients</h3>
-          <div className="flex justify-start items-center gap-1 w-full">
+          <div className="flex overflow-x-auto justify-start items-center gap-1 w-full"
+            style={{ scrollbarWidth: "none", msOverflowStyle: "none" }}
+            ref={scrollableDivRef}
+            onWheel={handleWheel}
+          >
             <CircularProgress
               color={getCalorieColor(recipe.nutrition.calories)}
               value={recipe.nutrition.calories}
@@ -383,6 +416,11 @@ function RecipeDetail() {
               unit="g"
             />
           </div>
+          {(recipe.nutrition.calories !== 0 || recipe.nutrition.protein_g !== 0 || recipe.nutrition.fat_total_g !== 0 || recipe.nutrition.carbohydrates_total_g !== 0 || recipe.nutrition.fiber_g !== 0) && (
+            <div className="w-full p-5">
+              <PieChart pieChartData={pieChartData} />
+            </div>
+          )}
         </div>
         <div className="w-full flex flex-col justify-start items-start mt-5 gap-2">
           <h3 className="font-semibold mb-1">Ingredients</h3>

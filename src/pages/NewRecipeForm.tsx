@@ -63,6 +63,8 @@ function NewRecipeForm() {
   const [ingredients, setIngredients] = useState<INewIngredientFrom[]>([]);
 
   const [instructions, setInstructions] = useState("");
+  console.log({instructions});
+  
   const { uploadFile, loading } = useFileUpload();
 
   const [errorMessage, setErrorMessage] = useState<string | null>(null);

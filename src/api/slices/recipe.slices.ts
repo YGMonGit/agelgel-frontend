@@ -1,11 +1,11 @@
 import agelgilAPI from "..";
-import { EPreferredMealTime, EPreferredMealTimeFilter, INewRecipeFrom, INutritionData, IRecipe, IRecipeSearchFrom, IRecipeUpdateFrom } from "../types/recipe.type";
+import { EPreferredMealTime, EPreferredMealTimeFilter, INewRecipeFrom, INutritionData, IRecipe, IRecipeSearchFrom, IRecipeToEdit, IRecipeUpdateFrom } from "../types/recipe.type";
 
 const recipeApiSlice = agelgilAPI.injectEndpoints({
     endpoints: (builder) => ({
-        getRecipeById: builder.query<IRecipe, string>({
+        getRecipeById: builder.query<IRecipeToEdit, string>({
             query: (recipeId) => `/public/recipe/${recipeId}`,
-            transformResponse: (response: { body: IRecipe }) => response.body,
+            transformResponse: (response: { body: IRecipeToEdit }) => response.body,
             providesTags: (result, error, recipeId) => [{ type: 'Recipe', id: recipeId }],
         }),
         getPrivateRecipeById: builder.query<IRecipe, string>({
@@ -81,7 +81,7 @@ const recipeApiSlice = agelgilAPI.injectEndpoints({
             }),
             invalidatesTags: (result) => result ? [{ type: 'Recipe', id: result?._id }] : [],
         }),
-        updateRecipe: builder.mutation<IRecipe, { recipeId: string; updates: IRecipeUpdateFrom }>({
+        updateRecipe: builder.mutation<IRecipeToEdit, { recipeId: string; updates: IRecipeUpdateFrom }>({
             query: ({ recipeId, updates }) => ({
                 url: `/private/recipe/update/${recipeId}`,
                 method: 'PATCH',
@@ -111,6 +111,13 @@ const recipeApiSlice = agelgilAPI.injectEndpoints({
                     ]
                     : [{ type: 'Recipe' as const, id: 'Recipe-LIST' }],
         }),
+        removeRecipe: builder.mutation<void, string>({
+            query: (recipeId) => ({
+                url: `/private/recipe/remove/${recipeId}`,
+                method: 'DELETE',
+            }),
+            invalidatesTags: (result, error, recipeId) => [{ type: 'Recipe', id: recipeId }],
+        }),
     }),
 
 });
@@ -128,4 +135,5 @@ export const {
     useUpdateRecipeMutation,
     useRecommendationQuery,
     useSimilarQuery,
+    useRemoveRecipeMutation,
 } = recipeApiSlice

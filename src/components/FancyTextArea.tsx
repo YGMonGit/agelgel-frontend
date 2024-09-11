@@ -1,75 +1,153 @@
-import React, { useState, useRef, useEffect } from 'react';
-import { Box, FormControl, FormLabel, IconButton, Menu, MenuItem, ListItemDecorator } from '@mui/joy';
-import { MdFormatBold, MdOutlineFormatItalic, MdOutlineFormatListBulleted, MdOutlineFormatListNumbered } from "react-icons/md";
+import React, { useRef, useEffect, useCallback } from 'react';
+import { Box, FormControl, IconButton } from '@mui/joy';
+import { MdFormatBold, MdOutlineFormatItalic, MdOutlineFormatListBulleted, MdOutlineFormatListNumbered, MdFormatIndentIncrease, MdFormatIndentDecrease } from "react-icons/md";
 
-export default function FancyTextArea({ onChange, errors, register }: { onChange: (html: string) => void, errors: any, register: any }) {
-  const [fontWeight, setFontWeight] = useState<'200' | 'normal' | 'bold'>('normal');
-  const [anchorEl, setAnchorEl] = useState<HTMLElement | null>(null);
+interface FancyTextAreaProps {
+  onChange: (html: string) => void;
+  errors: any;
+  register: any;
+  instruction: string;
+}
+
+const useCursor = (ref: React.RefObject<HTMLElement>) => {
+  const save = useCallback(() => {
+    const selection = window.getSelection();
+    if (selection && selection.rangeCount > 0) {
+      const range = selection.getRangeAt(0);
+      const preSelectionRange = range.cloneRange();
+      preSelectionRange.selectNodeContents(ref.current!);
+      preSelectionRange.setEnd(range.startContainer, range.startOffset);
+      return preSelectionRange.toString().length;
+    }
+    return 0;
+  }, [ref]);
+
+  const restore = useCallback((cursorPosition: number) => {
+    const selection = window.getSelection();
+    const range = document.createRange();
+    range.selectNodeContents(ref.current!);
+    const textNodes = getTextNodesIn(ref.current!);
+    let charCount = 0, end = 0;
+
+    for (let i = 0; i < textNodes.length; i++) {
+      end = charCount + textNodes[i].length;
+      if (cursorPosition >= charCount && cursorPosition <= end) {
+        range.setStart(textNodes[i], cursorPosition - charCount);
+        range.setEnd(textNodes[i], cursorPosition - charCount);
+        break;
+      }
+      charCount = end;
+    }
+
+    selection?.removeAllRanges();
+    selection?.addRange(range);
+  }, [ref]);
+
+  return { save, restore };
+};
+
+function getTextNodesIn(node: Node): Text[] {
+  const textNodes: Text[] = [];
+  if (node.nodeType === Node.TEXT_NODE) {
+    textNodes.push(node as Text);
+  } else {
+    const children = node.childNodes;
+    for (let i = 0; i < children.length; i++) {
+      textNodes.push(...getTextNodesIn(children[i]));
+    }
+  }
+  return textNodes;
+}
+
+export default function FancyTextArea({ onChange, errors, register, instruction }: FancyTextAreaProps) {
   const editorRef = useRef<HTMLDivElement>(null);
+  const { save, restore } = useCursor(editorRef);
+  const contentRef = useRef(instruction);
 
   const errorStyle = "text-[.8rem] text-red-400";
 
   useEffect(() => {
-    if (editorRef.current) {
+    if (editorRef.current && editorRef.current.innerHTML !== instruction) {
+      editorRef.current.innerHTML = instruction;
+      contentRef.current = instruction;
       editorRef.current.focus();
     }
-  }, []);
+  }, [instruction]);
 
-  const updateContent = () => {
+  const handleInput = useCallback(() => {
     if (editorRef.current) {
-      onChange(editorRef.current.innerHTML);
+      const newContent = editorRef.current.innerHTML;
+      if (newContent !== contentRef.current) {
+        contentRef.current = newContent;
+        onChange(newContent);
+      }
     }
-  };
+    renumberLists();
+  }, [onChange]);
 
-  const insertListAtCursor = (listType: 'ul' | 'ol') => {
+  const insertListAtCursor = useCallback((listType: 'ul' | 'ol') => {
     const selection = window.getSelection();
     if (selection && selection.rangeCount > 0) {
       const range = selection.getRangeAt(0);
       const listElement = document.createElement(listType);
       const listItem = document.createElement('li');
-      if(listType === "ul"){
-        listElement.className = "list-disc px-7"
-        // listItem.className = "list-disc"
-      } else {
-        listElement.className = "list-decimal px-7"
-        // listItem.className = "list-decimal"
-
-      }
-      listItem.appendChild(document.createTextNode('\u00A0')); // Add a non-breaking space
+      listElement.className = listType === 'ul' ? "list-disc px-7" : "list-decimal px-7";
+      listItem.appendChild(document.createTextNode('\u00A0'));
       listElement.appendChild(listItem);
       range.insertNode(listElement);
 
-      // Move the cursor inside the list item
       range.setStart(listItem, 0);
       range.setEnd(listItem, 0);
       selection.removeAllRanges();
       selection.addRange(range);
 
       editorRef.current?.focus();
-      updateContent();
+      handleInput();
     }
-  };
+  }, [handleInput]);
 
-  const handleBulletPoints = () => {
-    insertListAtCursor('ul');
-  };
+  const handleBulletPoints = useCallback(() => insertListAtCursor('ul'), [insertListAtCursor]);
+  const handleNumberedList = useCallback(() => insertListAtCursor('ol'), [insertListAtCursor]);
 
-  const handleNumberedList = () => {
-    insertListAtCursor('ol');
-  };
-
-  const applyStyle = (style: 'bold' | 'italic') => {
+  const applyStyle = useCallback((style: 'bold' | 'italic') => {
     document.execCommand(style, false, undefined);
     editorRef.current?.focus();
-    updateContent();
-  };
+    handleInput();
+  }, [handleInput]);
+  
+  const handleIndent = useCallback((increase: boolean) => {
+    document.execCommand(increase ? 'indent' : 'outdent', false, undefined);
+    handleInput();
+  }, [handleInput]);
 
-  const handleInput = () => {
-    updateContent();
-    renumberLists();
-  };
+  const handleKeyDown = useCallback((e: React.KeyboardEvent<HTMLDivElement>) => {
+    if (e.key === 'Enter') {
+      const selection = window.getSelection();
+      if (selection && selection.rangeCount > 0) {
+        const range = selection.getRangeAt(0);
+        const parentElement = range.startContainer.parentElement;
+        
+        if (parentElement && (parentElement.tagName === 'LI' || parentElement.parentElement?.tagName === 'LI')) {
+          if (parentElement.textContent?.trim() === '') {
+            e.preventDefault();
+            document.execCommand('outdent', false, undefined);
+            if (parentElement.parentElement?.childNodes.length === 1) {
+              const p = document.createElement('p');
+              p.innerHTML = '<br>';
+              parentElement.parentElement.parentElement?.replaceChild(p, parentElement.parentElement);
+              range.setStart(p, 0);
+              range.setEnd(p, 0);
+              selection.removeAllRanges();
+              selection.addRange(range);
+            }
+            handleInput();
+          }
+        }
+      }
+    }
+  }, [handleInput]);
 
-  const renumberLists = () => {
+  const renumberLists = useCallback(() => {
     if (editorRef.current) {
       const olElements = editorRef.current.querySelectorAll('ol');
       olElements.forEach((ol) => {
@@ -81,10 +159,10 @@ export default function FancyTextArea({ onChange, errors, register }: { onChange
         });
       });
     }
-  };
+  }, []);
 
   return (
-    <FormControl className="w-full border-b border-[#D1D5DB]">
+    <FormControl className="w-full border-b border-[#D1D5DB] mb-10">
       <p className="text-[1.2rem] font-semibold pt-2 mb-2">Instructions</p>
       <Box
         {...register('instructions')}
@@ -92,55 +170,29 @@ export default function FancyTextArea({ onChange, errors, register }: { onChange
         contentEditable
         suppressContentEditableWarning
         onInput={handleInput}
-        className="rounded-xl border border-neutral-300 min-h-[130px] p-1 font-inherit text-inherit focus:outline-none focus:border-primary-500"
-      >
-        {/* <div className="space-y-2">
-          <div className="space-x-1">
-            <span className="font-bold">Bold</span>
-            <span className="italic">Italic</span>
-          </div>
-          <ul className="list-disc pl-4">
-            <li>Bullet Point 1</li>
-            <li>Bullet Point 2</li>
-          </ul>
-          <ol className="list-decimal pl-4">
-            <li>Numbered List 1</li>
-            <li>Numbered List 2</li>
-          </ol>
-        </div> */}
-      </Box>
-      <div className="flex justify-start items-center gap-1 pt-1 h-[30px]">
-        <IconButton
-          variant="plain"
-          color="neutral"
-          onClick={() => applyStyle('bold')}
-          className="bg-blue-500"
-        >
+        onKeyDown={handleKeyDown}
+        className="rounded-xl border border-neutral-300 min-h-[130px] p-3 font-inherit text-inherit focus:outline-none focus:border-primary-500"
+      />
+      <div className="flex justify-start items-center gap-1 h-[40px]">
+        <IconButton variant="plain" color="neutral" onClick={() => applyStyle('bold')}>
           <MdFormatBold className="text-content-color text-[1.2rem]" />
         </IconButton>
-        <IconButton
-          variant="plain"
-          color="neutral"
-          onClick={() => applyStyle('italic')}
-        >
+        <IconButton variant="plain" color="neutral" onClick={() => applyStyle('italic')}>
           <MdOutlineFormatItalic className="text-content-color text-[1.2rem]" />
         </IconButton>
-        <IconButton
-          variant="plain"
-          color="neutral"
-          onClick={handleBulletPoints}
-        >
+        <IconButton variant="plain" color="neutral" onClick={handleBulletPoints}>
           <MdOutlineFormatListBulleted className="text-content-color text-[1.2rem]" />
         </IconButton>
-        <IconButton
-          variant="plain"
-          color="neutral"
-          onClick={handleNumberedList}
-        >
+        <IconButton variant="plain" color="neutral" onClick={handleNumberedList}>
           <MdOutlineFormatListNumbered className="text-content-color text-[1.2rem]" />
         </IconButton>
+        <IconButton variant="plain" color="neutral" onClick={() => handleIndent(true)}>
+          <MdFormatIndentIncrease className="text-content-color text-[1.2rem]" />
+        </IconButton>
+        <IconButton variant="plain" color="neutral" onClick={() => handleIndent(false)}>
+          <MdFormatIndentDecrease className="text-content-color text-[1.2rem]" />
+        </IconButton>
       </div>
-
       {errors && <p className={errorStyle}>{errors.message}</p>}
     </FormControl>
   );

@@ -71,7 +71,7 @@ function Home() {
       </div>
 
       {recommendedRecipes?.length !== 0 ? (
-        <div className="grid grid-cols-2 sm:grid-cols-3 gap-4 w-full px-5">
+        <div className="grid grid-cols-2 sm:grid-cols-3 gap-4 w-full px-5 mb-5">
           {isFetching
             ? Array.from({ length: skeletonCount }).map((_, index) => (
               <DisplayCard post={null} key={`skeleton-${index}`} />
@@ -86,7 +86,7 @@ function Home() {
         </div>
       )}
 
-      <div className="w-full flex justify-end items-center sticky bottom-0 px-5 pb-10">
+      <div className="w-full flex justify-end items-center fixed bottom-0 px-2 pb-5">
         <div
           className="w-14 h-14 bg-content-color flex justify-center items-center rounded-full text-[2rem] text-white"
           onClick={() => navigate(postUrl)}

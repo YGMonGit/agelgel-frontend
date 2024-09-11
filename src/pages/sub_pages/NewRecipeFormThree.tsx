@@ -43,7 +43,7 @@ function NewRecipeFormThree({ setFormNumber, ingredientList, setIngredientList, 
       />
       <div className="w-full flex flex-col justify-start items-start flex-grow">
         <div className="w-full px-5">
-          <FancyTextArea register={register} errors={errors.instructions} onChange={setInstructions} />
+          <FancyTextArea register={register} errors={errors.instructions} onChange={setInstructions} instruction={instructions} />
           
         </div>
       </div>
