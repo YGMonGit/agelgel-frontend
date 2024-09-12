@@ -1,28 +1,19 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useCallback, useRef } from "react";
 import PageHeader from "../components/PageHeader";
-// import Search from "../components/Search";
-import FilterBar from "../components/FilterBar";
 import FilterBarActive from "../components/FilterBarActive";
-import { filterData, postUrl } from "../assets/data";
+import { postUrl } from "../assets/data";
 import DisplayCard from "../components/DisplayCard";
 import { IoAdd } from "react-icons/io5";
 import { useGetRecipesQuery } from "../api/slices/recipe.slices";
 import { useNavigate } from "react-router-dom";
 import EmptyListIcon from "../assets/images/empty-list.png";
-
-import {
-  Drawer,
-  DrawerClose,
-  DrawerContent,
-  DrawerDescription,
-  DrawerFooter,
-  DrawerHeader,
-  DrawerTitle,
-  DrawerTrigger,
-} from "../components/ui/drawer";
-import { Button } from "../components/ui/button";
 import { useGetUserQuery } from "../api/slices/user.slices";
-import { EPreferredMealTime, EPreferredMealTimeFilter } from "../api/types/recipe.type";
+import {
+  EPreferredMealTime,
+  EPreferredMealTimeFilter,
+  IRecipe,
+} from "../api/types/recipe.type";
+import ClipLoader from "react-spinners/ClipLoader";
 
 function Home() {
   useEffect(() => {
@@ -30,31 +21,58 @@ function Home() {
   }, []);
 
   const navigate = useNavigate();
-  const [pagination, setPagination] = useState({
-    skip: 0,
-    limit: 10,
+  const [page, setPage] = useState(1);
+  const [allRecipes, setAllRecipes] = useState<IRecipe[]>([]);
+  const [hasMore, setHasMore] = useState(true);
+  const [filter, setFilter] = useState<EPreferredMealTimeFilter>(
+    EPreferredMealTimeFilter.all
+  );
+  const limit = 5; // Number of items to load per page
+
+  const {
+    data: recommendedRecipes,
+    isFetching,
+    isUninitialized,
+    refetch,
+  } = useGetRecipesQuery({
+    skip: (page - 1) * limit,
+    limit: limit,
+    filter: filter,
   });
-
-  const [filter, setFilter] = useState<EPreferredMealTimeFilter>(EPreferredMealTimeFilter.all);
-
-
-  const { data: recommendedRecipes, isFetching, isUninitialized, refetch } =
-    useGetRecipesQuery({
-      skip: pagination.skip,
-      limit: pagination.limit,
-      filter: filter,
-    });
-
-  useEffect(() => {
-    if (!isFetching && !isUninitialized) refetch();
-  }, [filter, isUninitialized, refetch]);
-
-  const skeletonCount = isFetching
-    ? pagination.limit
-    : recommendedRecipes?.length || 0;
 
   const { data: user } = useGetUserQuery();
 
+  const observer = useRef<IntersectionObserver | null>(null);
+  const lastRecipeElementRef = useCallback(
+    (node: HTMLDivElement | null) => {
+      if (isFetching) return;
+      if (observer.current) observer.current.disconnect();
+      observer.current = new IntersectionObserver((entries) => {
+        if (entries[0].isIntersecting && hasMore) {
+          setPage((prevPage) => prevPage + 1);
+        }
+      });
+      if (node) observer.current.observe(node);
+    },
+    [isFetching, hasMore]
+  );
+
+  useEffect(() => {
+    if (recommendedRecipes) {
+      setAllRecipes((prevRecipes) => [...prevRecipes, ...recommendedRecipes]);
+      setHasMore(recommendedRecipes.length === limit);
+    }
+  }, [recommendedRecipes, limit]);
+
+  useEffect(() => {
+    setPage(1);
+    setAllRecipes([]);
+    setHasMore(true);
+  }, [filter]);
+
+  useEffect(() => {
+    if (!isFetching && !isUninitialized) refetch();
+  }, [filter, page, isUninitialized, refetch, isFetching]);
 
   return (
     <div className="w-full flex-wrap flex-grow flex flex-col justify-start items-center relative min-h-[100%-56px]">
@@ -62,23 +80,50 @@ function Home() {
         header={`Good Morning, ${user?.first_name}!`}
         detail="Browse through our suggestions."
       />
-      {/* <Search /> */}
       <div className="w-full px-5">
-        <FilterBarActive data={["all", ...Object.values(EPreferredMealTime)]} selectedChip={filter} setSelectedChip={(filter) => {
-          setFilter(filter as any);
-
-        }} />
+        <FilterBarActive
+          data={["all", ...Object.values(EPreferredMealTime)]}
+          selectedChip={filter}
+          setSelectedChip={(filter) => {
+            setFilter(filter as EPreferredMealTimeFilter);
+          }}
+        />
       </div>
 
-      {recommendedRecipes?.length !== 0 ? (
-        <div className="grid grid-cols-2 sm:grid-cols-3 gap-4 w-full px-5 mb-5">
-          {isFetching
-            ? Array.from({ length: skeletonCount }).map((_, index) => (
+      {allRecipes.length !== 0 ? (
+        <div className="w-full flex flex-col justify-start items-center">
+          <div className="grid grid-cols-2 sm:grid-cols-3 gap-4 w-full px-5 mb-5">
+            {allRecipes.map((post, index) => {
+              if (allRecipes.length === index + 1) {
+                return (
+                  <div ref={lastRecipeElementRef} key={index}>
+                    <DisplayCard post={post} />
+                  </div>
+                );
+              } else {
+                return <DisplayCard post={post} key={index} />;
+              }
+            })}
+          </div>
+          {isFetching && (
+            <div className="w-full px-5 py-6 flex justify-center items-center gap-2">
+              <ClipLoader
+                color={"var(--content-color)"}
+                size={20}
+                aria-label="Loading Spinner"
+                data-testid="loader"
+              />
+              <p className="text-[1rem] italic">Loading...</p>
+            </div>
+          )}
+        </div>
+      ) : isFetching ? (
+        <div className="w-full flex flex-col justify-start items-center">
+          <div className="grid grid-cols-2 sm:grid-cols-3 gap-4 w-full px-5 mb-5">
+            {Array.from({ length: limit }).map((_, index) => (
               <DisplayCard post={null} key={`skeleton-${index}`} />
-            ))
-            : recommendedRecipes?.map((post, index) => (
-              <DisplayCard post={post} key={index} />
             ))}
+          </div>
         </div>
       ) : (
         <div className="w-full flex justify-center items-center flex-grow">
