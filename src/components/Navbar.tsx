@@ -171,7 +171,7 @@ function Navbar() {
             window.scrollTo({ top: 0 });
           }}
         >
-          <img src={logo} alt="agelgel logo" className="w-[23.91px] h-[28px]" />
+          <img src={logo} alt="agelgel logo" className="h-[28px]" />
           <p className="text-[1.2rem] font-semibold">Agelgel</p>
         </NavLink>
       );

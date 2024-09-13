@@ -8,7 +8,7 @@ import logo from "../assets/images/agelgel-logo.png";
 
 const LoadingBackdrop = () => (
   <div className='w-full h-full flex flex-col justify-center items-center gap-1'>
-    <img src={logo} alt="agelgel logo" className="w-[71.73px] h-[84px] -mt-24" />
+    <img src={logo} alt="agelgel logo" className="h-[84px] -mt-24" />
     <p className="text-[1.2rem] font-semibold mb-10">Agelgel</p>
     <ClipLoader
       color={"var(--content-color)"}
