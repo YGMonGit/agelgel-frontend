@@ -5,6 +5,8 @@ import IngredientIcon from "../assets/icons/apple-icon.png";
 import { IIngredient } from "../api/types/ingredient.type";
 import { useNavigate } from "react-router-dom";
 import { moderatorEditIngredientUrl } from "../assets/data";
+import { useRemoveIngredientMutation } from "../api/slices/ingredient.slices";
+import { CircularProgress } from "@mui/material";
 
 interface IngredientCardProps {
   ingredient: IIngredient | null;
@@ -18,10 +20,15 @@ function IngredientCard({ ingredient, ingredientImage }: IngredientCardProps) {
   const goToIngredientEditPage = () => {
     if (ingredient) {
       // console.log(location.pathname);
-      
+
       navigate(`${moderatorEditIngredientUrl}/${ingredient._id}`);
     }
   };
+
+  const [
+    removeIngredient,
+    { isLoading: isRemovingIngredient },
+  ] = useRemoveIngredientMutation();
 
   if (!ingredient) {
     return (
@@ -54,8 +61,13 @@ function IngredientCard({ ingredient, ingredientImage }: IngredientCardProps) {
           {ingredient.type}
         </p>
       </div>
-      <MdEdit className="text-[2.2rem] text-content-color" onClick={goToIngredientEditPage}/>
-      <MdDelete className="text-[2.2rem] text-[#DC3D3D]" />
+      <MdEdit className="text-[2.2rem] text-content-color" onClick={goToIngredientEditPage} />
+      {
+        isRemovingIngredient ? <CircularProgress size={20} /> : <MdDelete className="text-[2.2rem] text-[#DC3D3D]" onClick={async () => {
+          await removeIngredient(ingredient._id).unwrap();
+        }} />
+      }
+
     </div>
   );
 }

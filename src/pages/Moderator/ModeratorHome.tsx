@@ -69,7 +69,7 @@ function ModeratorHome() {
   }, [filter]);
 
   useEffect(() => {
-    if (!isFetching && !isUninitialized) refetch();
+    if (!isFetching && isUninitialized) refetch();
   }, [filter, page, isUninitialized, refetch, isFetching]);
 
   return (
@@ -83,15 +83,15 @@ function ModeratorHome() {
 
       {spaceType === "recipe" && (
         <div className="w-full">
-        <div className="w-full px-5">
-          <FilterBarActive
-            data={Object.values(EPreferredMealTimeFilter)}
-            selectedChip={filter}
-            setSelectedChip={(newFilter) => {
-              setFilter(newFilter as EPreferredMealTimeFilter);
-            }}
-          />
-        </div>
+          <div className="w-full px-5">
+            <FilterBarActive
+              data={Object.values(EPreferredMealTimeFilter)}
+              selectedChip={filter}
+              setSelectedChip={(newFilter) => {
+                setFilter(newFilter as EPreferredMealTimeFilter);
+              }}
+            />
+          </div>
           {allRecipes.length !== 0 ? (
             <div className="w-full flex flex-col justify-start items-center">
               <div className="grid grid-cols-2 sm:grid-cols-3 gap-4 w-full px-5 mb-5">
