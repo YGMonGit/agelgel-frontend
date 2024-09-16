@@ -1,3 +1,6 @@
+import { EPreferredMealTime, IngredientDetail, INutritionData, IRecipe } from "./recipe.type";
+import { IUser } from "./user.type";
+
 export enum EDietGoals {
   weight_loss = "weight_loss",
   weight_gain = "weight_gain",
@@ -35,8 +38,8 @@ export interface INutritionGoal {
 
 export interface IUserStats {
   weights: {
-      date: Date;
-      value: number;
+    date: Date;
+    value: number;
   };
   weight: number;
   height: number;
@@ -45,3 +48,28 @@ export interface IUserStats {
   activityLevel: EActivityLevel
   diet_goals: EDietGoals;
 }
+
+export interface IMealPlanner {
+  nutritionGoal: INutritionGoal,
+  currentNutrition: INutritionGoal,
+  user: IUser,
+  userStats?: IUserStats,
+  recipes: {
+    [key in EPreferredMealTime]: {
+      recipe: IRecipe[],
+      nutrition: INutritionData;
+      shoppingList: IngredientDetail[],
+    }
+  }
+}
+
+export interface INewMealPlanner {
+  weight: number;
+  height: number;
+  age: number
+  gender: EGender;
+  activityLevel: EActivityLevel
+  diet_goals: EDietGoals;
+}
+
+export interface IMealPlannerUpdateFrom extends Partial<INewMealPlanner> { }
