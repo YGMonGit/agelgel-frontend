@@ -1,10 +1,11 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import PersonalDataOne from './sub_pages/PersonalDataOne';
 import PersonalDataTwo from './sub_pages/PersonalDataTwo';
 import { EGender, IUserStats } from '../api/types/mealPreference.type';
-import { useForm } from 'react-hook-form';
+import { set, useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { AddMealPreferenceSchema } from '../validation/mealPreference.validation';
+import { useCreateMealPlanMutation } from '../api/slices/mealPlanner.slices';
 
 function PersonalData() {
   const [formPage, setFormPage] = useState(1);
@@ -27,9 +28,40 @@ function PersonalData() {
     resolver: zodResolver(AddMealPreferenceSchema),
   });
 
-  const SetUserStatus = () => {
-    console.log("In function");
+  const [CreateMealPlan] = useCreateMealPlanMutation();
+  const [serverError, setServerError] = useState<string | null>(null);
+  console.log({ errors, serverError });
+
+  console.log({ errors });
+
+  const SetUserStatus = async (data: IUserStats) => {
+    console.log(data);
+    try {
+      const res = await CreateMealPlan({ mealPlanData: data }).unwrap()
+      console.log('success', res)
+    } catch (error: any) {
+      if (!error.data.error) return;
+      const err = error.data.error;
+      if (err.type === "Validation") {
+        setError(err.attr, { message: err.error });
+      } else {
+        setServerError(err.msg);
+      }
+    }
+
   }
+
+  useEffect(() => {
+    setValue("gender", gender as any);
+  }, [gender]);
+
+  useEffect(() => {
+    setValue("activityLevel", activityLevel as any);
+  }, [activityLevel]);
+
+  useEffect(() => {
+    setValue("diet_goals", dietGoals as any);
+  }, [dietGoals]);
 
   return (
     <form className='w-full flex flex-col flex-grow justify-start items-center' onSubmit={handleSubmit(SetUserStatus)}>
@@ -44,6 +76,7 @@ function PersonalData() {
           setAge={setAge}
           register={register}
           errors={errors}
+          control={control}
         />
       )}
       {formPage === 2 && (

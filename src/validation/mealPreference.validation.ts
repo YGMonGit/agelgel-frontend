@@ -14,7 +14,7 @@ export const AddMealPreferenceSchema = z.object({
   weight: z.number().min(1, "Weight must be greater than 0").refine((value) => !isNaN(value), "Weight is required"),
   height: z.number().min(1, "Height must be greater than 0").refine((value) => !isNaN(value), "Height is required"),
   age: z.number().int().min(1, "Age must be greater than 0").max(110, "Age cannot be this high"),
-  gender: z.nativeEnum(EGender, { required_error: "Gender is required" }),
-  active_level: z.nativeEnum(EActivityLevel, { required_error: "Activity level is required" }),
-  diet_goals: z.nativeEnum(EDietGoals, { required_error: "Diet goal is required" }),
+  gender: z.nativeEnum(EGender, { message: "Invalid input Male or Female" }),
+  activityLevel: z.nativeEnum(EActivityLevel, { message: "Invalid input" }),
+  diet_goals: z.nativeEnum(EDietGoals, { message: "Invalid input" }),
 });

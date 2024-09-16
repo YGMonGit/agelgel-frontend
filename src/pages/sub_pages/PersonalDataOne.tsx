@@ -7,6 +7,7 @@ import WideButton from "../../components/WideButton";
 import WideLink from "../../components/WideLink";
 import { EGender } from "../../api/types/mealPreference.type";
 import { FormControl, InputLabel, MenuItem, Select } from "@mui/material";
+import { Controller } from "react-hook-form";
 
 interface PersonalDataOneProps {
   setFromPage: React.Dispatch<React.SetStateAction<number>>;
@@ -18,9 +19,10 @@ interface PersonalDataOneProps {
   setAge: React.Dispatch<React.SetStateAction<number>>;
   register: any;
   errors: any;
+  control: any;
 }
 
-function PersonalDataOne({ setFromPage, weight, setWeight, height, setHeight, age, setAge, register, errors }: PersonalDataOneProps) {
+function PersonalDataOne({ setFromPage, weight, setWeight, height, setHeight, age, setAge, register, errors, control }: PersonalDataOneProps) {
   const onWeightChange = (e: React.ChangeEvent<HTMLInputElement>) =>
     setWeight(Number.parseInt(e.target.value));
   const onHeightChange = (e: React.ChangeEvent<HTMLInputElement>) =>
@@ -33,40 +35,72 @@ function PersonalDataOne({ setFromPage, weight, setWeight, height, setHeight, ag
   return (
     <div className="w-full flex flex-col flex-grow justify-start items-center">
       <img src={SpaceOne} alt="pic" className="w-full p-9 pt-12 max-w-[450px]" />
-      <Input
-        type="number"
-        label="Weight"
-        placeholder="weight"
-        value={weight}
-        onChange={onWeightChange}
-        // register={register}
-        // {...register("weight", { valueAsNumber: true })}
-        {...register("weight", { valueAsNumber: true })}
-        errors={errors.weight}
+
+      <Controller
+        name="weight"
+        control={control}
+        defaultValue={weight}
+        render={({ field }) => (
+          <Input
+            type="number"
+            label="Weight"
+            placeholder="weight"
+            {...field}
+            value={weight}
+            onChange={(e) => {
+              const value = e.target.value;
+              field.onChange(Number.parseInt(value));
+              onWeightChange(e);
+            }}
+            errors={errors.weight}
+          />
+        )}
       />
-      <Input
-        type="number"
-        label="Height"
-        placeholder="height"
-        value={height}
-        onChange={onHeightChange}
-        // register={register}
-        {...register("height", { valueAsNumber: true })}
-        errors={errors.height}
+
+      <Controller
+        name="height"
+        control={control}
+        defaultValue={height}
+        render={({ field }) => (
+          <Input
+            type="number"
+            label="Height"
+            placeholder="height"
+            {...field}
+            value={height}
+            onChange={(e) => {
+              const value = e.target.value;
+              field.onChange(Number.parseInt(value));
+              onHeightChange(e);
+            }}
+            errors={errors.height}
+          />
+        )}
       />
-      <Input
-        type="number"
-        label="Age"
-        placeholder="age"
-        value={age}
-        onChange={onAgeChange}
-        // register={register}
-        {...register("age", { valueAsNumber: true })}
-        errors={errors.age}
+
+      <Controller
+        name="age"
+        control={control}
+        defaultValue={age}
+        render={({ field }) => (
+          <Input
+            type="number"
+            label="Age"
+            placeholder="age"
+            {...field}
+            value={age}
+            onChange={(e) => {
+              const value = e.target.value;
+              field.onChange(Number.parseInt(value));
+              onAgeChange(e);
+            }}
+            errors={errors.age}
+          />
+        )}
       />
 
       <div className="w-full flex-grow"></div>
-      
+
       <div className="w-full px-5 mb-5">
         <WideLink label="Next" color="bg-content-color" clickAction={nextPage} />
       </div>

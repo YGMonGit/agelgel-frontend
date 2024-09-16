@@ -121,8 +121,8 @@ function PersonalDataTwo({ setFromPage, gender, setGender, activityLevel, setAct
               </MenuItem>
             ))}
           </Select>
-          {errors && errors.active_level && (
-            <p className={errorStyle}>{errors.active_level.message}</p>
+          {errors && errors.activityLevel && (
+            <p className={errorStyle}>{errors.activityLevel.message}</p>
           )}
         </FormControl>
       </div>
@@ -160,7 +160,7 @@ function PersonalDataTwo({ setFromPage, gender, setGender, activityLevel, setAct
           >
             {dietGoalsOptions?.map((type) => (
               <MenuItem key={type} value={type}>
-                {type}
+                {type.replace(/_/g, " ")}
               </MenuItem>
             ))}
           </Select>
