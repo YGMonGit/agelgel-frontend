@@ -4,9 +4,10 @@ import { EStatus, EVerified, IUser } from "../api/types/user.type";
 import { Skeleton } from "./ui/skeleton";
 import WideButton from "./WideButton";
 import { Switch } from "./ui/switch";
-import { FormControl, InputLabel, MenuItem, Select } from "@mui/material";
+import { FormControl, MenuItem, Select } from "@mui/material";
 import { RiCloseLargeLine } from "react-icons/ri";
 import { Button } from "./ui/button";
+import { useUpdateUserStatusMutation } from "../api/slices/moderator.slices";
 
 interface UserCardProps {
   user: IUser | null;
@@ -19,10 +20,12 @@ const CustomDrawer: React.FC<{
   user: IUser;
   children: React.ReactNode;
 }> = ({ isVisible, onClose, user, children }) => {
-  const [type, setType] = useState("");
-  const [useUserData, setUserData] = useState(true);
+  const [type, setType] = useState(user.status);
+  const [useUserData, setUserData] = useState<EVerified>(user.verified);
   const onTypeChange = (e: React.ChangeEvent<HTMLInputElement>) =>
-    setType(e.target.value);
+    setType(e.target.value as any);
+
+  const [updateUser] = useUpdateUserStatusMutation();
 
   if (!isVisible) return null;
 
@@ -73,15 +76,13 @@ const CustomDrawer: React.FC<{
                   },
                 }}
               >
-                <MenuItem key={type} value="active">
-                  active
-                </MenuItem>
-                <MenuItem key={type} value="disabled">
-                  disabled
-                </MenuItem>
-                <MenuItem key={type} value="blocked">
-                  blocked
-                </MenuItem>
+                {
+                  Object.values(EStatus).map((status) => (
+                    <MenuItem key={status} value={status}>
+                      {status}
+                    </MenuItem>
+                  ))
+                }
               </Select>
             </FormControl>
             <div className="w-full flex justify-start items-center gap-2 mb-3">
@@ -90,22 +91,33 @@ const CustomDrawer: React.FC<{
                 style={{
                   display: setUserData == undefined ? "none" : "block",
                 }}
-                checked={useUserData}
+                checked={useUserData == EVerified.verified ? true : false}
                 disabled={setUserData == undefined}
-                onCheckedChange={(checked) => setUserData(checked)}
+                onCheckedChange={(checked) => setUserData(checked ? EVerified.verified : EVerified.pending)}
               />
               <p>Verified</p>
             </div>
           </div>
 
-          <WideButton label="Done" color="bg-content-color" />
+          <WideButton label="Done" color="bg-content-color" clickAction={async () => {
+            console.log("update user status", type, useUserData);
+            try {
+              await updateUser({
+                userId: user._id,
+                update: { status: type as any, verified: useUserData as any },
+              }).unwrap();
+              onClose();
+            } catch (error) {
+
+            }
+
+          }} />
 
           <Button
             variant="outline"
             className="absolute top-4 right-2 border-none shadow-none"
-            onClick={(e) => {
+            onClick={async (e) => {
               e.preventDefault();
-              onClose();
             }}
           >
             <RiCloseLargeLine className="text-[1rem] text-content-color" />

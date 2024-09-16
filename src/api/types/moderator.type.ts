@@ -1,4 +1,5 @@
 import { ERecipeStatus, IRecipe, TRecipeStatus } from "./recipe.type";
+import { EVerified } from "./user.type";
 
 export enum EStatus {
     active = "active",
@@ -26,6 +27,11 @@ export interface IModerator {
         status: ERecipeStatus,
     }[];
 
+}
+
+export interface IModeratorUserUpdateSchema {
+    verified?: EVerified;
+    status?: EStatus;
 }
 
 export interface IModeratorLogInFrom {

@@ -149,15 +149,6 @@ const userApiSlice = agelgilAPI.injectEndpoints({
                     : [{ type: 'Users' as const, id: 'List' }],
             transformResponse: (response: { body: IUser[] }) => response.body,
         }),
-        updateUserStatus: builder.mutation<IUser, { userId: string; update: IModeratorUserUpdateSchema }>({
-            query: ({ userId, update }) => ({
-                url: `/private/user/updateUserStatus/${userId}`,
-                method: 'PATCH',
-                body: update,
-            }),
-            invalidatesTags: (result, _, { userId }) => result ? [{ type: 'User', id: userId }] : [],
-            transformResponse: (response: { body: IUser }) => response.body,
-        }),
     }),
 });
 
@@ -173,5 +164,4 @@ export const {
     useRefreshTokenQuery,
     useLogOutMutation,
     useListUsersQuery,
-    useUpdateUserStatusMutation,
 } = userApiSlice
