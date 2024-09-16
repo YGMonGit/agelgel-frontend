@@ -25,6 +25,7 @@ import {
   moderatorAddIngredientUrl,
   moderatorEditIngredientUrl,
   personalDataUrl,
+  mealPlannerUrl,
 } from "../assets/data";
 
 import { SlClose, SlArrowLeft } from "react-icons/sl";
@@ -182,6 +183,7 @@ function Navbar() {
       location.pathname.startsWith(editUserUrl) ||
       location.pathname === mySpaceUrl ||
       location.pathname === personalDataUrl ||
+      location.pathname === mealPlannerUrl ||
       location.pathname === moderatorSpaceUrl ||
       location.pathname === moderatorAddIngredientUrl ||
       location.pathname.startsWith(moderatorEditIngredientUrl) 

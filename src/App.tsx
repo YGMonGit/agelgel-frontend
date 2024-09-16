@@ -37,11 +37,13 @@ import {
   moderatorWelcomeUrl,
   editPostUrl,
   personalDataUrl,
+  mealPlannerUrl,
 } from "./assets/data";
 import ModeratorAddIngredient from "./pages/Moderator/ModeratorAddIngredient";
 import ModeratorEditIngredient from "./pages/Moderator/ModeratorEditIngredient";
 import RecipeEditForm from "./pages/RecipeEditForm";
 import PersonalData from "./pages/PersonalData";
+import MealPlanner from "./pages/MealPlanner";
 
 // ... (other imports remain the same)
 
@@ -150,6 +152,14 @@ function App() {
               element={
                 <NavLayout>
                   <PersonalData />
+                </NavLayout>
+              }
+            />
+            <Route
+              path={mealPlannerUrl}
+              element={
+                <NavLayout>
+                  <MealPlanner />
                 </NavLayout>
               }
             />

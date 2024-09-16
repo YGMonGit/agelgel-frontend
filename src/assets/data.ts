@@ -21,6 +21,7 @@ export const mySpaceUrl = "/user/my-space";
 export const welcomeUrl = "/user";
 // export const weightInputUrl = "/user/add-weight";
 export const personalDataUrl = "/user/personal-data";
+export const mealPlannerUrl = "/user/meal-planner";
 
 export const moderatorSignUpUrl = "/moderator/sign-up";
 export const moderatorLoginUrl = "/moderator/login";

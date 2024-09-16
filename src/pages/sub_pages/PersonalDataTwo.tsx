@@ -4,6 +4,8 @@ import { EActivityLevel, EDietGoals, EGender } from "../../api/types/mealPrefere
 import { FormControl, MenuItem, Select } from "@mui/material";
 import WideButton from '../../components/WideButton';
 import WideLink from '../../components/WideLink';
+import { useNavigate } from 'react-router-dom';
+import { mealPlannerUrl } from '../../assets/data';
 
 interface PersonalDataTwoProps {
   setFromPage: React.Dispatch<React.SetStateAction<number>>;
@@ -19,6 +21,7 @@ interface PersonalDataTwoProps {
 
 function PersonalDataTwo({ setFromPage, gender, setGender, activityLevel, setActivityLevel, dietGoals, setDietGoals, register, errors }: PersonalDataTwoProps) {
 
+  const navigate = useNavigate();
   const onGenderChange = (e: React.ChangeEvent<HTMLInputElement>) =>
     setGender(e.target.value);
   const onActivityLevelChange = (e: React.ChangeEvent<HTMLInputElement>) =>
@@ -33,6 +36,7 @@ function PersonalDataTwo({ setFromPage, gender, setGender, activityLevel, setAct
   const errorStyle = "text-[.8rem] text-red-400";
 
   const onBackClick = () => setFromPage(1);
+  const onDoneClick = () => navigate(mealPlannerUrl);
   return (
     <div className="w-full flex flex-col flex-grow justify-start items-center">
       <img src={SpaceOne} alt="pic" className="w-full p-9 pt-12 max-w-[450px]" />
@@ -167,7 +171,8 @@ function PersonalDataTwo({ setFromPage, gender, setGender, activityLevel, setAct
       </div>
       <div className="w-full px-5 mb-5 flex justify-center items-end gap-2">
         <WideLink label="Back" color="bg-white" outline={true} clickAction={onBackClick} />
-        <WideButton label="Finish" color="bg-content-color" />
+        <WideLink label="Finish" color="bg-content-color" clickAction={onDoneClick} />
+        {/* <WideButton label="Finish" color="bg-content-color" /> */}
       </div>
     </div>
   )
