@@ -5,6 +5,8 @@ import { Input } from "../../components/Input";
 import { HeightIcon } from "@radix-ui/react-icons";
 import WideButton from "../../components/WideButton";
 import WideLink from "../../components/WideLink";
+import { EGender } from "../../api/types/mealPreference.type";
+import { FormControl, InputLabel, MenuItem, Select } from "@mui/material";
 
 interface PersonalDataOneProps {
   setFromPage: React.Dispatch<React.SetStateAction<number>>;
@@ -12,29 +14,25 @@ interface PersonalDataOneProps {
   setWeight: React.Dispatch<React.SetStateAction<number>>;
   height: number;
   setHeight: React.Dispatch<React.SetStateAction<number>>;
+  age: number;
+  setAge: React.Dispatch<React.SetStateAction<number>>;
+  register: any;
+  errors: any;
 }
 
-function PersonalDataOne({setFromPage, weight, setWeight, height, setHeight}: PersonalDataOneProps) {
-  const onWeightChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const value = e.target.value;
-    setWeight(value ? Number(value) : 0); // Convert to number, default to 0 if empty
-  };
-  const onHeightChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const value = e.target.value;
-    setHeight(value ? Number(value) : 0); // Convert to number, default to 0 if empty
-  };
+function PersonalDataOne({ setFromPage, weight, setWeight, height, setHeight, age, setAge, register, errors }: PersonalDataOneProps) {
+  const onWeightChange = (e: React.ChangeEvent<HTMLInputElement>) =>
+    setWeight(Number.parseInt(e.target.value));
+  const onHeightChange = (e: React.ChangeEvent<HTMLInputElement>) =>
+    setHeight(Number.parseInt(e.target.value));
+  const onAgeChange = (e: React.ChangeEvent<HTMLInputElement>) =>
+    setAge(Number.parseInt(e.target.value));
+
   const nextPage = () => setFromPage(2);
+
   return (
     <div className="w-full flex flex-col flex-grow justify-start items-center">
-      <img src={SpaceOne} alt="pic" className="w-full p-9 pt-12" />
-      {/* <p className="text-[2rem] font-bold mt-2 mb-5">Weight</p> */}
-      {/* <input 
-        className="rounded-full border border-content-color w-[70%] py-3 px-4"
-        type="number"
-        placeholder="weight"
-        value={weight}
-        onChange={onWeightChange}
-      /> */}
+      <img src={SpaceOne} alt="pic" className="w-full p-9 pt-12 max-w-[450px]" />
       <Input
         type="number"
         label="Weight"
@@ -42,7 +40,9 @@ function PersonalDataOne({setFromPage, weight, setWeight, height, setHeight}: Pe
         value={weight}
         onChange={onWeightChange}
         // register={register}
-        // errors={errors.name}
+        // {...register("weight", { valueAsNumber: true })}
+        {...register("weight", { valueAsNumber: true })}
+        errors={errors.weight}
       />
       <Input
         type="number"
@@ -51,16 +51,25 @@ function PersonalDataOne({setFromPage, weight, setWeight, height, setHeight}: Pe
         value={height}
         onChange={onHeightChange}
         // register={register}
-        // errors={errors.name}
+        {...register("height", { valueAsNumber: true })}
+        errors={errors.height}
       />
-      <div className="w-full px-5">
+      <Input
+        type="number"
+        label="Age"
+        placeholder="age"
+        value={age}
+        onChange={onAgeChange}
+        // register={register}
+        {...register("age", { valueAsNumber: true })}
+        errors={errors.age}
+      />
+
+      <div className="w-full flex-grow"></div>
+      
+      <div className="w-full px-5 mb-5">
         <WideLink label="Next" color="bg-content-color" clickAction={nextPage} />
       </div>
-      {/* <div className="w-full flex flex-grow pt-12 justify-center">
-        <div className="h-16 aspect-square flex justify-center items-center bg-content-color rounded-full">
-          <FaAngleRight className="text-[2rem] text-white"/>
-        </div>
-      </div> */}
     </div>
   );
 }

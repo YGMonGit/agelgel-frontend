@@ -1,9 +1,174 @@
 import React from 'react'
+import SpaceOne from "../../assets/images/space-1.png";
+import { EActivityLevel, EDietGoals, EGender } from "../../api/types/mealPreference.type";
+import { FormControl, MenuItem, Select } from "@mui/material";
+import WideButton from '../../components/WideButton';
+import WideLink from '../../components/WideLink';
 
-function PersonalDataTwo() {
+interface PersonalDataTwoProps {
+  setFromPage: React.Dispatch<React.SetStateAction<number>>;
+  gender: string;
+  setGender: React.Dispatch<React.SetStateAction<string>>;
+  activityLevel: string;
+  setActivityLevel: React.Dispatch<React.SetStateAction<string>>;
+  dietGoals: string;
+  setDietGoals: React.Dispatch<React.SetStateAction<string>>;
+  register: any;
+  errors: any;
+}
+
+function PersonalDataTwo({ setFromPage, gender, setGender, activityLevel, setActivityLevel, dietGoals, setDietGoals, register, errors }: PersonalDataTwoProps) {
+
+  const onGenderChange = (e: React.ChangeEvent<HTMLInputElement>) =>
+    setGender(e.target.value);
+  const onActivityLevelChange = (e: React.ChangeEvent<HTMLInputElement>) =>
+    setActivityLevel(e.target.value);
+  const onDietGoalsChange = (e: React.ChangeEvent<HTMLInputElement>) =>
+    setDietGoals(e.target.value);
+
+  const genderOptions = Object.values(EGender);
+  const activityLevelOptions = Object.values(EActivityLevel);
+  const dietGoalsOptions = Object.values(EDietGoals);
+
+  const errorStyle = "text-[.8rem] text-red-400";
+
+  const onBackClick = () => setFromPage(1);
   return (
-    <div className="w-full flex flex-col flex-grow justify-center items-center">
-      <p>Personal Form Two</p>
+    <div className="w-full flex flex-col flex-grow justify-start items-center">
+      <img src={SpaceOne} alt="pic" className="w-full p-9 pt-12 max-w-[450px]" />
+      <div className="w-full px-5 flex flex-col justify-center items-start gap-2">
+        <p className="text-[1.1rem] font-semibold">Gender</p>
+        <FormControl
+          fullWidth
+          sx={{
+            borderRadius: "0.75rem",
+            marginBottom: "1.25rem",
+            backgroundColor: "#F9FAFB",
+            "& .MuiOutlinedInput-root": {
+              borderRadius: "0.75rem",
+              "& fieldset": {
+                borderColor: "#D1D5DB",
+              },
+              "&:hover fieldset": {
+                borderColor: "#D1D5DB",
+              },
+              "&.Mui-focused fieldset": {
+                border: "1px solid #D1D5DB",
+              },
+            },
+          }}
+        >
+          <Select
+            value={gender}
+            onChange={onGenderChange as any}
+            displayEmpty
+            sx={{
+              "& .MuiSelect-select": {
+                borderRadius: "0.75rem",
+              },
+            }}
+          >
+            {genderOptions?.map((type) => (
+              <MenuItem key={type} value={type}>
+                {type}
+              </MenuItem>
+            ))}
+          </Select>
+          {errors && errors.gender && (
+            <p className={errorStyle}>{errors.gender.message}</p>
+          )}
+        </FormControl>
+      </div>
+      <div className="w-full px-5 flex flex-col justify-center items-start gap-2">
+        <p className="text-[1.1rem] font-semibold">Activity Level</p>
+        <FormControl
+          fullWidth
+          sx={{
+            borderRadius: "0.75rem",
+            marginBottom: "1.25rem",
+            backgroundColor: "#F9FAFB",
+            "& .MuiOutlinedInput-root": {
+              borderRadius: "0.75rem",
+              "& fieldset": {
+                borderColor: "#D1D5DB",
+              },
+              "&:hover fieldset": {
+                borderColor: "#D1D5DB",
+              },
+              "&.Mui-focused fieldset": {
+                border: "1px solid #D1D5DB",
+              },
+            },
+          }}
+        >
+          <Select
+            value={activityLevel}
+            onChange={onActivityLevelChange as any}
+            displayEmpty
+            sx={{
+              "& .MuiSelect-select": {
+                borderRadius: "0.75rem",
+              },
+            }}
+          >
+            {activityLevelOptions?.map((type) => (
+              <MenuItem key={type} value={type}>
+                {type}
+              </MenuItem>
+            ))}
+          </Select>
+          {errors && errors.active_level && (
+            <p className={errorStyle}>{errors.active_level.message}</p>
+          )}
+        </FormControl>
+      </div>
+      <div className="w-full px-5 flex flex-col justify-start items-start gap-2 flex-grow">
+        <p className="text-[1.1rem] font-semibold">Diet Goals</p>
+        <FormControl
+          fullWidth
+          sx={{
+            borderRadius: "0.75rem",
+            marginBottom: "1.25rem",
+            backgroundColor: "#F9FAFB",
+            "& .MuiOutlinedInput-root": {
+              borderRadius: "0.75rem",
+              "& fieldset": {
+                borderColor: "#D1D5DB",
+              },
+              "&:hover fieldset": {
+                borderColor: "#D1D5DB",
+              },
+              "&.Mui-focused fieldset": {
+                border: "1px solid #D1D5DB",
+              },
+            },
+          }}
+        >
+          <Select
+            value={dietGoals}
+            onChange={onDietGoalsChange as any}
+            displayEmpty
+            sx={{
+              "& .MuiSelect-select": {
+                borderRadius: "0.75rem",
+              },
+            }}
+          >
+            {dietGoalsOptions?.map((type) => (
+              <MenuItem key={type} value={type}>
+                {type}
+              </MenuItem>
+            ))}
+          </Select>
+          {errors && errors.diet_goals && (
+            <p className={errorStyle}>{errors.diet_goals.message}</p>
+          )}
+        </FormControl>
+      </div>
+      <div className="w-full px-5 mb-5 flex justify-center items-end gap-2">
+        <WideLink label="Back" color="bg-white" outline={true} clickAction={onBackClick} />
+        <WideButton label="Finish" color="bg-content-color" />
+      </div>
     </div>
   )
 }

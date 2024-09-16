@@ -41,7 +41,6 @@ import {
 import ModeratorAddIngredient from "./pages/Moderator/ModeratorAddIngredient";
 import ModeratorEditIngredient from "./pages/Moderator/ModeratorEditIngredient";
 import RecipeEditForm from "./pages/RecipeEditForm";
-import WeightInput from "./pages/WeightInput";
 import PersonalData from "./pages/PersonalData";
 
 // ... (other imports remain the same)
