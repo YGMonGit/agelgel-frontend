@@ -27,8 +27,9 @@ import DisplayCard from "../components/DisplayCard";
 import { FaChevronLeft, FaChevronRight } from "react-icons/fa6";
 import { FaShoppingCart } from "react-icons/fa";
 import IngredientDefaultImage from "../assets/images/default_image_1.png";
+import IngredientIcon from "../assets/icons/apple-icon.png";
 
-import { Button } from "../components/ui/button"
+import { Button } from "../components/ui/button";
 // import { Input } from "../components/ui/input"
 // import { Label } from "../components/ui/label"
 import {
@@ -40,7 +41,7 @@ import {
   SheetHeader,
   SheetTitle,
   SheetTrigger,
-} from "../components/ui/sheet"
+} from "../components/ui/sheet";
 import IngredientCard from "../components/IngredientCard";
 import SpoonacularClient from "../api/SpoonacularClient";
 import { GoDotFill } from "react-icons/go";
@@ -61,20 +62,22 @@ function MealPlanner() {
     mealTime: EPreferredMealTime.breakfast,
     page: 1,
   });
-  const { data: similarRecipes, isLoading: similarRecipesLoading, isFetching } = useGetSimilarRecipesQuery({
+  const {
+    data: similarRecipes,
+    isLoading: similarRecipesLoading,
+    isFetching,
+  } = useGetSimilarRecipesQuery({
     mealTime: EPreferredMealTime.breakfast,
     page: page,
   });
 
-
-  const pageSize = 10
+  const pageSize = 10;
   const [pagination, setPagination] = useState({
     skip: 0,
     limit: 10,
   });
 
   const [ingredientImages, setIngredientImages] = useState<string[]>([]);
-
 
   const {
     data: ingredientList,
@@ -132,15 +135,10 @@ function MealPlanner() {
       {
         label: "Current",
         data: [
-          // normalizeData(goals?.nutrition)?.calories || 0,
-          // normalizeData(goals?.nutrition)?.protein_g || 0,
-          // normalizeData(goals?.nutrition)?.carbohydrates_total_g || 0,
-          // normalizeData(goals?.nutrition)?.fat_total_g || 0,
           goals?.nutrition?.calories || 0,
           goals?.nutrition?.protein_g || 0,
           goals?.nutrition?.carbohydrates_total_g || 0,
           goals?.nutrition?.fat_total_g || 0,
-          
         ],
         backgroundColor: "rgba(255, 0, 0, 0.2)",
         borderColor: "rgba(255, 0, 0, 1)",
@@ -153,10 +151,6 @@ function MealPlanner() {
           nutritionGoal?.protein || 0,
           nutritionGoal?.carbs || 0,
           nutritionGoal?.fat || 0,
-          // normalizeData(nutritionGoal)?.calories || 0,
-          // normalizeData(nutritionGoal)?.protein || 0,
-          // normalizeData(nutritionGoal)?.carbs || 0,
-          // normalizeData(nutritionGoal)?.fat || 0,
         ],
         backgroundColor: "rgba(0, 0, 255, 0.2)",
         borderColor: "rgba(0, 0, 255, 1)",
@@ -166,19 +160,14 @@ function MealPlanner() {
   };
 
   const pageChange = ({ direction }: { direction: string }) => {
-
     if (direction === "back") {
       setPage((prev) => {
         if (prev > 0) {
           return prev - 1;
-        }
-        else
-          return 0;
+        } else return 0;
       });
     } else {
-      setPage((prev) => (
-        prev + 1
-      ));
+      setPage((prev) => prev + 1);
     }
   };
 
@@ -208,20 +197,18 @@ function MealPlanner() {
     : ingredientList?.length || 0;
 
   const pageChangeShopList = ({ direction }: { direction: string }) => {
-
     if (direction === "back") {
       setPagination((prev) => {
         if (prev.skip - pageSize < 0) {
-          return ({
+          return {
             skip: 0,
             limit: pageSize,
-          });
-        }
-        else
-          return ({
+          };
+        } else
+          return {
             skip: prev.skip - pageSize,
             limit: prev.limit - pageSize,
-          });
+          };
       });
     } else {
       setPagination((prev) => ({
@@ -230,7 +217,6 @@ function MealPlanner() {
       }));
     }
   };
-  
 
   return (
     <div className="w-full flex flex-grow flex-col justify-start items-center pt-4 min-h-[100%-56px]">
@@ -243,7 +229,7 @@ function MealPlanner() {
           }}
         />
       </div>
-      <div className="w-full max-w-md mt-3">
+      <div className="w-full max-w-md mt-3 px-5">
         {!isLoading && nutritionGoal && (
           <Bar data={chartData} options={options} />
         )}
@@ -252,99 +238,45 @@ function MealPlanner() {
         <div className="w-full flex justify-between items-center text-[1.4rem]">
           <h3 className="font-semibold mb-1">Recipes</h3>
           <Sheet>
-      <SheetTrigger asChild>
-        {/* <Button variant="outline">Open</Button> */}
-        <FaShoppingCart className="text-content-color text-[1.4rem]" />
-      </SheetTrigger>
-      <SheetContent>
-        <SheetHeader>
-          <SheetTitle>Shopping List</SheetTitle>
-          {/* <SheetDescription>
-            Your shoping 
-          </SheetDescription> */}
-        </SheetHeader>
-        {/* <div className="flex flex-col h-full justify-start items-center w-full pt-3">
-      {ingredientList?.length !== 0 ? (
-        <div className="w-full flex flex-col justify-start items-center">
-          <div className="flex flex-col h-full justify-start items-center w-full pt-3 gap-2">
-            {isLoading
-              ? Array.from({ length: skeletonCounts }).map((_, index) => (
-                <IngredientCard ingredient={null} key={`skeleton-${index}`} />
-              ))
-              : ingredientList?.map((ingredient, index) => (
-                <IngredientCard ingredientImage={ingredientImages[index]} ingredient={ingredient} key={index} />
-              ))}
-          </div>
-          {!isFetching && (
-            <div className="w-full p-5 flex justify-center items-center gap-3 mb-5 text-[1rem] select-none z-20">
-              <button
-                className="flex justify-center items-center border border-content-color rounded-lg p-2 px-5 shadow-md bg-slate-50 text-slate-500 text-[.9rem]"
-                onClick={() => pageChangeShopList({ direction: "back" })}
+            <SheetTrigger asChild>
+              <FaShoppingCart className="text-content-color text-[1.4rem]" />
+            </SheetTrigger>
+            <SheetContent>
+              <SheetHeader>
+                <SheetTitle className="pb-2">Shopping List</SheetTitle>
+              </SheetHeader>
+              <div className="flex flex-col h-full justify-start items-start w-full pt-3 gap-3 overflow-y-auto pb-8"
+                style={{ scrollbarWidth: "none", msOverflowStyle: "none" }}
               >
-                <FaChevronLeft className="text-content-color text-[1.2rem]" />{" "}
-                Back
-              </button>
-              <button
-                className="flex justify-center items-center border border-content-color rounded-lg p-2 px-5 shadow-md bg-slate-50 text-slate-500 text-[.9rem]"
-                onClick={() => pageChangeShopList({ direction: "forward" })}
-              >
-                Next{" "}
-                <FaChevronRight className="text-content-color text-[1.2rem]" />
-              </button>
-            </div>
-          )}
-        </div>
-      ) : (
-        // <div className="w-full flex justify-center items-center flex-grow">
-        //   <img src={EmptyListIcon} alt="pic" className="w-[75%] sm:w-[50%]" />
-        // </div>
-        <div className="w-full flex flex-col justify-center items-center flex-grow">
-          <img src={EmptyListIcon} alt="pic" className="w-[75%] sm:w-[50%]" />
-          <div className="w-full px-5 flex justify-center items-center gap-3 mb-5 text-[1rem] select-none z-20">
-            <button
-              className="flex justify-center items-center border border-content-color rounded-lg p-2 px-5 shadow-md bg-slate-50 text-slate-500 text-[.9rem]"
-              onClick={() => pageChangeShopList({ direction: "back" })}
-            >
-              <FaChevronLeft className="text-content-color text-[1.2rem]" />{" "}
-              Back
-            </button>
-            
-          </div>
-        </div>
-      )}
-        </div> */}
-        {ingredientList?.map((ingredient, index) => {
-            return (
-              <div
-                key={index}
-                className="flex justify-start items-center leading-none gap-1 text-slate-400"
-              >
-                <img
-                  src={
-                    ingredientImages[index] !== undefined
-                      ? ingredientImages[index]
-                      : IngredientDefaultImage
-                  }
-                  alt="pic"
-                  className={`min-w-8 w-8 ${ingredientImages[index] === undefined &&
-                    "rounded-full p-[5px] shadow-md bg-neutral-200"
-                    }`}
-                />
-                <GoDotFill className="text-[.7rem] ml-[6px] mr-1 text-slate-500" />
-                {ingredient.name}({" "}
-                {ingredient.localName} )-{" "}
-                {ingredient.amount}{" "}
-                {ingredient.unit}
+                {ingredientList?.map((ingredient, index) => {
+                  return (
+                    <div
+                      key={index}
+                      className="w-full flex bg-neutral-100 px-3 py-4 justify-start items-center leading-none gap-1 text-slate-500 rounded-xl"
+                    >
+                      <img
+                        src={ingredientImages[index] ?? IngredientIcon}
+                        className="w-[61px] p-3 aspect-square"
+                      />
+                      <div className="flex flex-col justify-center items-start">
+                        <p className="text-black text-[1.1rem]">
+                          {ingredient.name}( {ingredient.localName})
+                        </p>
+                        <p className="italic mt-1">
+                          {ingredient.amount} {ingredient.unit}
+                        </p>
+                      </div>
+                    </div>
+                  );
+                })}
               </div>
-            );
-          })}
-        <SheetFooter>
-          <SheetClose asChild>
-            <Button type="submit">Save changes</Button>
-          </SheetClose>
-        </SheetFooter>
-      </SheetContent>
-    </Sheet>
+              <SheetFooter>
+                <SheetClose asChild>
+                  <Button type="submit">Save changes</Button>
+                </SheetClose>
+              </SheetFooter>
+            </SheetContent>
+          </Sheet>
         </div>
         {goals?.recipe.length !== 0 ? (
           <div
@@ -368,18 +300,39 @@ function MealPlanner() {
         )}
       </div>
       <div className="">
-      {similarRecipes?.length !== 0 ? (
-        <div className="w-full flex flex-col justify-start items-center">
-          <div className="grid grid-cols-2 sm:grid-cols-3 gap-4 w-full px-5 mb-5">
-            {isFetching
-              ? Array.from({ length: skeletonCount }).map((_, index) => (
-                <DisplayCard post={null} key={`skeleton-${index}`} />
-              ))
-              : similarRecipes?.map((post, index) => (
-                <DisplayCard post={post} key={index} />
-              ))}
+        {similarRecipes?.length !== 0 ? (
+          <div className="w-full flex flex-col justify-start items-center">
+            <div className="grid grid-cols-2 sm:grid-cols-3 gap-4 w-full px-5 mb-5">
+              {isFetching
+                ? Array.from({ length: skeletonCount }).map((_, index) => (
+                    <DisplayCard post={null} key={`skeleton-${index}`} />
+                  ))
+                : similarRecipes?.map((post, index) => (
+                    <DisplayCard post={post} key={index} />
+                  ))}
+            </div>
+            {!isFetching && (
+              <div className="w-full px-5 flex justify-center items-center gap-3 mb-5 text-[1rem] select-none z-20">
+                <button
+                  className="flex justify-center items-center border border-content-color rounded-lg p-2 px-5 shadow-md bg-slate-50 text-slate-500 text-[.9rem]"
+                  onClick={() => pageChange({ direction: "back" })}
+                >
+                  <FaChevronLeft className="text-content-color text-[1.2rem]" />{" "}
+                  Back
+                </button>
+                <button
+                  className="flex justify-center items-center border border-content-color rounded-lg p-2 px-5 shadow-md bg-slate-50 text-slate-500 text-[.9rem]"
+                  onClick={() => pageChange({ direction: "forward" })}
+                >
+                  Next{" "}
+                  <FaChevronRight className="text-content-color text-[1.2rem]" />
+                </button>
+              </div>
+            )}
           </div>
-          {!isFetching && (
+        ) : (
+          <div className="w-full flex flex-col justify-center items-center flex-grow">
+            <img src={EmptyListIcon} alt="pic" className="w-[75%] sm:w-[50%]" />
             <div className="w-full px-5 flex justify-center items-center gap-3 mb-5 text-[1rem] select-none z-20">
               <button
                 className="flex justify-center items-center border border-content-color rounded-lg p-2 px-5 shadow-md bg-slate-50 text-slate-500 text-[.9rem]"
@@ -388,31 +341,9 @@ function MealPlanner() {
                 <FaChevronLeft className="text-content-color text-[1.2rem]" />{" "}
                 Back
               </button>
-              <button
-                className="flex justify-center items-center border border-content-color rounded-lg p-2 px-5 shadow-md bg-slate-50 text-slate-500 text-[.9rem]"
-                onClick={() => pageChange({ direction: "forward" })}
-              >
-                Next{" "}
-                <FaChevronRight className="text-content-color text-[1.2rem]" />
-              </button>
             </div>
-          )}
-        </div>
-      ) : (
-        <div className="w-full flex flex-col justify-center items-center flex-grow">
-          <img src={EmptyListIcon} alt="pic" className="w-[75%] sm:w-[50%]" />
-          <div className="w-full px-5 flex justify-center items-center gap-3 mb-5 text-[1rem] select-none z-20">
-            <button
-              className="flex justify-center items-center border border-content-color rounded-lg p-2 px-5 shadow-md bg-slate-50 text-slate-500 text-[.9rem]"
-              onClick={() => pageChange({ direction: "back" })}
-            >
-              <FaChevronLeft className="text-content-color text-[1.2rem]" />{" "}
-              Back
-            </button>
-            
           </div>
-        </div>
-      )}
+        )}
       </div>
     </div>
   );
