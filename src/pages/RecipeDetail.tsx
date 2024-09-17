@@ -5,6 +5,7 @@ import { HiOutlineBookmark, HiMiniBookmark } from "react-icons/hi2";
 import { GoDotFill } from "react-icons/go";
 import { BsFillPersonCheckFill } from "react-icons/bs";
 import { MdAdd, MdVerified } from "react-icons/md";
+import { TiMinus } from "react-icons/ti";
 
 import { LuClock9 } from "react-icons/lu";
 import { IoSpeedometerOutline } from "react-icons/io5";
@@ -50,7 +51,7 @@ import ClipLoader from "react-spinners/ClipLoader";
 import FilterBarActive from "../components/FilterBarActive";
 import { getCalorieColor, getCarbsColor, getFatColor, getFiberColor, getProteinColor } from "../assets/data";
 import PieChart from "../components/PieChart";
-import { useAddToMealPlanMutation } from "../api/slices/mealPlanner.slices";
+import { useAddToMealPlanMutation, useCheckIfUserRecipeExistsQuery, useRemoveFromMealPlanMutation } from "../api/slices/mealPlanner.slices";
 
 const StyledRating = styled(Rating)({
   fontSize: "1rem",
@@ -189,12 +190,20 @@ function RecipeDetail() {
 
   const onNewCommentChange = (e: React.ChangeEvent<HTMLInputElement>) =>
     setNewComment(e.target.value);
-  
-  const { data: user } =
-  useGetUserByIdQuery(String(recipe?.user.user)); 
 
-  const [addToMealPlan,{isLoading:addToMealPlanIsLoading}] = useAddToMealPlanMutation()
-  
+  const { data: user } =
+    useGetUserByIdQuery(String(recipe?.user.user));
+
+  const [addToMealPlan, { isLoading: addToMealPlanIsLoading }] = useAddToMealPlanMutation();
+  const [removeFromMealPlan, { isLoading: removeFromMealPlanIsLoading }] = useRemoveFromMealPlanMutation();
+
+  const { data: isUserRecipeExists, isError: isUserRecipeExistsError
+  } = useCheckIfUserRecipeExistsQuery({
+    recipeID: recipe?._id as any
+  }, {
+    skip: !recipe
+  });
+
   if (!recipe) {
     return (
       <div className="w-full h-full max-w-[800px] px-5 flex flex-col justify-start items-start gap-3">
@@ -215,9 +224,9 @@ function RecipeDetail() {
   }
 
   if (recipe) {
-    let caloryInGram = recipe.nutrition.calories *  0.129598;
+    let caloryInGram = recipe.nutrition.calories * 0.129598;
 
-    const pieChartData ={
+    const pieChartData = {
       labels: ["Calorie", "Protein", "Fat", "Carbs", "Fiber"],
       datasets: [
         {
@@ -234,7 +243,7 @@ function RecipeDetail() {
         },
       ],
     };
-    
+
     return (
       <div className="w-full max-w-[800px] px-5 flex flex-col justify-start items-center">
         <div className=" bg-neutral-100 my-5 slide-container bg-custom-content-bg w-full max-w-[500px]">
@@ -327,19 +336,19 @@ function RecipeDetail() {
             <MdAdd className="text-[1rem]" /> Add to meal plan
           </div>
         )} color="bg-white" outline={true} /> */}
-        {InMealPlan && (
-          <WideButton 
-          disable={addToMealPlanIsLoading}
-          clickAction={async ()=>{
-            try {
-              await addToMealPlan({
-                mealTime:recipe.preferredMealTime[0],
-                recipeID:recipe._id
-              })
-            } catch (error) {
-              
-            }
-          }}
+        {isUserRecipeExists?.isRecipeInMealPlan == false ? (
+          <WideButton
+            disable={addToMealPlanIsLoading}
+            clickAction={async () => {
+              try {
+                await addToMealPlan({
+                  mealTime: recipe.preferredMealTime[0],
+                  recipeID: recipe._id
+                })
+              } catch (error) {
+
+              }
+            }}
             label={
               <div className="w-full flex justify-center items-center gap-2">
                 {addToMealPlanIsLoading ? (
@@ -349,16 +358,46 @@ function RecipeDetail() {
                     aria-label="Loading Spinner"
                     data-testid="loader"
                   />
-                ):(
+                ) : (
                   <MdAdd className="text-[1.3rem]" />
                 )}
                 <p className="text-slate-400 font-normal">Add to Meal Plan</p>
               </div>
-            } 
-            color="bg-white" 
-            outline={true} 
+            }
+            color="bg-white"
+            outline={true}
           />
-        )}
+        ) : !isUserRecipeExistsError ? <WideButton
+          disable={removeFromMealPlanIsLoading}
+          clickAction={async () => {
+            try {
+              await removeFromMealPlan({
+                mealTime: recipe.preferredMealTime[0],
+                recipeID: recipe._id
+              })
+            } catch (error) {
+
+            }
+          }}
+          label={
+            <div className="w-full flex justify-center items-center gap-2">
+              {removeFromMealPlanIsLoading ? (
+                <ClipLoader
+                  color={"var(--content-color)"}
+                  size={15}
+                  aria-label="Loading Spinner"
+                  data-testid="loader"
+                />
+              ) : (
+                <TiMinus className="text-[1.3rem]" />
+              )}
+              <p className="text-slate-400 font-normal">remove from Meal Plan</p>
+            </div>
+          }
+          color="bg-white"
+          outline={true}
+        /> : null
+        }
         <div className="w-full flex flex-col justify-start items-start gap-2">
           <div className="flex justify-start items-center gap-2 mb-3">
             <div className="w-full flex justify-start items-center bg-[#F3F4F6] pl-[10px] rounded-[8px]">

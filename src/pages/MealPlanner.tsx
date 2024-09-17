@@ -136,11 +136,11 @@ function MealPlanner() {
           // normalizeData(goals?.nutrition)?.protein_g || 0,
           // normalizeData(goals?.nutrition)?.carbohydrates_total_g || 0,
           // normalizeData(goals?.nutrition)?.fat_total_g || 0,
-          goals?.nutrition?.calories || 0,
+          (goals?.nutrition?.calories || 0) * 0.129598,
           goals?.nutrition?.protein_g || 0,
           goals?.nutrition?.carbohydrates_total_g || 0,
           goals?.nutrition?.fat_total_g || 0,
-          
+
         ],
         backgroundColor: "rgba(255, 0, 0, 0.2)",
         borderColor: "rgba(255, 0, 0, 1)",
@@ -230,7 +230,7 @@ function MealPlanner() {
       }));
     }
   };
-  
+
 
   return (
     <div className="w-full flex flex-grow flex-col justify-start items-center pt-4 min-h-[100%-56px]">
@@ -252,18 +252,18 @@ function MealPlanner() {
         <div className="w-full flex justify-between items-center text-[1.4rem]">
           <h3 className="font-semibold mb-1">Recipes</h3>
           <Sheet>
-      <SheetTrigger asChild>
-        {/* <Button variant="outline">Open</Button> */}
-        <FaShoppingCart className="text-content-color text-[1.4rem]" />
-      </SheetTrigger>
-      <SheetContent>
-        <SheetHeader>
-          <SheetTitle>Shopping List</SheetTitle>
-          {/* <SheetDescription>
+            <SheetTrigger asChild>
+              {/* <Button variant="outline">Open</Button> */}
+              <FaShoppingCart className="text-content-color text-[1.4rem]" />
+            </SheetTrigger>
+            <SheetContent>
+              <SheetHeader>
+                <SheetTitle>Shopping List</SheetTitle>
+                {/* <SheetDescription>
             Your shoping 
           </SheetDescription> */}
-        </SheetHeader>
-        {/* <div className="flex flex-col h-full justify-start items-center w-full pt-3">
+              </SheetHeader>
+              {/* <div className="flex flex-col h-full justify-start items-center w-full pt-3">
       {ingredientList?.length !== 0 ? (
         <div className="w-full flex flex-col justify-start items-center">
           <div className="flex flex-col h-full justify-start items-center w-full pt-3 gap-2">
@@ -313,38 +313,38 @@ function MealPlanner() {
         </div>
       )}
         </div> */}
-        {ingredientList?.map((ingredient, index) => {
-            return (
-              <div
-                key={index}
-                className="flex justify-start items-center leading-none gap-1 text-slate-400"
-              >
-                <img
-                  src={
-                    ingredientImages[index] !== undefined
-                      ? ingredientImages[index]
-                      : IngredientDefaultImage
-                  }
-                  alt="pic"
-                  className={`min-w-8 w-8 ${ingredientImages[index] === undefined &&
-                    "rounded-full p-[5px] shadow-md bg-neutral-200"
-                    }`}
-                />
-                <GoDotFill className="text-[.7rem] ml-[6px] mr-1 text-slate-500" />
-                {ingredient.name}({" "}
-                {ingredient.localName} )-{" "}
-                {ingredient.amount}{" "}
-                {ingredient.unit}
-              </div>
-            );
-          })}
-        <SheetFooter>
-          <SheetClose asChild>
-            <Button type="submit">Save changes</Button>
-          </SheetClose>
-        </SheetFooter>
-      </SheetContent>
-    </Sheet>
+              {ingredientList?.map((ingredient, index) => {
+                return (
+                  <div
+                    key={index}
+                    className="flex justify-start items-center leading-none gap-1 text-slate-400"
+                  >
+                    <img
+                      src={
+                        ingredientImages[index] !== undefined
+                          ? ingredientImages[index]
+                          : IngredientDefaultImage
+                      }
+                      alt="pic"
+                      className={`min-w-8 w-8 ${ingredientImages[index] === undefined &&
+                        "rounded-full p-[5px] shadow-md bg-neutral-200"
+                        }`}
+                    />
+                    <GoDotFill className="text-[.7rem] ml-[6px] mr-1 text-slate-500" />
+                    {ingredient.name}({" "}
+                    {ingredient.localName} )-{" "}
+                    {ingredient.amount}{" "}
+                    {ingredient.unit}
+                  </div>
+                );
+              })}
+              <SheetFooter>
+                <SheetClose asChild>
+                  <Button type="submit">Save changes</Button>
+                </SheetClose>
+              </SheetFooter>
+            </SheetContent>
+          </Sheet>
         </div>
         {goals?.recipe.length !== 0 ? (
           <div
@@ -355,11 +355,11 @@ function MealPlanner() {
           >
             {isLoading
               ? Array.from({ length: skeletonCount }).map((_, index) => (
-                  <DisplayCard post={null} key={`skeleton-${index}`} />
-                ))
+                <DisplayCard post={null} key={`skeleton-${index}`} />
+              ))
               : goals?.recipe.map((post, index) => (
-                  <DisplayCard post={post} key={index} />
-                ))}
+                <DisplayCard post={post} key={index} />
+              ))}
           </div>
         ) : (
           <div className="w-full flex justify-center">
@@ -368,18 +368,39 @@ function MealPlanner() {
         )}
       </div>
       <div className="">
-      {similarRecipes?.length !== 0 ? (
-        <div className="w-full flex flex-col justify-start items-center">
-          <div className="grid grid-cols-2 sm:grid-cols-3 gap-4 w-full px-5 mb-5">
-            {isFetching
-              ? Array.from({ length: skeletonCount }).map((_, index) => (
-                <DisplayCard post={null} key={`skeleton-${index}`} />
-              ))
-              : similarRecipes?.map((post, index) => (
-                <DisplayCard post={post} key={index} />
-              ))}
+        {similarRecipes?.length !== 0 ? (
+          <div className="w-full flex flex-col justify-start items-center">
+            <div className="grid grid-cols-2 sm:grid-cols-3 gap-4 w-full px-5 mb-5">
+              {isFetching
+                ? Array.from({ length: skeletonCount }).map((_, index) => (
+                  <DisplayCard post={null} key={`skeleton-${index}`} />
+                ))
+                : similarRecipes?.map((post, index) => (
+                  <DisplayCard post={post} key={index} />
+                ))}
+            </div>
+            {!isFetching && (
+              <div className="w-full px-5 flex justify-center items-center gap-3 mb-5 text-[1rem] select-none z-20">
+                <button
+                  className="flex justify-center items-center border border-content-color rounded-lg p-2 px-5 shadow-md bg-slate-50 text-slate-500 text-[.9rem]"
+                  onClick={() => pageChange({ direction: "back" })}
+                >
+                  <FaChevronLeft className="text-content-color text-[1.2rem]" />{" "}
+                  Back
+                </button>
+                <button
+                  className="flex justify-center items-center border border-content-color rounded-lg p-2 px-5 shadow-md bg-slate-50 text-slate-500 text-[.9rem]"
+                  onClick={() => pageChange({ direction: "forward" })}
+                >
+                  Next{" "}
+                  <FaChevronRight className="text-content-color text-[1.2rem]" />
+                </button>
+              </div>
+            )}
           </div>
-          {!isFetching && (
+        ) : (
+          <div className="w-full flex flex-col justify-center items-center flex-grow">
+            <img src={EmptyListIcon} alt="pic" className="w-[75%] sm:w-[50%]" />
             <div className="w-full px-5 flex justify-center items-center gap-3 mb-5 text-[1rem] select-none z-20">
               <button
                 className="flex justify-center items-center border border-content-color rounded-lg p-2 px-5 shadow-md bg-slate-50 text-slate-500 text-[.9rem]"
@@ -388,31 +409,10 @@ function MealPlanner() {
                 <FaChevronLeft className="text-content-color text-[1.2rem]" />{" "}
                 Back
               </button>
-              <button
-                className="flex justify-center items-center border border-content-color rounded-lg p-2 px-5 shadow-md bg-slate-50 text-slate-500 text-[.9rem]"
-                onClick={() => pageChange({ direction: "forward" })}
-              >
-                Next{" "}
-                <FaChevronRight className="text-content-color text-[1.2rem]" />
-              </button>
+
             </div>
-          )}
-        </div>
-      ) : (
-        <div className="w-full flex flex-col justify-center items-center flex-grow">
-          <img src={EmptyListIcon} alt="pic" className="w-[75%] sm:w-[50%]" />
-          <div className="w-full px-5 flex justify-center items-center gap-3 mb-5 text-[1rem] select-none z-20">
-            <button
-              className="flex justify-center items-center border border-content-color rounded-lg p-2 px-5 shadow-md bg-slate-50 text-slate-500 text-[.9rem]"
-              onClick={() => pageChange({ direction: "back" })}
-            >
-              <FaChevronLeft className="text-content-color text-[1.2rem]" />{" "}
-              Back
-            </button>
-            
           </div>
-        </div>
-      )}
+        )}
       </div>
     </div>
   );

@@ -1,7 +1,7 @@
 import agelgilAPI from "..";
 import { IMealPlanner, INewMealPlanner, INutritionGoal } from "../types/mealPreference.type";
 import { EPreferredMealTime, ERecipeStatus, IngredientDetail, INutritionData, IRecipe } from "../types/recipe.type";
-const userApiSlice = agelgilAPI.injectEndpoints({
+const mealPlannerApiSlice = agelgilAPI.injectEndpoints({
     endpoints: (builder) => ({
 
         createMealPlan: builder.mutation<IMealPlanner, { mealPlanData: INewMealPlanner }>({
@@ -15,11 +15,11 @@ const userApiSlice = agelgilAPI.injectEndpoints({
         }),
 
         getMealPlan: builder.query<{
-        
-                recipe: IRecipe[],
-                nutrition: INutritionData;
-                shoppingList: IngredientDetail[],
-              
+
+            recipe: IRecipe[],
+            nutrition: INutritionData;
+            shoppingList: IngredientDetail[],
+
         }, { mealTime: EPreferredMealTime | 'all', page: number }>({
             query: ({ mealTime, page }) => ({
                 url: `/private/mealPlanner/mealPlan/${mealTime}/${page}`,
@@ -34,7 +34,10 @@ const userApiSlice = agelgilAPI.injectEndpoints({
                 method: 'POST',
             }),
             transformResponse: (response: { body: IMealPlanner }) => response.body,
-            invalidatesTags: (result, error, { mealTime }) => [{ type: 'MealPlan-Recipe', mealTime }],
+            invalidatesTags: (result, error, { recipeID, mealTime }) => result ? [
+                { type: "checkIfUserRecipeExists" },
+                { type: 'MealPlan-Recipe', id: mealTime }
+            ] : [],
         }),
 
         removeFromMealPlan: builder.mutation<IMealPlanner, { mealTime: EPreferredMealTime, recipeID: string }>({
@@ -43,7 +46,10 @@ const userApiSlice = agelgilAPI.injectEndpoints({
                 method: 'DELETE',
             }),
             transformResponse: (response: { body: IMealPlanner }) => response.body,
-            invalidatesTags: (result, error, { mealTime }) => [{ type: 'MealPlan-Recipe', mealTime }],
+            invalidatesTags: (result, error, { recipeID, mealTime }) => result ? [
+                { type: "checkIfUserRecipeExists" },
+                { type: 'MealPlan-Recipe', id: mealTime }
+            ] : [],
         }),
 
         resetMealPlanRecipes: builder.mutation<{}, void>({
@@ -89,6 +95,15 @@ const userApiSlice = agelgilAPI.injectEndpoints({
             providesTags: ['MealPlan-SimilarRecipe'],
             transformResponse: (response: { body: IRecipe[] }) => response.body,
         }),
+
+        checkIfUserRecipeExists: builder.query<{ isRecipeInMealPlan: boolean }, { recipeID: string }>({
+            query: ({ recipeID }) => ({
+                url: `/private/mealPlanner/checkIfUserRecipe/${recipeID}`,
+                method: 'GET',
+            }),
+            providesTags: ['checkIfUserRecipeExists'],
+            transformResponse: (response: { body: { isRecipeInMealPlan: boolean } }) => response.body,
+        }),
     }),
 });
 
@@ -102,4 +117,5 @@ export const {
     useUpdateStatsMutation,
     useGetShoppingListQuery,
     useGetSimilarRecipesQuery,
-} = userApiSlice
+    useCheckIfUserRecipeExistsQuery,
+} = mealPlannerApiSlice
