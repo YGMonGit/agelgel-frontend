@@ -142,7 +142,7 @@ function Home() {
           )}
         </div>
       ) : (
-        <div className="w-full flex justify-center items-center flex-grow">
+        <div className="w-full flex flex-col justify-center items-center flex-grow">
           <img src={EmptyListIcon} alt="pic" className="w-[75%] sm:w-[50%]" />
           <div className="w-full px-5 flex justify-center items-center gap-3 mb-5 text-[1rem] select-none z-20">
             <button
@@ -152,13 +152,7 @@ function Home() {
               <FaChevronLeft className="text-content-color text-[1.2rem]" />{" "}
               Back
             </button>
-            <button
-              className="flex justify-center items-center border border-content-color rounded-lg p-2 px-5 shadow-md bg-slate-50 text-slate-500 text-[.9rem]"
-              onClick={() => pageChange({ direction: "forward" })}
-            >
-              Next{" "}
-              <FaChevronRight className="text-content-color text-[1.2rem]" />
-            </button>
+            
           </div>
         </div>
       )}

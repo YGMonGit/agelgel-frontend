@@ -171,8 +171,8 @@ function PersonalDataTwo({ setFromPage, gender, setGender, activityLevel, setAct
       </div>
       <div className="w-full px-5 mb-5 flex justify-center items-end gap-2">
         <WideLink label="Back" color="bg-white" outline={true} clickAction={onBackClick} />
-        <WideLink label="Finish" color="bg-content-color" clickAction={onDoneClick} />
-        {/* <WideButton label="Finish" color="bg-content-color" /> */}
+        {/* <WideLink label="Finish" color="bg-content-color" clickAction={onDoneClick} /> */}
+        <WideButton label="Finish" color="bg-content-color" />
       </div>
     </div>
   )

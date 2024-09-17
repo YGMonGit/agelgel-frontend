@@ -42,7 +42,7 @@ function Login() {
       await logIn({ data }).unwrap();
       navigate(`${homeUrl}`);
     } catch (error: any) {
-      if (!error.data.error) return;
+      if (!error?.data.error) return;
       const err = error.data.error;
       if (err.type === "Validation") {
         if (err.attr === "") setError("email", { message: err.msg });

@@ -6,8 +6,13 @@ import { set, useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { AddMealPreferenceSchema } from '../validation/mealPreference.validation';
 import { useCreateMealPlanMutation } from '../api/slices/mealPlanner.slices';
+import { useNavigate } from 'react-router-dom';
+import { mealPlannerUrl } from '../assets/data';
 
 function PersonalData() {
+
+  const navigate = useNavigate();
+
   const [formPage, setFormPage] = useState(1);
   const [weight, setWeight] = useState<number>(0);
   const [height, setHeight] = useState<number>(0);
@@ -39,6 +44,7 @@ function PersonalData() {
     try {
       const res = await CreateMealPlan({ mealPlanData: data }).unwrap()
       console.log('success', res)
+      navigate(mealPlannerUrl);
     } catch (error: any) {
       if (!error.data.error) return;
       const err = error.data.error;
