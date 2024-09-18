@@ -82,7 +82,7 @@ function Navbar() {
         <div className="flex justify-center items-center gap-2">
           {location.pathname === homeUrl && (
             <NavLink
-              to={personalDataUrl}
+              to={mealPlannerUrl}
               className="w-9 h-9 border border-content-color flex justify-center items-center rounded-full text-[2rem] text-content-color"
               onClick={() => {
                 window.scrollTo({ top: 0 });

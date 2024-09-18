@@ -3,7 +3,6 @@ import { useParams } from "react-router-dom";
 
 import { HiOutlineBookmark, HiMiniBookmark } from "react-icons/hi2";
 import { GoDotFill } from "react-icons/go";
-import { BsFillPersonCheckFill } from "react-icons/bs";
 import { MdAdd, MdClose, MdVerified } from "react-icons/md";
 import { TiMinus } from "react-icons/ti";
 
@@ -17,12 +16,8 @@ import { styled } from "@mui/system";
 import Comment, { ModeratorComment } from "../components/Comment";
 import {
   useGetPrivateRecipeByIdQuery,
-  useGetRecipeByIdQuery,
-  useGetRecipeCarbsQuery,
-  useGetRecipesQuery,
   useSimilarQuery,
 } from "../api/slices/recipe.slices";
-import { IIngredient } from "../api/types/ingredient.type";
 import { IReview } from "../api/types/review.type";
 import { Slide } from "react-slideshow-image";
 import "react-slideshow-image/dist/styles.css";
@@ -42,9 +37,7 @@ import {
   useCreateReviewMutation,
   useGetRecipeReviewsQuery,
 } from "../api/slices/review.slices";
-import { set } from "react-hook-form";
 import CircularProgress from "../components/CircularProgress";
-import { HiFire } from "react-icons/hi";
 import DisplayCard from "../components/DisplayCard";
 import { useGetUserByIdQuery, useToggleBookedRecipeMutation } from "../api/slices/user.slices";
 import ClipLoader from "react-spinners/ClipLoader";
@@ -55,13 +48,9 @@ import { useAddToMealPlanMutation, useCheckIfUserRecipeExistsQuery, useRemoveFro
 
 import {
   AlertDialog,
-  AlertDialogAction,
   AlertDialogCancel,
   AlertDialogContent,
-  AlertDialogDescription,
   AlertDialogFooter,
-  AlertDialogHeader,
-  AlertDialogTitle,
   AlertDialogTrigger,
 } from "../components/ui/alert-dialog";
 import { EPreferredMealTimeForMealPlan, EPreferredMealTimeForMealPlanFilter } from "../api/types/recipe.type";
@@ -76,11 +65,13 @@ function RecipeDetail() {
   const [value, setValue] = React.useState<number | null>(0);
   const showCommentButton = value !== 0 && newComment.trim() !== "";
 
-  const [filter, setFilter] = useState(EPreferredMealTimeForMealPlanFilter.all);
+  const [filter, setFilter] = useState(EPreferredMealTimeForMealPlan.breakfast);
+
+  useEffect(() => {
+    console.log(filter);
+  }, [filter]);
 
   const scrollableDivRef = useRef<HTMLDivElement>(null);
-
-  const InMealPlan = true;
 
   const handleWheel = (event: React.WheelEvent<HTMLDivElement>) => {
     const wheelDelta = Math.max(-1, Math.min(1, event.deltaY || -event.detail));
@@ -346,109 +337,62 @@ function RecipeDetail() {
             {recipe.rating.toFixed(1)}
           </p>
         </div>
-        {/* <WideButton label={() => (
-          <div>
-            <MdAdd className="text-[1rem]" /> Add to meal plan
-          </div>
-        )} color="bg-white" outline={true} /> */}
         {isUserRecipeExists?.isRecipeInMealPlan == false ? (
 
-          // <AlertDialog>
-          //   <AlertDialogTrigger asChild>
-          //     <WideButton
-          //       label={
-          //         <div className="w-full flex justify-center items-center gap-2">
-          //           <MdAdd className="text-[1.3rem]" />
-          //           <p className="text-slate-400 font-normal">Add to Meal Plan</p>
-          //         </div>
-          //       }
-          //       color="bg-white"
-          //       outline={true}
-          //     />
-          //   </AlertDialogTrigger>
-          //   <AlertDialogContent className="bg-white w-[90%] rounded-2xl">
-          //     <div className="flex flex-col justify-start items-start gap-2">
-          //       <FilterBarActive
-          //         data={["all", ...Object.values(EPreferredMealTimeForMealPlan)]}
-          //         selectedChip={filter}
-          //         setSelectedChip={(filter) => {
-          //           setFilter(filter);
-          //         }}
-          //       />
-          //       <WideButton
-          //         disable={addToMealPlanIsLoading}
-          //         clickAction={async () => {
-          //           try {
-          //             await addToMealPlan({
-          //               mealTime: recipe.preferredMealTime[0],
-          //               recipeID: recipe._id
-          //             })
-          //           } catch (error) {
+          <AlertDialog>
+            <AlertDialogTrigger asChild>
+              <button className="w-full px-5 border border-content-color py-2 rounded-lg flex justify-center items-center gap-2 mb-4">
+                <MdAdd className="text-[1.3rem] text-content-color" />
+                <p className="text-slate-400 font-normal">Add to Meal Plan</p>
+              </button>
+            </AlertDialogTrigger>
+            <AlertDialogContent className="bg-white w-[90%] rounded-2xl">
+              <div className="flex flex-col justify-start items-start gap-2">
+                <FilterBarActive
+                  data={[...Object.values(EPreferredMealTimeForMealPlan)]}
+                  selectedChip={filter}
+                  setSelectedChip={(filter) => {
+                    setFilter(filter);
+                  }}
+                />
+                <WideButton
+                  disable={addToMealPlanIsLoading}
+                  clickAction={async () => {
+                    try {
+                      await addToMealPlan({
+                        mealTime: filter,
+                        recipeID: recipe._id
+                      })
+                    } catch (error) {
 
-          //           }
-          //         }}
-          //         label={
-          //           <div className="w-full flex justify-center items-center gap-2">
-          //             {addToMealPlanIsLoading ? (
-          //               <ClipLoader
-          //                 color={"var(--content-color)"}
-          //                 size={15}
-          //                 aria-label="Loading Spinner"
-          //                 data-testid="loader"
-          //               />
-          //             ) : (
-          //               <MdAdd className="text-[1.3rem]" />
-          //             )}
-          //             <p className="text-slate-400 font-normal">Add to Meal Plan</p>
-          //           </div>
-          //         }
-          //         color="bg-white"
-          //         outline={true}
-          //       />
-          //     </div>
-          //     <AlertDialogFooter>
-          //       <AlertDialogCancel className="text-[1.1rem] border-0 absolute top-2 right-3">
-          //         <MdClose />
-          //       </AlertDialogCancel>
-          //       {/* <AlertDialogAction
-          //         className="text-[1.2rem] h-[50px] bg-content-color rounded-xl"
-          //         onClick={updateWeight}
-          //       >
-          //         Update Weight
-          //       </AlertDialogAction> */}
-          //     </AlertDialogFooter>
-          //   </AlertDialogContent>
-          // </AlertDialog>
-          <WideButton
-            disable={removeFromMealPlanIsLoading}
-            clickAction={async () => {
-              try {
-                await addToMealPlan({
-                  mealTime: recipe.preferredMealTime[0],
-                  recipeID: recipe._id
-                })
-              } catch (error) {
-
-              }
-            }}
-            label={
-              <div className="w-full flex justify-center items-center gap-2">
-                {removeFromMealPlanIsLoading ? (
-                  <ClipLoader
-                    color={"var(--content-color)"}
-                    size={15}
-                    aria-label="Loading Spinner"
-                    data-testid="loader"
-                  />
-                ) : (
-                  <TiMinus className="text-[1.3rem]" />
-                )}
-                <p className="text-slate-400 font-normal">Add Meal Plan</p>
+                    }
+                  }}
+                  label={
+                    <div className="w-full flex justify-center items-center gap-2">
+                      {addToMealPlanIsLoading ? (
+                        <ClipLoader
+                          color={"var(--content-color)"}
+                          size={15}
+                          aria-label="Loading Spinner"
+                          data-testid="loader"
+                        />
+                      ) : (
+                        <MdAdd className="text-[1.3rem]" />
+                      )}
+                      <p className="text-slate-400 font-normal">Add to Meal Plan</p>
+                    </div>
+                  }
+                  color="bg-white"
+                  outline={true}
+                />
               </div>
-            }
-            color="bg-white"
-            outline={true}
-          />
+              <AlertDialogFooter>
+                <AlertDialogCancel className="text-[1.1rem] border-0 absolute top-2 right-3">
+                  <MdClose />
+                </AlertDialogCancel>
+              </AlertDialogFooter>
+            </AlertDialogContent>
+          </AlertDialog>
         ) : !isUserRecipeExistsError ? <WideButton
           disable={removeFromMealPlanIsLoading}
           clickAction={async () => {

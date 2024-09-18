@@ -40,7 +40,8 @@ export interface IUserStats {
   weights: {
     date: Date;
     value: number;
-  };
+  }[];
+  
   weight: number;
   height: number;
   age: number;

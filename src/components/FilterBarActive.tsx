@@ -1,10 +1,10 @@
 import React, { useEffect, useRef, useState } from "react";
 import { Chip } from "@mui/material";
-import { EPreferredMealTimeFilter, EPreferredMealTimeForMealPlanFilter } from "../api/types/recipe.type";
+import { EPreferredMealTimeFilter, EPreferredMealTimeForMealPlan, EPreferredMealTimeForMealPlanFilter } from "../api/types/recipe.type";
 
 interface FilterBarActiveProps {
   data: string[];
-  selectedChip: EPreferredMealTimeFilter | EPreferredMealTimeForMealPlanFilter | null;
+  selectedChip: EPreferredMealTimeFilter | EPreferredMealTimeForMealPlanFilter | EPreferredMealTimeForMealPlan | null;
   setSelectedChip: (condition: any) => void;
 }
 
