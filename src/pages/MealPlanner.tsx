@@ -3,6 +3,7 @@ import FilterBarActive from "../components/FilterBarActive";
 import {
   EPreferredMealTime,
   EPreferredMealTimeFilter,
+  EPreferredMealTimeForMealPlan,
 } from "../api/types/recipe.type";
 
 import EmptyListIcon from "../assets/images/empty-list.png";
@@ -26,12 +27,13 @@ import {
 import DisplayCard from "../components/DisplayCard";
 import { FaChevronLeft, FaChevronRight } from "react-icons/fa6";
 import { FaShoppingCart } from "react-icons/fa";
-import IngredientDefaultImage from "../assets/images/default_image_1.png";
+import AiPreImage from "../assets/icons/ai.png";
+import AiAfterImage from "../assets/icons/ai2.png";
 import IngredientIcon from "../assets/icons/apple-icon.png";
 
+import { BarChart } from '@mui/x-charts/BarChart';
+
 import { Button } from "../components/ui/button";
-// import { Input } from "../components/ui/input"
-// import { Label } from "../components/ui/label"
 import {
   Sheet,
   SheetClose,
@@ -129,6 +131,19 @@ function MealPlanner() {
 
   const [filter, setFilter] = useState(EPreferredMealTimeFilter.all);
 
+
+
+
+  const cData = [(goals?.nutrition?.calories || 0) * 0.129598,  goals?.nutrition?.protein_g || 0, goals?.nutrition?.carbohydrates_total_g || 0, goals?.nutrition?.fat_total_g || 0,];
+  const iData = [nutritionGoal?.calories || 0, nutritionGoal?.protein || 0, nutritionGoal?.carbs || 0, nutritionGoal?.fat || 0,];
+  const xLabels = [
+    'Calories',
+    'Protein',
+    'Carbs',
+    'Fat',
+  ];
+
+
   const chartData = {
     labels: ["Calories", "Protein", "Carbs", "Fat"],
     datasets: [
@@ -197,33 +212,11 @@ function MealPlanner() {
     ? pagination.limit
     : ingredientList?.length || 0;
 
-  const pageChangeShopList = ({ direction }: { direction: string }) => {
-    if (direction === "back") {
-      setPagination((prev) => {
-        if (prev.skip - pageSize < 0) {
-          return {
-            skip: 0,
-            limit: pageSize,
-          };
-        } else
-          return {
-            skip: prev.skip - pageSize,
-            limit: prev.limit - pageSize,
-          };
-      });
-    } else {
-      setPagination((prev) => ({
-        skip: prev.skip + pageSize,
-        limit: prev.limit + pageSize,
-      }));
-    }
-  };
-
   return (
     <div className="w-full flex flex-grow flex-col justify-start items-center pt-4 min-h-[100%-56px]">
       <div className="w-full px-5">
         <FilterBarActive
-          data={["all", ...Object.values(EPreferredMealTime)]}
+          data={["all", ...Object.values(EPreferredMealTimeForMealPlan)]}
           selectedChip={filter}
           setSelectedChip={(filter) => {
             setFilter(filter);
@@ -232,7 +225,16 @@ function MealPlanner() {
       </div>
       <div className="w-full max-w-md mt-3 px-5">
         {!isLoading && nutritionGoal && (
-          <Bar data={chartData} options={options} />
+          // <Bar data={chartData} options={options} />
+          <BarChart
+            width={500}
+            height={300}
+            series={[
+              { data: cData, label: 'pv', id: 'pvId', stack: 'total' },
+              { data: iData, label: 'uv', id: 'uvId', stack: 'total' },
+            ]}
+            xAxis={[{ data: xLabels, scaleType: 'band' }]}
+          />
         )}
       </div>
       <div className="w-full flex flex-col justify-start items-start mt-5 px-5">
@@ -300,7 +302,14 @@ function MealPlanner() {
           </div>
         )}
       </div>
-      <div className="">
+      <div className="flex flex-col justify-start items-start">
+        <div className="w-full px-5 flex justify-between items-center gap-1 mb-2">
+          <div className="flex justify-start items-center">
+            <img src={AiPreImage} alt="pic" className="w-4"/>
+            <p className="font-bold">AI Recipes</p>
+          </div>
+          <img src={AiAfterImage} alt="pic" className="w-6"/>
+        </div>
         {similarRecipes?.length !== 0 ? (
           <div className="w-full flex flex-col justify-start items-center">
             <div className="grid grid-cols-2 sm:grid-cols-3 gap-4 w-full px-5 mb-5">

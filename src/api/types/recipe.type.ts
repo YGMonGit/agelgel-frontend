@@ -21,6 +21,23 @@ export enum EPreferredMealTimeFilter {
     other = "other",
 }
 
+export enum EPreferredMealTimeForMealPlan {
+    breakfast = "breakfast",
+    lunch = "lunch",
+    dinner = "dinner",
+    snack = "snack",
+}
+
+export enum EPreferredMealTimeForMealPlanFilter {
+    all = "all",
+    breakfast = "breakfast",
+    lunch = "lunch",
+    dinner = "dinner",
+    snack = "snack",
+}
+
+
+
 export type TPreferredMealTime = "breakfast" | "lunch" | "dinner" | "snack" | "dessert" | "other";
 
 

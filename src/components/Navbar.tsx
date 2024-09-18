@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { useLocation, useNavigate, NavLink } from "react-router-dom";
 import logo from "../assets/images/agelgel-logo.png";
 import ArrowUpRight from "../assets/icons/arrow-up-right.png";
@@ -43,11 +43,39 @@ import {
   AlertDialogTrigger,
 } from "./ui/alert-dialog";
 import { IoSearchOutline } from "react-icons/io5";
+import { MdAdd, MdClose, MdEdit } from "react-icons/md";
+import { IoMdAdd } from "react-icons/io";
+import { useUpdateStatsMutation } from "../api/slices/mealPlanner.slices";
 
 function Navbar() {
   const location = useLocation();
   const navigate = useNavigate();
 
+  const [changeWeight, { isLoading, isSuccess }] = useUpdateStatsMutation();
+
+  const updateWeight = async () => {
+    try {
+      console.log("Weight Updating");
+      await changeWeight({statsData: {weight: weight}});
+      console.log("Weight Updated");
+      
+    } catch (error) {
+      console.log(error);
+      
+    }
+    
+  }
+
+  
+  const [weight, setWeight] = useState<number>(0);
+  const onWeightChange = (e: React.ChangeEvent<HTMLInputElement>) =>
+    setWeight(Number.parseInt(e.target.value));
+  
+  useEffect(() => {
+    console.log("weight update success");
+    setWeight(0);
+  }, [isSuccess]);
+  
   const getRightContent = () => {
     if (location.pathname === homeUrl || location.pathname === moderatorHomeUrl) {
       return (
@@ -94,6 +122,50 @@ function Navbar() {
       );
     } else if (location.pathname === searchUrl || location.pathname === moderatorSearchUrl) {
       return <CircleDropdown />;
+    } else if (location.pathname === mealPlannerUrl) {
+      return (
+        <div className="flex justify-center items-center gap-1">
+          <NavLink
+            to="#"
+            className="text-content-color text-[1.1rem] flex items-end font-[600] leading-none gap-1"
+            onClick={() => {
+              window.scrollTo({ top: 0 });
+            }}
+          >
+            <MdEdit className="text-[1.3rem]" />
+          </NavLink>
+          <AlertDialog>
+            <AlertDialogTrigger asChild>
+              <div className="text-content-color text-[1.1rem] flex items-end font-[600] leading-none gap-1">
+                <IoMdAdd className="text-[1.3rem]" />
+              </div>
+            </AlertDialogTrigger>
+            <AlertDialogContent className="bg-white w-[90%] rounded-2xl">
+              <div className="flex flex-col justify-start items-start gap-2">
+                <p className="text-[1.1rem] font-semibold mt-2">Weight</p>
+                <input 
+                  type="number"
+                  value={weight}
+                  onChange={onWeightChange}
+                  placeholder="weight"
+                  className="py-[10px] w-full bg-[#F9FAFB] leading-none text-[1rem] px-4 border outline-none rounded-lg border-[#D1D5DB]"
+                />
+              </div>
+              <AlertDialogFooter>
+                <AlertDialogCancel className="text-[1.1rem] border-0 absolute top-2 right-3">
+                  <MdClose />
+                </AlertDialogCancel>
+                <AlertDialogAction
+                  className="text-[1.2rem] h-[50px] bg-content-color rounded-xl"
+                  onClick={updateWeight}
+                >
+                  Update Weight
+                </AlertDialogAction>
+              </AlertDialogFooter>
+            </AlertDialogContent>
+          </AlertDialog>
+        </div>
+      );
     } else if (location.pathname === loginUrl || location.pathname === moderatorLoginUrl) {
       return (
         <NavLink

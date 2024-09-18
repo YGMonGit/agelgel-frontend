@@ -1,5 +1,5 @@
 import agelgilAPI from "..";
-import { IMealPlanner, INewMealPlanner, INutritionGoal } from "../types/mealPreference.type";
+import { IMealPlanner, IMealPlannerUpdateFrom, INewMealPlanner, INutritionGoal } from "../types/mealPreference.type";
 import { EPreferredMealTime, ERecipeStatus, IngredientDetail, INutritionData, IRecipe } from "../types/recipe.type";
 const mealPlannerApiSlice = agelgilAPI.injectEndpoints({
     endpoints: (builder) => ({
@@ -70,7 +70,7 @@ const mealPlannerApiSlice = agelgilAPI.injectEndpoints({
             providesTags: ['User-NutritionGoal'],
         }),
 
-        updateStats: builder.mutation<IMealPlanner, { statsData: INewMealPlanner }>({
+        updateStats: builder.mutation<IMealPlanner, { statsData: IMealPlannerUpdateFrom }>({
             query: ({ statsData }) => ({
                 url: '/private/mealPlanner/updateStats',
                 method: 'PATCH',
