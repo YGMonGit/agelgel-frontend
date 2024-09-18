@@ -220,6 +220,15 @@ function MealPlanner() {
     ? pagination.limit
     : ingredientList?.length || 0;
 
+    const weightData = [
+      { date: '2024-09-12', value: 2 },
+      { date: '2024-09-13', value: 5.5 },
+      { date: '2024-09-14', value: 2 },
+      { date: '2024-09-15', value: 8.5 },
+      { date: '2024-09-16', value: 1.5 },
+      { date: '2024-09-17', value: 5 },
+    ];
+
   return (
     <div className="w-full flex flex-grow flex-col justify-start items-center pt-4 min-h-[100%-56px]">
       <div className="w-full px-5">
@@ -234,17 +243,15 @@ function MealPlanner() {
       <div className="w-full max-w-md mt-3 px-5">
         {!isLoading && nutritionGoal && (
           // <Bar data={chartData} options={options} />
-          <>
-            <BarChart
-              width={500}
-              height={300}
-              series={[
-                { data: cData, label: 'current nutrition', id: 'pvId', stack: 'total' },
-                { data: iData, label: 'idle nutrition', id: 'uvId', stack: 'total' },
-              ]}
-              xAxis={[{ data: xLabels, scaleType: 'band' }]}
-            />
-          </>
+          <BarChart
+            width={500}
+            height={300}
+            series={[
+              { data: cData, label: 'current nutrition', id: 'pvId', stack: 'total' },
+              { data: iData, label: 'idle nutrition', id: 'uvId', stack: 'total' },
+            ]}
+            xAxis={[{ data: xLabels, scaleType: 'band' }]}
+          />
         )}
         {/* <LineChart
           xAxis={[{ data: [1, 2, 3, 5, 8, 10] }]}
