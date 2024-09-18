@@ -38,12 +38,16 @@ import {
   editPostUrl,
   personalDataUrl,
   mealPlannerUrl,
+  updateHealthConditionUrl,
+  editUserInfoUrl,
 } from "./assets/data";
 import ModeratorAddIngredient from "./pages/Moderator/ModeratorAddIngredient";
 import ModeratorEditIngredient from "./pages/Moderator/ModeratorEditIngredient";
 import RecipeEditForm from "./pages/RecipeEditForm";
 import PersonalData from "./pages/PersonalData";
 import MealPlanner from "./pages/MealPlanner";
+import UpdateHealthCondition from "./pages/UpdateHealthCondition";
+import EditUserInfo from "./pages/EditUserInfo";
 
 // ... (other imports remain the same)
 
@@ -90,6 +94,23 @@ function App() {
             element={
               <NavLayout>
                 <SignUp />
+              </NavLayout>
+            }
+          />
+          <Route
+            path={updateHealthConditionUrl}
+            element={
+              <NavLayout>
+                <UpdateHealthCondition />
+              </NavLayout>
+            }
+          />
+
+          <Route
+            path={editUserInfoUrl}
+            element={
+              <NavLayout>
+                <EditUserInfo />
               </NavLayout>
             }
           />

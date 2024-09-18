@@ -1,49 +1,27 @@
-import React from "react";
+import React, { useState } from "react";
 import PageHeader from "../components/PageHeader";
 import ChipsBox from "../components/ChipsBox";
 import WideButton from "../components/WideButton";
 import { EAllergies, EChronicDisease, EDietaryPreferences } from "../api/types/user.type";
 import WideLink from "../components/WideLink";
 import ClipLoader from "react-spinners/ClipLoader";
+import { useSignUpMutation } from "../api/slices/user.slices";
 
-interface HealthConditionProps {
-  setFormNumber: React.Dispatch<React.SetStateAction<number>>;
-  healthCondition: string[];
-  setHealthCondition: any;
-  allergies: string[];
-  setAllergies: any;
-  mealPreference: string[];
-  setMealPreference: any;
-  finish?: boolean;
-  register?: any;
-  errors?: any;
-  isLoading?: any;
-}
+function UpdateHealthCondition() {
 
-function UpdateHealthCondition({
-  setFormNumber,
-  healthCondition,
-  setHealthCondition,
-  allergies,
-  setAllergies,
-  mealPreference,
-  setMealPreference,
-  finish = true,
-  register,
-  errors,
-  isLoading,
-}: HealthConditionProps) {
+  const [healthCondition, setHealthCondition] = useState<EChronicDisease[]>([]);
+  const [allergies, setAllergies] = useState<EAllergies[]>([]);
+  const [mealPreference, setMealPreference] = useState<EDietaryPreferences[]>([]);
 
-  const onBackClick = () => { setFormNumber(1) };
-  const onNextClick = () => { setFormNumber(3) };
+  const [signUp, { isLoading }] = useSignUpMutation();
 
   return (
-    <div className="w-full flex flex-col flex-grow justify-start items-center pb-8">
+    <form className="w-full flex flex-col flex-grow justify-start items-center pb-8">
       <PageHeader
-        header="Chronic Diseases,Allergies & Preferences"
-        detail="Helps with our suggestions."
+        header="Edit health conditions"
+        detail="Update the information of your health condition"
       />
-      <div className="w-full flex flex-col justify-start items-center flex-grow">
+      <div className="w-full flex flex-col justify-start items-center flex-grow mt-2">
         <ChipsBox
           name="medical_condition.chronicDisease"
           label="Chronic Diseases"
@@ -51,8 +29,8 @@ function UpdateHealthCondition({
           detail="Select all the condition(s) you have"
           selectedConditions={healthCondition}
           setSelectedConditions={setHealthCondition}
-          register={register}
-          errors={errors && errors.medical_condition && errors.medical_condition?.chronicDiseases}
+          // register={register}
+          // errors={errors && errors.medical_condition && errors.medical_condition?.chronicDiseases}
         />
 
         <ChipsBox
@@ -62,8 +40,8 @@ function UpdateHealthCondition({
           detail="This is here to make sure you end up loving the recipes we suggest."
           selectedConditions={mealPreference}
           setSelectedConditions={setMealPreference}
-          register={register}
-          errors={errors && errors.medical_condition && errors.medical_condition?.dietary_preferences}
+          // register={register}
+          // errors={errors && errors.medical_condition && errors.medical_condition?.dietary_preferences}
         />
 
         <ChipsBox
@@ -73,8 +51,8 @@ function UpdateHealthCondition({
           detail="Food groups or ingredients you're allergies to."
           selectedConditions={allergies}
           setSelectedConditions={setAllergies}
-          register={register}
-          errors={errors && errors.medical_condition && errors.medical_condition?.allergies}
+          // register={register}
+          // errors={errors && errors.medical_condition && errors.medical_condition?.allergies}
         />
       </div>
         <div className="w-full px-5">
@@ -97,8 +75,7 @@ function UpdateHealthCondition({
             />
           )}
         </div>
-      {/* <button>submit</button> */}
-    </div>
+    </form>
   );
 }
 

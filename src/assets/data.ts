@@ -13,7 +13,8 @@ export const homeUrl = "/user/home";
 export const searchUrl = "/user/search";
 export const loginUrl = "/user/login";
 export const signUpUrl = "/user/sign-up";
-export const editUserUrl = "/user/edit-user";
+// export const editUserUrl = "/user/edit-user";
+export const editUserInfoUrl = "/user/edit-info";
 export const recipeDetailUrl = "/user/recipe-detail";
 export const postUrl = "/user/post";
 export const editPostUrl = "/user/edit-post";
@@ -22,6 +23,7 @@ export const welcomeUrl = "/user";
 // export const weightInputUrl = "/user/add-weight";
 export const personalDataUrl = "/user/personal-data";
 export const mealPlannerUrl = "/user/meal-planner";
+export const updateHealthConditionUrl = "/user/update-health-condition";
 
 export const moderatorSignUpUrl = "/moderator/sign-up";
 export const moderatorLoginUrl = "/moderator/login";
@@ -31,6 +33,7 @@ export const moderatorRecipeDetailUrl = "/moderator/recipe-detail";
 export const moderatorSpaceUrl = "/moderator/space";
 export const moderatorAddIngredientUrl = "/moderator/add-ingredient";
 export const moderatorEditIngredientUrl = "/moderator/edit-ingredient";
+export const moderatorEditInfoUrl = "/moderator/edit-info";
 export const moderatorWelcomeUrl = "/moderator";
 
 

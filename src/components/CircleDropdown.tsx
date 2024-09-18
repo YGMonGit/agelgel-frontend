@@ -1,6 +1,6 @@
 import React, { useState, useRef, useEffect } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
-import { homeUrl, moderatorHomeUrl, moderatorSpaceUrl, moderatorWelcomeUrl, mySpaceUrl, searchUrl } from "../assets/data";
+import { editUserInfoUrl, homeUrl, moderatorEditInfoUrl, moderatorHomeUrl, moderatorSpaceUrl, moderatorWelcomeUrl, mySpaceUrl, searchUrl, updateHealthConditionUrl } from "../assets/data";
 import { useGetUserQuery, useLogOutMutation } from "../api/slices/user.slices";
 import { useGetModeratorQuery, useModeratorIogOutMutation } from "../api/slices/moderator.slices";
 import { welcomeUrl } from "../assets/data";
@@ -74,7 +74,7 @@ function CircleDropdown() {
           className="absolute top-10 right-0 bg-white shadow-lg border border-gray-300 rounded-lg py-2 w-[200px] z-50"
         >
           <ul className="space-y-1">
-            <li className="hover:bg-gray-100 p-1 px-3 cursor-pointer flex flex-col justify-center items-start border-b border-gray-400">
+            <li className="hover:bg-gray-100 p-1 px-3 cursor-pointer flex flex-col justify-center items-start border-b border-gray-400" onClick={() => navigate(location.pathname.startsWith("/moderator") ? moderatorEditInfoUrl : editUserInfoUrl)}>
               <p className="text-[.9rem] font-semibold">{user?.first_name}</p>
               <p className="text-[.8rem] text-slate-500 -mt-1">{user?.email}</p>
             </li>
@@ -82,7 +82,7 @@ function CircleDropdown() {
               Recipes
             </li>
             {(location.pathname === homeUrl || location.pathname === searchUrl) && (
-              <li className="hover:bg-gray-100 text-slate-500 rounded-md p-1 px-3 cursor-pointer">
+              <li className="hover:bg-gray-100 text-slate-500 rounded-md p-1 px-3 cursor-pointer" onClick={() => navigate(updateHealthConditionUrl)}>
                 Health condition
               </li>
             )}

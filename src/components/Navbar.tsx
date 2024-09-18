@@ -7,7 +7,6 @@ import CircleDropdown from "./CircleDropdown";
 import DetailNavDropdown from "./DetailNavDropdown";
 import {
   editPostUrl,
-  editUserUrl,
   homeUrl,
   searchUrl,
   welcomeUrl,
@@ -26,6 +25,9 @@ import {
   moderatorEditIngredientUrl,
   personalDataUrl,
   mealPlannerUrl,
+  editUserInfoUrl,
+  moderatorEditInfoUrl,
+  updateHealthConditionUrl,
 } from "../assets/data";
 
 import { SlClose, SlArrowLeft } from "react-icons/sl";
@@ -252,12 +254,14 @@ function Navbar() {
       location.pathname.startsWith(recipeDetailUrl) ||
       location.pathname.startsWith(moderatorRecipeDetailUrl) ||
       location.pathname.startsWith(editPostUrl) ||
-      location.pathname.startsWith(editUserUrl) ||
       location.pathname === mySpaceUrl ||
       location.pathname === personalDataUrl ||
       location.pathname === mealPlannerUrl ||
       location.pathname === moderatorSpaceUrl ||
       location.pathname === moderatorAddIngredientUrl ||
+      location.pathname === updateHealthConditionUrl ||
+      location.pathname === editUserInfoUrl ||
+      location.pathname === moderatorEditInfoUrl ||
       location.pathname.startsWith(moderatorEditIngredientUrl) 
     ) {
       return (

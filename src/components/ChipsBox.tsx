@@ -8,7 +8,7 @@ interface ChipsBoxProps {
   options: string[];
   detail?: string;
   selectedConditions: string[];
-  setSelectedConditions: React.Dispatch<React.SetStateAction<string[]>>;
+  setSelectedConditions: React.Dispatch<React.SetStateAction<any[]>>;
   errors?: any;
   register?: any;
 }
