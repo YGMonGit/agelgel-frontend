@@ -48,6 +48,10 @@ export interface IUserStats {
   gender: EGender;
   activityLevel: EActivityLevel
   diet_goals: EDietGoals;
+  bestWeigh: {
+    min: number,
+    max: number
+  }
 }
 
 export interface IMealPlanner {
