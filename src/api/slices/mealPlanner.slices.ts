@@ -23,7 +23,7 @@ const mealPlannerApiSlice = agelgilAPI.injectEndpoints({
             transformResponse: (response: { body: IMealPlanner }) => response.body,
         }),
 
-        getMealPlan: builder.query<{ recipe: IRecipe; nutrition: INutritionData }[], { mealTime: EPreferredMealTime | 'all', page: number }>({
+        getMealPlan: builder.query<{ recipe: IRecipe; nutrition: INutritionData }[], { mealTime: EPreferredMealTimeForMealPlanFilter | 'all', page: number }>({
             query: ({ mealTime, page }) => ({
                 url: `/private/mealPlanner/mealPlan/${mealTime}/${page}`,
                 method: 'GET',
@@ -83,7 +83,7 @@ const mealPlannerApiSlice = agelgilAPI.injectEndpoints({
 
         getShoppingList: builder.query<IngredientDetail[], void>({
             query: () => ({
-                url: `/private/mealPlanner/shoppingList}`,
+                url: `/private/mealPlanner/shoppingList`,
                 method: 'GET',
             }),
             transformResponse: (response: { body: IngredientDetail[] }) => response.body,

@@ -13,9 +13,10 @@ const StyledRating = styled(Rating)({
 
 interface DisplayCardProps {
   post: IRecipeCard | null;
+  HSlide?: boolean; 
 }
 
-function DisplayCard({ post }: DisplayCardProps) {
+function DisplayCard({ post, HSlide = false }: DisplayCardProps) {
   const navigate = useNavigate();
   const location = useLocation();
   const scrollableDivRef = useRef<HTMLDivElement>(null);
@@ -35,7 +36,7 @@ function DisplayCard({ post }: DisplayCardProps) {
 
   if (!post) {
     return (
-      <div className="flex flex-col justify-start items-start border border-[#6B728040] p-2 w-[42vw] sm:w-[30vw] max-w-[245px] rounded-md leading-4 select-none">
+      <div className={`flex flex-col justify-start items-start border border-[#6B728040] p-2 w-[42vw] sm:w-[30vw] ${ HSlide ? "max-w-[175px]" : "max-w-[175px]"} rounded-md leading-4 select-none`}>
         <Skeleton className="w-full aspect-square" />
         <Skeleton className="h-3 w-[35%] mt-3" />
         <Skeleton className="h-3 w-[55%] mt-2" />
@@ -47,7 +48,7 @@ function DisplayCard({ post }: DisplayCardProps) {
   }
 
   return (
-    <div className="flex flex-col flex-grow justify-start items-start p-2 min-w-[150px] w-[42vw] sm:w-[30vw] max-w-[245px] rounded-md leading-4 select-none shadow-xl h-full border border-[#63796b33] cursor-pointer"
+    <div className={`flex flex-col flex-grow justify-start items-start p-2 min-w-[150px] w-[42vw] sm:w-[30vw] ${ HSlide ? "max-w-[175px]" : "max-w-[175px]"} rounded-md leading-4 select-none shadow-xl h-full border border-[#63796b33] cursor-pointer`}
       onClick={goToDetailedPage}>
       <img src={post.imgs[0]} className="w-full aspect-square rounded-t-md" alt="pic" />
       <h2 className="text-[.8rem] mt-3 font-bold whitespace-pre-wrap overflow-hidden line-clamp-1">{post.name}</h2>

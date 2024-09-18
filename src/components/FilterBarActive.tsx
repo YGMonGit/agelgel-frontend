@@ -6,9 +6,10 @@ interface FilterBarActiveProps {
   data: string[];
   selectedChip: EPreferredMealTimeFilter | EPreferredMealTimeForMealPlanFilter | EPreferredMealTimeForMealPlan | null;
   setSelectedChip: (condition: any) => void;
+  large?: boolean;
 }
 
-function FilterBarActive({ data, selectedChip, setSelectedChip }: FilterBarActiveProps) {
+function FilterBarActive({ data, selectedChip, setSelectedChip, large = false }: FilterBarActiveProps) {
 
   const scrollableDivRef = useRef<HTMLDivElement>(null);
 
@@ -60,7 +61,7 @@ function FilterBarActive({ data, selectedChip, setSelectedChip }: FilterBarActiv
               borderRadius: "8px",
               backgroundColor: selectedChip === condition ? "#bbf7d0" : "#F3F4F6",
               color: selectedChip === condition ? "#15803d" : "#374151",
-              height: "25px",
+              height: large? "30px" : "25px",
               cursor: "pointer",
               "&:hover": selectedChip === condition
                 ? {

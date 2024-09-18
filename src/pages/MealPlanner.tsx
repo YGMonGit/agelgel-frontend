@@ -4,6 +4,7 @@ import {
   EPreferredMealTime,
   EPreferredMealTimeFilter,
   EPreferredMealTimeForMealPlan,
+  EPreferredMealTimeForMealPlanFilter,
 } from "../api/types/recipe.type";
 
 import EmptyListIcon from "../assets/images/empty-list.png";
@@ -78,10 +79,11 @@ ChartJS.register(
 
 function MealPlanner() {
   const [page, setPage] = useState(0);
+  const [filter, setFilter] = useState(EPreferredMealTimeForMealPlanFilter.all);
   const navigate = useNavigate();
 
   const { data: goals, isLoading } = useGetMealPlanQuery({
-    mealTime: EPreferredMealTime.breakfast,
+    mealTime: filter,
     page: 1,
   });
   const {
@@ -127,7 +129,6 @@ function MealPlanner() {
 
   const skeletonCount = isLoading ? 10 : goals?.length || 0;
 
-  const [filter, setFilter] = useState(EPreferredMealTimeFilter.all);
 
   const pageChange = ({ direction }: { direction: string }) => {
     if (direction === "back") {
@@ -166,17 +167,18 @@ function MealPlanner() {
     <div className="w-full flex flex-grow flex-col justify-start items-center pt-4 min-h-[100%-56px]">
       <div className="w-full px-5">
         <FilterBarActive
-          data={["all", ...Object.values(EPreferredMealTimeForMealPlan)]}
+          data={[...Object.values(EPreferredMealTimeForMealPlanFilter)]}
           selectedChip={filter}
           setSelectedChip={(filter) => {
             setFilter(filter);
           }}
+          large={true}
         />
       </div>
       <MyCharts />
       <div className="w-full flex flex-col justify-start items-start mt-5 px-5">
         <div className="w-full flex justify-between items-center text-[1.4rem]">
-          <h3 className="font-semibold mb-1">Recipes</h3>
+          <h3 className="font-bold text-[1.2rem] italic text-slate-600 mb-1">Recipes</h3>
           <Sheet>
             <SheetTrigger asChild>
               <FaShoppingCart className="text-content-color text-[1.4rem]" />
@@ -185,32 +187,39 @@ function MealPlanner() {
               <SheetHeader>
                 <SheetTitle className="pb-2">Shopping List</SheetTitle>
               </SheetHeader>
-              <div
-                className="flex flex-col h-full justify-start items-start w-full pt-3 gap-3 overflow-y-auto pb-8"
-                style={{ scrollbarWidth: "none", msOverflowStyle: "none" }}
-              >
-                {ingredientList?.map((ingredient, index) => {
-                  return (
-                    <div
-                      key={index}
-                      className="w-full flex bg-neutral-100 px-3 py-4 justify-start items-center leading-none gap-1 text-slate-500 rounded-xl"
-                    >
-                      <img
-                        src={ingredientImages[index] ?? IngredientIcon}
-                        className="w-[61px] p-3 aspect-square"
-                      />
-                      <div className="flex flex-col justify-center items-start">
-                        <p className="text-black text-[1.1rem]">
-                          {ingredient.name}( {ingredient.localName})
-                        </p>
-                        <p className="italic mt-1">
-                          {ingredient.amount} {ingredient.unit}
-                        </p>
+
+              {ingredientList?.length !== 0 ? (
+                <div
+                  className="flex flex-col h-full justify-start items-start w-full pt-3 gap-3 overflow-y-auto pb-8"
+                  style={{ scrollbarWidth: "none", msOverflowStyle: "none" }}
+                >
+                  {ingredientList?.map((ingredient, index) => {
+                    return (
+                      <div
+                        key={index}
+                        className="w-full flex bg-neutral-100 px-3 py-4 justify-start items-center leading-none gap-1 text-slate-500 rounded-xl"
+                      >
+                        <img
+                          src={ingredientImages[index] ?? IngredientIcon}
+                          className="w-[61px] p-3 aspect-square"
+                        />
+                        <div className="flex flex-col justify-center items-start">
+                          <p className="text-black text-[1.1rem]">
+                            {ingredient.name}( {ingredient.localName})
+                          </p>
+                          <p className="italic mt-1">
+                            {ingredient.amount} {ingredient.unit}
+                          </p>
+                        </div>
                       </div>
-                    </div>
-                  );
-                })}
-              </div>
+                    );
+                  })}
+                </div>
+              ) : (
+                <div className="w-full flex justify-center">
+                  <img src={EmptyListIcon} alt="pic" className="w-[75%] sm:w-[50%]" />
+                </div>
+              )}
               <SheetFooter>
                 <SheetClose asChild>
                   <Button type="submit">Save changes</Button>
@@ -231,7 +240,7 @@ function MealPlanner() {
                   <DisplayCard post={null} key={`skeleton-${index}`} />
                 ))
               : goals?.map((post, index) => (
-                  <DisplayCard post={post.recipe} key={index} />
+                  <DisplayCard post={post.recipe} key={index} HSlide={true} />
                 ))}
           </div>
         ) : (
@@ -240,17 +249,17 @@ function MealPlanner() {
           </div>
         )}
       </div>
-      <div className="flex flex-col justify-start items-start">
+      <div className="w-full flex flex-col justify-start items-start">
         <div className="w-full px-5 flex justify-between items-center gap-1 mb-2">
-          <div className="flex justify-start items-center">
-            <img src={AiPreImage} alt="pic" className="w-4" />
-            <p className="font-bold">AI Recipes</p>
+          <div className="flex justify-start items-center gap-1">
+            <img src={AiPreImage} alt="pic" className="w-5" />
+            <p className="font-bold italic text-slate-600 text-[1.1rem]">AI Recipes</p>
           </div>
           <img src={AiAfterImage} alt="pic" className="w-6" />
         </div>
         {similarRecipes?.length !== 0 ? (
-          <div className="w-full flex flex-col justify-start items-center">
-            <div className="grid grid-cols-2 sm:grid-cols-3 gap-4 w-full px-5 mb-5">
+          <div className="w-full flex flex-col justify-start items-start">
+            <div className="grid grid-cols-2 sm:grid-cols-3 gap-4 px-5 mb-5">
               {isFetching
                 ? Array.from({ length: skeletonCount }).map((_, index) => (
                     <DisplayCard post={null} key={`skeleton-${index}`} />

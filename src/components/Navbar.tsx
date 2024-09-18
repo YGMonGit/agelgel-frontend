@@ -132,12 +132,12 @@ function Navbar() {
               window.scrollTo({ top: 0 });
             }}
           >
-            <MdEdit className="text-[1.3rem]" />
+            <MdEdit className="text-[1.6rem]" />
           </NavLink>
           <AlertDialog>
             <AlertDialogTrigger asChild>
               <div className="text-content-color text-[1.1rem] flex items-end font-[600] leading-none gap-1">
-                <IoMdAdd className="text-[1.3rem]" />
+                <IoMdAdd className="text-[1.6rem]" />
               </div>
             </AlertDialogTrigger>
             <AlertDialogContent className="bg-white w-[90%] rounded-2xl">
