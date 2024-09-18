@@ -23,6 +23,7 @@ import {
   useGetNutritionGoalQuery,
   useGetShoppingListQuery,
   useGetSimilarRecipesQuery,
+  useMyMealPlanQuery,
 } from "../api/slices/mealPlanner.slices";
 import DisplayCard from "../components/DisplayCard";
 import { FaChevronLeft, FaChevronRight } from "react-icons/fa6";
@@ -73,6 +74,11 @@ function MealPlanner() {
     page: page,
   });
 
+  console.log("similarRecipes", {
+    mealTime: EPreferredMealTime.breakfast,
+    page: page,
+  });
+
   const pageSize = 10;
   const [pagination, setPagination] = useState({
     skip: 0,
@@ -86,9 +92,7 @@ function MealPlanner() {
     refetch,
     isFetching: ingredientFetching,
     isUninitialized,
-  } = useGetShoppingListQuery({
-    mealTime: EPreferredMealTime.breakfast,
-  });
+  } = useGetShoppingListQuery();
 
   const { data: nutritionGoal } = useGetNutritionGoalQuery();
 
@@ -101,7 +105,9 @@ function MealPlanner() {
     }
   };
 
-  const skeletonCount = isLoading ? 10 : goals?.recipe.length || 0;
+  const skeletonCount = isLoading ? 10 : goals?.length || 0;
+
+  const { data: myMeal } = useMyMealPlanQuery();
 
   const normalizeData = (data: any) => {
     if (!data) return {};
@@ -134,7 +140,7 @@ function MealPlanner() {
 
 
 
-  const cData = [(goals?.nutrition?.calories || 0) * 0.129598,  goals?.nutrition?.protein_g || 0, goals?.nutrition?.carbohydrates_total_g || 0, goals?.nutrition?.fat_total_g || 0,];
+  const cData = [(myMeal?.nutrition?.calories || 0) * 0.129598, myMeal?.nutrition?.protein_g || 0, myMeal?.nutrition?.carbohydrates_total_g || 0, myMeal?.nutrition?.fat_total_g || 0,];
   const iData = [nutritionGoal?.calories || 0, nutritionGoal?.protein || 0, nutritionGoal?.carbs || 0, nutritionGoal?.fat || 0,];
   const xLabels = [
     'Calories',
@@ -144,36 +150,36 @@ function MealPlanner() {
   ];
 
 
-  const chartData = {
-    labels: ["Calories", "Protein", "Carbs", "Fat"],
-    datasets: [
-      {
-        label: "Current",
-        data: [
-          (goals?.nutrition?.calories || 0) * 0.129598,
-          goals?.nutrition?.protein_g || 0,
-          goals?.nutrition?.carbohydrates_total_g || 0,
-          goals?.nutrition?.fat_total_g || 0,
+  // const chartData = {
+  //   labels: ["Calories", "Protein", "Carbs", "Fat"],
+  //   datasets: [
+  //     {
+  //       label: "Current",
+  //       data: [
+  //         (goals?.nutrition?.calories || 0) * 0.129598,
+  //         goals?.nutrition?.protein_g || 0,
+  //         goals?.nutrition?.carbohydrates_total_g || 0,
+  //         goals?.nutrition?.fat_total_g || 0,
 
-        ],
-        backgroundColor: "rgba(255, 0, 0, 0.2)",
-        borderColor: "rgba(255, 0, 0, 1)",
-        borderWidth: 1,
-      },
-      {
-        label: "Ideal",
-        data: [
-          nutritionGoal?.calories || 0,
-          nutritionGoal?.protein || 0,
-          nutritionGoal?.carbs || 0,
-          nutritionGoal?.fat || 0,
-        ],
-        backgroundColor: "rgba(0, 0, 255, 0.2)",
-        borderColor: "rgba(0, 0, 255, 1)",
-        borderWidth: 1,
-      },
-    ],
-  };
+  //       ],
+  //       backgroundColor: "rgba(255, 0, 0, 0.2)",
+  //       borderColor: "rgba(255, 0, 0, 1)",
+  //       borderWidth: 1,
+  //     },
+  //     {
+  //       label: "Ideal",
+  //       data: [
+  //         nutritionGoal?.calories || 0,
+  //         nutritionGoal?.protein || 0,
+  //         nutritionGoal?.carbs || 0,
+  //         nutritionGoal?.fat || 0,
+  //       ],
+  //       backgroundColor: "rgba(0, 0, 255, 0.2)",
+  //       borderColor: "rgba(0, 0, 255, 1)",
+  //       borderWidth: 1,
+  //     },
+  //   ],
+  // };
 
   const pageChange = ({ direction }: { direction: string }) => {
     if (direction === "back") {
@@ -230,8 +236,8 @@ function MealPlanner() {
             width={500}
             height={300}
             series={[
-              { data: cData, label: 'pv', id: 'pvId', stack: 'total' },
-              { data: iData, label: 'uv', id: 'uvId', stack: 'total' },
+              { data: cData, label: 'current nutrition', id: 'pvId', stack: 'total' },
+              { data: iData, label: 'idle nutrition', id: 'uvId', stack: 'total' },
             ]}
             xAxis={[{ data: xLabels, scaleType: 'band' }]}
           />
@@ -281,7 +287,7 @@ function MealPlanner() {
             </SheetContent>
           </Sheet>
         </div>
-        {goals?.recipe.length !== 0 ? (
+        {goals?.length !== 0 ? (
           <div
             className="flex overflow-x-scroll justify-start items-center gap-4 w-full pb-8 px-3"
             style={{ scrollbarWidth: "none", msOverflowStyle: "none" }}
@@ -292,8 +298,8 @@ function MealPlanner() {
               ? Array.from({ length: skeletonCount }).map((_, index) => (
                 <DisplayCard post={null} key={`skeleton-${index}`} />
               ))
-              : goals?.recipe.map((post, index) => (
-                <DisplayCard post={post} key={index} />
+              : goals?.map((post, index) => (
+                <DisplayCard post={post.recipe} key={index} />
               ))}
           </div>
         ) : (
@@ -305,10 +311,10 @@ function MealPlanner() {
       <div className="flex flex-col justify-start items-start">
         <div className="w-full px-5 flex justify-between items-center gap-1 mb-2">
           <div className="flex justify-start items-center">
-            <img src={AiPreImage} alt="pic" className="w-4"/>
+            <img src={AiPreImage} alt="pic" className="w-4" />
             <p className="font-bold">AI Recipes</p>
           </div>
-          <img src={AiAfterImage} alt="pic" className="w-6"/>
+          <img src={AiAfterImage} alt="pic" className="w-6" />
         </div>
         {similarRecipes?.length !== 0 ? (
           <div className="w-full flex flex-col justify-start items-center">

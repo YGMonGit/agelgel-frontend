@@ -52,15 +52,14 @@ export interface IUserStats {
 export interface IMealPlanner {
   nutritionGoal: INutritionGoal,
   currentNutrition: INutritionGoal,
-  user: IUser,
+  user: string | IUser,
   userStats?: IUserStats,
   recipes: {
-    [key in EPreferredMealTime]: {
-      recipe: IRecipe[],
-      nutrition: INutritionData;
-      shoppingList: IngredientDetail[],
-    }
-  }
+    recipe: string | IRecipe,
+    mealTime: EPreferredMealTime,
+  }[],
+  nutrition: INutritionData;
+  shoppingList: IngredientDetail[],
 }
 
 export interface INewMealPlanner {
