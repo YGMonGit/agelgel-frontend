@@ -32,6 +32,8 @@ import AiAfterImage from "../assets/icons/ai2.png";
 import IngredientIcon from "../assets/icons/apple-icon.png";
 
 import { BarChart } from '@mui/x-charts/BarChart';
+// import { LineChart } from '@mui/x-charts/LineChart';
+import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip as RechartsTooltip, ResponsiveContainer } from 'recharts';
 
 import { Button } from "../components/ui/button";
 import {
@@ -175,6 +177,15 @@ function MealPlanner() {
     ],
   };
 
+  const weightData = [
+    { date: '2024-09-12', value: 2 },
+    { date: '2024-09-13', value: 5.5 },
+    { date: '2024-09-14', value: 2 },
+    { date: '2024-09-15', value: 8.5 },
+    { date: '2024-09-16', value: 1.5 },
+    { date: '2024-09-17', value: 5 },
+  ];
+
   const pageChange = ({ direction }: { direction: string }) => {
     if (direction === "back") {
       setPage((prev) => {
@@ -226,16 +237,42 @@ function MealPlanner() {
       <div className="w-full max-w-md mt-3 px-5">
         {!isLoading && nutritionGoal && (
           // <Bar data={chartData} options={options} />
-          <BarChart
-            width={500}
-            height={300}
-            series={[
-              { data: cData, label: 'pv', id: 'pvId', stack: 'total' },
-              { data: iData, label: 'uv', id: 'uvId', stack: 'total' },
-            ]}
-            xAxis={[{ data: xLabels, scaleType: 'band' }]}
-          />
+          <>
+            <BarChart
+              width={500}
+              height={300}
+              series={[
+                { data: cData, label: 'pv', id: 'pvId', stack: 'total' },
+                { data: iData, label: 'uv', id: 'uvId', stack: 'total' },
+              ]}
+              xAxis={[{ data: xLabels, scaleType: 'band' }]}
+            />
+          </>
         )}
+        {/* <LineChart
+          xAxis={[{ data: [1, 2, 3, 5, 8, 10] }]}
+          series={[
+            {
+              data: [2, 5.5, 2, 8.5, 1.5, 5],
+              area: true,
+              color: "#0E9F6E",
+            },
+          ]}
+          width={500}
+          height={300}
+        /> */}2
+        <ResponsiveContainer width="100%" height={300}>
+          <LineChart data={weightData}>
+            <CartesianGrid strokeDasharray="3 3" />
+            <XAxis 
+              dataKey="date" 
+              tickFormatter={(tick: string) => new Date(tick).toLocaleDateString()}
+            />
+            <YAxis />
+            <RechartsTooltip labelFormatter={(label: string) => new Date(label).toLocaleDateString()} />
+            <Line type="monotone" dataKey="value" stroke="#0E9F6E" strokeWidth={2} dot={false} />
+          </LineChart>
+        </ResponsiveContainer>
       </div>
       <div className="w-full flex flex-col justify-start items-start mt-5 px-5">
         <div className="w-full flex justify-between items-center text-[1.4rem]">
