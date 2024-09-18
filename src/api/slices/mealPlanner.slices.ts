@@ -14,13 +14,16 @@ const mealPlannerApiSlice = agelgilAPI.injectEndpoints({
             transformResponse: (response: { body: IMealPlanner }) => response.body,
         }),
 
-        getMealPlan: builder.query<{
+        myMealPlan: builder.query<IMealPlanner, void>({
+            query: () => ({
+                url: '/private/mealPlanner/myMealPlan',
+                method: 'GET',
+            }),
+            providesTags: ['User-MealPlan'],
+            transformResponse: (response: { body: IMealPlanner }) => response.body,
+        }),
 
-            recipe: IRecipe[],
-            nutrition: INutritionData;
-            shoppingList: IngredientDetail[],
-
-        }, { mealTime: EPreferredMealTime | 'all', page: number }>({
+        getMealPlan: builder.query<{ recipe: IRecipe; nutrition: INutritionData }[], { mealTime: EPreferredMealTime | 'all', page: number }>({
             query: ({ mealTime, page }) => ({
                 url: `/private/mealPlanner/mealPlan/${mealTime}/${page}`,
                 method: 'GET',
@@ -40,15 +43,14 @@ const mealPlannerApiSlice = agelgilAPI.injectEndpoints({
             ] : [],
         }),
 
-        removeFromMealPlan: builder.mutation<IMealPlanner, { mealTime: EPreferredMealTime, recipeID: string }>({
-            query: ({ mealTime, recipeID }) => ({
-                url: `/private/mealPlanner/removeFromMealPlan/${mealTime}/${recipeID}`,
+        removeFromMealPlan: builder.mutation<IMealPlanner, { recipeID: string }>({
+            query: ({ recipeID }) => ({
+                url: `/private/mealPlanner/removeFromMealPlan/${recipeID}`,
                 method: 'DELETE',
             }),
             transformResponse: (response: { body: IMealPlanner }) => response.body,
-            invalidatesTags: (result, error, { recipeID, mealTime }) => result ? [
-                { type: "checkIfUserRecipeExists" },
-                { type: 'MealPlan-Recipe', id: mealTime }
+            invalidatesTags: (result, error, { recipeID }) => result ? [
+                { type: "checkIfUserRecipeExists" }
             ] : [],
         }),
 
@@ -78,9 +80,9 @@ const mealPlannerApiSlice = agelgilAPI.injectEndpoints({
             }),
         }),
 
-        getShoppingList: builder.query<IngredientDetail[], { mealTime: EPreferredMealTime }>({
-            query: ({ mealTime }) => ({
-                url: `/private/mealPlanner/shoppingList/${mealTime}`,
+        getShoppingList: builder.query<IngredientDetail[], void>({
+            query: () => ({
+                url: `/private/mealPlanner/shoppingList}`,
                 method: 'GET',
             }),
             transformResponse: (response: { body: IngredientDetail[] }) => response.body,
@@ -89,7 +91,7 @@ const mealPlannerApiSlice = agelgilAPI.injectEndpoints({
 
         getSimilarRecipes: builder.query<IRecipe[], { mealTime: EPreferredMealTime | 'all', page: number }>({
             query: ({ mealTime, page }) => ({
-                url: `/private/mealPlanner/similarRecipes/${mealTime}/${page}`,
+                url: `/private/mealPlanner/similarRecipes/${mealTime.toString()}/${page}`,
                 method: 'GET',
             }),
             providesTags: ['MealPlan-SimilarRecipe'],
@@ -109,6 +111,7 @@ const mealPlannerApiSlice = agelgilAPI.injectEndpoints({
 
 export const {
     useCreateMealPlanMutation,
+    useMyMealPlanQuery,
     useGetMealPlanQuery,
     useAddToMealPlanMutation,
     useRemoveFromMealPlanMutation,
