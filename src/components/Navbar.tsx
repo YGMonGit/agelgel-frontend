@@ -75,7 +75,7 @@ function Navbar() {
     console.log("weight update success");
     setWeight(0);
   }, [isSuccess]);
-  
+
   const getRightContent = () => {
     if (location.pathname === homeUrl || location.pathname === moderatorHomeUrl) {
       return (
@@ -152,7 +152,7 @@ function Navbar() {
                 />
               </div>
               <AlertDialogFooter>
-                <AlertDialogCancel className="text-[1.1rem] border-0 absolute top-2 right-3">
+                <AlertDialogCancel className="text-[1.1rem] border-0 absolute top-2 right-3 outline-none">
                   <MdClose />
                 </AlertDialogCancel>
                 <AlertDialogAction
