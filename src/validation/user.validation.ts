@@ -37,3 +37,9 @@ export const logInSchema = z.object({
         .min(8, { message: "Password must be at least 8 characters long." })
         .min(1, { message: "Password is required." }),
 });
+
+export const updateUserMedicalConditionSchema = z.object({
+    chronicDiseases: z.array(z.string()).min(1, { message: "Please select at least one chronic disease." }),
+    dietary_preferences: z.array(z.string()).min(1, { message: "Please select at least one dietary preference." }),
+    allergies: z.array(z.string()).min(1, { message: "Please select at least one allergy." }),
+});
