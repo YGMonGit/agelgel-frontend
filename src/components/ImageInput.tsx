@@ -77,12 +77,12 @@ const ImageInput = ({ images, setImages, setValue, register }: ImageInputProps) 
                 alt={`Uploaded pic ${index + 1}`}
                 className="w-20 h-20 object-cover rounded"
               />
-              <button
+              <div
                 onClick={() => removeImage(index)}
                 className="absolute -top-2 -right-2 bg-red-500 rounded-full p-1 text-white hover:bg-red-600 focus:outline-none focus:ring-2 focus:ring-red-500 focus:ring-opacity-50"
               >
                 <IoCloseCircle size={16} />
-              </button>
+              </div>
             </div>
           ))}
         </div>

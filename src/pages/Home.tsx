@@ -157,7 +157,7 @@ function Home() {
         </div>
       )}
 
-      <div className="w-full flex justify-end items-center fixed bottom-0 px-2 pb-5">
+      <div className="w-full flex justify-end items-center fixed bottom-0 px-2 pb-5 max-w-[800px]">
         <div
           className="w-14 h-14 bg-content-color flex justify-center items-center rounded-full text-[2rem] text-white"
           onClick={() => navigate(postUrl)}
