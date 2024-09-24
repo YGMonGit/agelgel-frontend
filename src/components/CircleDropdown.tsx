@@ -1,6 +1,6 @@
 import React, { useState, useRef, useEffect } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
-import { editUserInfoUrl, homeUrl, moderatorEditInfoUrl, moderatorHomeUrl, moderatorSpaceUrl, moderatorWelcomeUrl, mySpaceUrl, searchUrl, updateHealthConditionUrl } from "../assets/data";
+import { editUserInfoUrl, homeUrl, moderatorEditInfoUrl, moderatorHomeUrl, moderatorSpaceUrl, moderatorWelcomeUrl, mySpaceUrl, notificationsUrl, searchUrl, updateHealthConditionUrl } from "../assets/data";
 import { useGetUserQuery, useLogOutMutation } from "../api/slices/user.slices";
 import { useGetModeratorQuery, useModeratorIogOutMutation } from "../api/slices/moderator.slices";
 import { welcomeUrl } from "../assets/data";
@@ -80,6 +80,10 @@ function CircleDropdown() {
             </li>
             <li className="hover:bg-gray-100 text-slate-500 rounded-md p-1 px-3 cursor-pointer" onClick={() => navigate(location.pathname.startsWith("/moderator") ? moderatorSpaceUrl : mySpaceUrl)}>
               Recipes
+            </li>
+            <li className="hover:bg-gray-100 text-slate-500 rounded-md p-1 px-3 cursor-pointer flex justify-start items-center gap-2" onClick={() => navigate(notificationsUrl)}>
+              <p>Notification</p>
+              <div className="w-[14px] h-[14px] bg-content-color text-white text-[.6rem] rounded-full flex justify-center items-center">3</div>
             </li>
             {(location.pathname === homeUrl || location.pathname === searchUrl) && (
               <li className="hover:bg-gray-100 text-slate-500 rounded-md p-1 px-3 cursor-pointer" onClick={() => navigate(updateHealthConditionUrl)}>

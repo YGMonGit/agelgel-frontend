@@ -51,6 +51,13 @@ export enum EAllergies {
     none = "none",
 }
 
+export interface ENotification {
+    status: string;
+    title: string;
+    message: string;
+    seen: boolean;
+}
+
 export type TAllergies = "peanuts" | "tree_nuts" | "shellfish" | "dairy" | "eggs" | "wheat" | "soy" | "fish" | "other" | "none";
 
 

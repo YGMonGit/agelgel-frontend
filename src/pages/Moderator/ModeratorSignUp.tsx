@@ -14,6 +14,7 @@ import useFileUpload from "../../hooks/useFileUpload";
 import ErrorPopup from "../../components/ErrorPopup";
 import { useModeratorSignUpMutation } from "../../api/slices/moderator.slices";
 import { IModeratorSignUpFrom } from "../../api/types/moderator.type";
+import VerifyEmail from "../VerifyEmail";
 
 function ModeratorSignUp() {
   // Form navigator state
@@ -26,6 +27,7 @@ function ModeratorSignUp() {
   const [email, setEmail] = useState("");
   const [phone, setPhone] = useState("");
   const [bio, setBio] = useState("");
+  const [otp, setOtp] = useState("");
 
 
   // For form sign up create password
@@ -74,8 +76,6 @@ function ModeratorSignUp() {
     }
   }
 
-  const handleWithGoogleClick = () => { };
-
   const formatErrors = (): string | null => {
     const errorMessages: string[] = [];
     const pageErrors: { [key: number]: string[] } = {
@@ -94,8 +94,8 @@ function ModeratorSignUp() {
     if (errors.email) addErrorToPage(1, "email");
     if (errors.phone_number) addErrorToPage(1, "phone number");
 
-    if (errors.password) addErrorToPage(2, "password");
-    if (errors.confirm_password) addErrorToPage(2, "confirm password");
+    if (errors.password) addErrorToPage(3, "password");
+    if (errors.confirm_password) addErrorToPage(3, "confirm password");
 
 
     // Format error messages
@@ -134,10 +134,17 @@ function ModeratorSignUp() {
           register={register}
           setValue={setValue}
           forModerator={true}
-          handleWithGoogleClick={handleWithGoogleClick}
           bio={bio}
           setBio={setBio}
           errors={errors}
+        />
+      ) : formNumber === 2 ? (
+        <VerifyEmail
+          setFormNumber={setFormNumber}
+          email={email}
+          otp={otp}
+          setOtp={setOtp}
+          forModerator={true}
         />
       ) : (
         <SignUpCreatePassword
@@ -150,7 +157,6 @@ function ModeratorSignUp() {
           errors={errors}
           forModerator={true}
           isLoading={isLoading}
-          handleWithGoogleClick={handleWithGoogleClick}
         />
       )}
       <ErrorPopup error={errorMessage} />

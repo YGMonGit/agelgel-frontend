@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import PageHeader from "../../components/PageHeader";
-import { Input, UseGoogle } from "../../components/Input";
+import { Input } from "../../components/Input";
 import { RiEyeCloseLine, RiEyeLine } from "react-icons/ri";
 import { Checkbox } from "../../components/ui/checkbox";
 import WideButton from "../../components/WideButton";
@@ -59,7 +59,6 @@ function ModeratorLogin() {
   return (
     <div className="w-full flex-grow flex flex-col justify-start items-center">
       <PageHeader header="Hey! Welcome Back." detail="Log in to your account." />
-      <UseGoogle clickAction={handleWithGoogleClick} />
       <form className="w-full flex flex-col justify-start items-center flex-grow" onSubmit={handleSubmit(login)}>
         <Input label="Your email" placeholder="email" value={email} onChange={onEmailChange} register={register} errors={!isError && errors.email} />
         <div className="w-full flex-grow">

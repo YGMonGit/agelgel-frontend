@@ -76,9 +76,6 @@ function ModeratorEditInfo() {
     }
   }
 
-
-  const handleWithGoogleClick = () => { };
-
   const formatErrors = (): string | null => {
     const errorMessages: string[] = [];
     const pageErrors: { [key: number]: string[] } = {
@@ -134,7 +131,6 @@ function ModeratorEditInfo() {
           register={register}
           errors={errors}
           forModerator={true}
-          handleWithGoogleClick={handleWithGoogleClick}
         />
       ) : (
         <SignUpUsername
@@ -151,7 +147,6 @@ function ModeratorEditInfo() {
           setPhone={setPhone}
           register={register}
           setValue={setValue}
-          handleWithGoogleClick={handleWithGoogleClick}
           errors={errors}
         />
       )}

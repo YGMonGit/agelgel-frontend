@@ -48,12 +48,17 @@ export enum EPreparationDifficulty {
 }
 export type TPreparationDifficulty = "easy" | "medium" | "hard";
 
-
 export enum ERecipeStatus {
     verified = "verified",
     pending = "pending",
     rejected = "rejected",
 }
+
+export enum ERecipeStatusResponse {
+    verified = "verified",
+    rejected = "rejected",
+}
+
 export type TRecipeStatus = "verified" | "pending" | "rejected";
 export interface IngredientDetail extends IIngredient {
     amount: number;

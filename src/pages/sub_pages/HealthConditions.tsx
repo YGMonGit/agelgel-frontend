@@ -83,7 +83,7 @@ function HealthConditions({
             label="Back"
             color="bg-white"
             outline={true}
-            clickAction={onBackClick}
+            clickAction={() => setFormNumber(3)}
           />
           {isLoading ? (
             <WideButton label={

@@ -2166,11 +2166,6 @@
   dependencies:
     "@radix-ui/react-use-layout-effect" "1.1.0"
 
-"@react-oauth/google@^0.12.1":
-  version "0.12.1"
-  resolved "https://registry.yarnpkg.com/@react-oauth/google/-/google-0.12.1.tgz#b76432c3a525e9afe076f787d2ded003fcc1bee9"
-  integrity sha512-qagsy22t+7UdkYAiT5ZhfM4StXi9PPNvw0zuwNmabrWyMKddczMtBIOARflbaIj+wHiQjnMAsZmzsUYuXeyoSg==
-
 "@react-spring/animated@~9.7.4":
   version "9.7.4"
   resolved "https://registry.yarnpkg.com/@react-spring/animated/-/animated-9.7.4.tgz#c712b2d3dc9312ef41aa8886818b539151bda062"
@@ -6179,6 +6174,11 @@ ini@^1.3.5:
   version "1.3.8"
   resolved "https://registry.yarnpkg.com/ini/-/ini-1.3.8.tgz#a29da425b48806f34767a4efce397269af28432c"
   integrity sha512-JV/yugV2uzW5iMRSiZAyDtQd+nxtUnjeLt0acNdw98kKLrvuRVyB80tsREOE7yvGVgalhZ6RNXCmEHkUKBKxew==
+
+input-otp@^1.2.4:
+  version "1.2.4"
+  resolved "https://registry.yarnpkg.com/input-otp/-/input-otp-1.2.4.tgz#9834af8675ac72c7f1b7c010f181b3b4ffdd0f72"
+  integrity sha512-md6rhmD+zmMnUh5crQNSQxq3keBRYvE3odbr4Qb9g2NWzQv9azi+t1a3X4TBTbh98fsGHgEEJlzbe1q860uGCA==
 
 internal-slot@^1.0.4, internal-slot@^1.0.7:
   version "1.0.7"

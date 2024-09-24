@@ -90,9 +90,6 @@ function EditUserInfo() {
     // }
   }
 
-
-  const handleWithGoogleClick = () => { };
-
   const formatErrors = (): string | null => {
     const errorMessages: string[] = [];
     const pageErrors: { [key: number]: string[] } = {
@@ -153,7 +150,6 @@ function EditUserInfo() {
         setPhone={setPhone}
         register={register}
         setValue={setValue}
-        handleWithGoogleClick={handleWithGoogleClick}
         errors={errors}
         isLoading={isLoading}
         isOnly={true}

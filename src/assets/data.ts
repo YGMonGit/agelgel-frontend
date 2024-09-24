@@ -23,6 +23,7 @@ export const personalDataUrl = "/user/personal-data";
 export const mealPlannerUrl = "/user/meal-planner";
 export const updateHealthConditionUrl = "/user/update-health-condition";
 export const editPersonalDataUrl = "/user/edit-personal-data";
+export const notificationsUrl = "/user/notifications";
 
 export const moderatorSignUpUrl = "/moderator/sign-up";
 export const moderatorLoginUrl = "/moderator/login";
@@ -291,3 +292,26 @@ export function getFiberColor(fiber: number) {
 
   return hex;
 }
+
+
+//temporary dummy data
+export const notifications = [
+  {
+    status: "verified",
+    title: "Its a great recipe",
+    message: "Very great way of showing how the meal is made!",
+    seen: false,
+  },
+  {
+    status: "rejected",
+    title: "Its a mess",
+    message: "A lot of mistakes exist in your work",
+    seen: false,
+  },
+  {
+    status: "verified",
+    title: "Its a great recipe",
+    message: "Very great way of showing how the meal is made! keep it up",
+    seen: true,
+  },
+];

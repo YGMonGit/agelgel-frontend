@@ -41,6 +41,7 @@ import {
   updateHealthConditionUrl,
   editUserInfoUrl,
   editPersonalDataUrl,
+  notificationsUrl,
 } from "./assets/data";
 import ModeratorAddIngredient from "./pages/Moderator/ModeratorAddIngredient";
 import ModeratorEditIngredient from "./pages/Moderator/ModeratorEditIngredient";
@@ -50,6 +51,7 @@ import MealPlanner from "./pages/MealPlanner";
 import UpdateHealthCondition from "./pages/UpdateHealthCondition";
 import EditUserInfo from "./pages/EditUserInfo";
 import EditPersonalData from "./pages/EditPersonalData";
+import UserNotification from "./pages/UserNotification";
 
 // ... (other imports remain the same)
 
@@ -191,6 +193,14 @@ function App() {
               element={
                 <NavLayout>
                   <MealPlanner />
+                </NavLayout>
+              }
+            />
+            <Route
+              path={notificationsUrl}
+              element={
+                <NavLayout>
+                  <UserNotification />
                 </NavLayout>
               }
             />

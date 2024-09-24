@@ -29,6 +29,7 @@ import {
   moderatorEditInfoUrl,
   updateHealthConditionUrl,
   editPersonalDataUrl,
+  notificationsUrl,
 } from "../assets/data";
 
 import { SlClose, SlArrowLeft } from "react-icons/sl";
@@ -263,6 +264,7 @@ function Navbar() {
       location.pathname === updateHealthConditionUrl ||
       location.pathname === editUserInfoUrl ||
       location.pathname === editPersonalDataUrl ||
+      location.pathname === notificationsUrl ||
       location.pathname === moderatorEditInfoUrl ||
       location.pathname.startsWith(moderatorEditIngredientUrl) 
     ) {

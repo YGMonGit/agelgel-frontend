@@ -1,6 +1,6 @@
 import React from "react";
 import PageHeader from "../../components/PageHeader";
-import { Input, UseGoogle } from "../../components/Input";
+import { Input } from "../../components/Input";
 import { loginUrl, moderatorLoginUrl } from "../../assets/data";
 import ProfileImageInput from "../../components/ProfileImageInput";
 import WideLink from "../../components/WideLink";
@@ -20,7 +20,6 @@ interface SingUpUsernameProps {
   setEmail: React.Dispatch<React.SetStateAction<string>>;
   phone: string;
   setPhone: React.Dispatch<React.SetStateAction<string>>;
-  handleWithGoogleClick?: () => void;
   forModerator?: boolean;
   register: any;
   setValue: any
@@ -46,7 +45,6 @@ function SignUpUsername({
   phone,
   setPhone,
   forModerator = false,
-  handleWithGoogleClick,
   register,
   setValue,
   errors,
@@ -73,7 +71,6 @@ function SignUpUsername({
       <PageHeader header={
         isOnly ? "Update" : "Register"
       } detail="Sign up and create your account." />
-      {!isOnly && <UseGoogle clickAction={handleWithGoogleClick} />}
       <div className="w-full flex flex-col justify-start items-center flex-grow">
         <div className="w-full px-5 flex flex-col justify-start items-center">
           <ProfileImageInput register={register} setValue={setValue} image={image} setImage={setImage} />
@@ -137,17 +134,21 @@ function SignUpUsername({
               </div>
             } color="bg-content-color" disable={isLoading} />
           ) : (
-            <WideButton
-              label="Finish"
-              color="bg-content-color"
-            />
+            <div className="w-full px-5">
+              <WideButton
+                label="Finish"
+                color="bg-content-color"
+              />
+            </div>
           )
         ) : (
-          <WideLink
-            label="Next"
-            color="bg-content-color"
-            clickAction={onNextClick}
-          />
+          <div className="w-full px-5">
+            <WideLink
+              label="Next"
+              color="bg-content-color"
+              clickAction={onNextClick}
+            />
+          </div>
         )}
       <div className="w-full px-5 text-slate-400 text-[1rem] mb-10">
         Already have an account?{" "}

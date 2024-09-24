@@ -107,15 +107,15 @@ function InputNumber({ label, placeholder, value, isPassword, showPassword, onCh
   );
 }
 
-function UseGoogle({ clickAction }: UseGoogleProps) {
-  return (
-    <div className="w-full px-5 flex flex-col justify-start items-center gap-2 mt-3 mb-10">
-      <button className="w-full py-[12px] bg-[#F9FAFB] leading-none text-[1.1rem] px-4 border outline-none rounded-lg border-[#D1D5DB] flex justify-center items-center gap-2" onClick={clickAction}>
-        <img src={google_logo} alt="google-logo" className="w-[18px] h-[18px]" /> Continue with Google
-      </button>
-      <p className="text-[#6B7280]">or</p>
-    </div>
-  );
-}
+// function UseGoogle({ clickAction }: UseGoogleProps) {
+//   return (
+//     <div className="w-full px-5 flex flex-col justify-start items-center gap-2 mt-3 mb-10">
+//       <button className="w-full py-[12px] bg-[#F9FAFB] leading-none text-[1.1rem] px-4 border outline-none rounded-lg border-[#D1D5DB] flex justify-center items-center gap-2" onClick={clickAction}>
+//         <img src={google_logo} alt="google-logo" className="w-[18px] h-[18px]" /> Continue with Google
+//       </button>
+//       <p className="text-[#6B7280]">or</p>
+//     </div>
+//   );
+// }
 
-export { Input, UseGoogle, InputNumber };
+export { Input, InputNumber };

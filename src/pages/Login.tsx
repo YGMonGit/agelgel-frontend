@@ -1,6 +1,6 @@
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import PageHeader from "../components/PageHeader";
-import { Input, UseGoogle } from "../components/Input";
+import { Input } from "../components/Input";
 import { RiEyeCloseLine, RiEyeLine } from "react-icons/ri";
 import { Checkbox } from "../components/ui/checkbox";
 import WideButton from "../components/WideButton";
@@ -9,9 +9,7 @@ import { useLogInMutation } from "../api/slices/user.slices";
 import { useForm } from "react-hook-form";
 import { IUserLogInFrom } from "../api/types/user.type";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { z } from "zod";
 import { useNavigate } from "react-router-dom";
-import ProfileImageInput from "../components/ProfileImageInput";
 import { logInSchema } from "../validation/user.validation";
 import ClipLoader from "react-spinners/ClipLoader";
 import ErrorPopup from "../components/ErrorPopup"; // Import the ErrorPopup component
@@ -53,8 +51,6 @@ function Login() {
     }
   }
 
-  const handleWithGoogleClick = () => {};
-
   const onEmailChange = (e: React.ChangeEvent<HTMLInputElement>) =>
     setEmail(e.target.value);
   const onPasswordChange = (e: React.ChangeEvent<HTMLInputElement>) =>
@@ -67,7 +63,6 @@ function Login() {
         header="Hey! Welcome Back."
         detail="Log in to your account."
       />
-      <UseGoogle clickAction={handleWithGoogleClick} />
       <form
         className="w-full flex flex-col justify-start items-center flex-grow"
         onSubmit={handleSubmit(login)}

@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import PageHeader from "../../components/PageHeader";
-import { Input, UseGoogle } from "../../components/Input";
+import { Input } from "../../components/Input";
 import { RiEyeCloseLine, RiEyeLine } from "react-icons/ri";
 import WideButton from "../../components/WideButton";
 import { loginUrl, moderatorLoginUrl } from "../../assets/data";
@@ -17,7 +17,6 @@ interface SingUpCreatePasswordProps {
   errors: any;
   forModerator?: boolean;
   isLoading?: any;
-  handleWithGoogleClick?: () => void;
 }
 
 function SignUpCreatePassword({
@@ -30,7 +29,6 @@ function SignUpCreatePassword({
   errors,
   forModerator = false,
   isLoading,
-  handleWithGoogleClick,
 }: SingUpCreatePasswordProps) {
   const [showPassword, setShowPassword] = useState(false);
   const [showCPassword, setShowCPassword] = useState(false);
@@ -41,10 +39,10 @@ function SignUpCreatePassword({
     setPassword(e.target.value);
 
   const onBackClick = () => {
-    setFormNumber(1);
+    setFormNumber(2);
   };
   const onNextClick = () => {
-    setFormNumber(3);
+    setFormNumber(4);
   };
 
   return (
@@ -53,7 +51,6 @@ function SignUpCreatePassword({
         header="Last step!"
         detail="Sign up and create your account."
       />
-      <UseGoogle clickAction={handleWithGoogleClick} />
       <div className="w-full flex flex-col justify-start items-center flex-grow">
         <Input
           label="Password"
