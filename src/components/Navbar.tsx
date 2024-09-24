@@ -28,6 +28,7 @@ import {
   editUserInfoUrl,
   moderatorEditInfoUrl,
   updateHealthConditionUrl,
+  editPersonalDataUrl,
 } from "../assets/data";
 
 import { SlClose, SlArrowLeft } from "react-icons/sl";
@@ -128,7 +129,7 @@ function Navbar() {
       return (
         <div className="flex justify-center items-center gap-1">
           <NavLink
-            to="#"
+            to={editPersonalDataUrl}
             className="text-content-color text-[1.1rem] flex items-end font-[600] leading-none gap-1"
             onClick={() => {
               window.scrollTo({ top: 0 });
@@ -261,6 +262,7 @@ function Navbar() {
       location.pathname === moderatorAddIngredientUrl ||
       location.pathname === updateHealthConditionUrl ||
       location.pathname === editUserInfoUrl ||
+      location.pathname === editPersonalDataUrl ||
       location.pathname === moderatorEditInfoUrl ||
       location.pathname.startsWith(moderatorEditIngredientUrl) 
     ) {

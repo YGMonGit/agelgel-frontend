@@ -5,8 +5,8 @@ interface ProfileImageInputProps {
   defaultImage?: string;
   register?: any
   setValue: any
-  image: string | null;
-  setImage: React.Dispatch<React.SetStateAction<string|null>>;
+  image: string | undefined | null;
+  setImage: React.Dispatch<React.SetStateAction<string | undefined | null>>;
 }
 
 const ProfileImageInput: React.FC<ProfileImageInputProps> = ({ register = (placeholder: string) => { }, setValue, image, setImage }) => {

@@ -19,7 +19,7 @@ function EditUserInfo() {
   const [formNumber, setFormNumber] = useState(1);
 
   // For form sign up username
-  const [image, setImage] = useState<string | null>(null);
+  const [image, setImage] = useState<string | null | undefined>(null);
   const [firstName, setFirstName] = useState("");
   const [lastName, setLastName] = useState("");
   const [email, setEmail] = useState("");
@@ -53,6 +53,7 @@ function EditUserInfo() {
     setValue("phone_number", user.phone_number);
     setPhone(user.phone_number);
     setValue("profile_img", user.profile_img);
+    setImage(user.profile_img);
 
   }, [user]);
 

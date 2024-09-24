@@ -10,8 +10,8 @@ import ClipLoader from "react-spinners/ClipLoader";
 
 interface SingUpUsernameProps {
   setFormNumber: React.Dispatch<React.SetStateAction<number>>;
-  image: string | null;
-  setImage: React.Dispatch<React.SetStateAction<string | null>>;
+  image: string | undefined | null;
+  setImage: React.Dispatch<React.SetStateAction<string | undefined | null>>;
   firstName: string;
   setFirstName: React.Dispatch<React.SetStateAction<string>>;
   lastName: string;

@@ -40,6 +40,7 @@ import {
   mealPlannerUrl,
   updateHealthConditionUrl,
   editUserInfoUrl,
+  editPersonalDataUrl,
 } from "./assets/data";
 import ModeratorAddIngredient from "./pages/Moderator/ModeratorAddIngredient";
 import ModeratorEditIngredient from "./pages/Moderator/ModeratorEditIngredient";
@@ -48,6 +49,7 @@ import PersonalData from "./pages/PersonalData";
 import MealPlanner from "./pages/MealPlanner";
 import UpdateHealthCondition from "./pages/UpdateHealthCondition";
 import EditUserInfo from "./pages/EditUserInfo";
+import EditPersonalData from "./pages/EditPersonalData";
 
 // ... (other imports remain the same)
 
@@ -173,6 +175,14 @@ function App() {
               element={
                 <NavLayout>
                   <PersonalData />
+                </NavLayout>
+              }
+            />
+            <Route
+              path={editPersonalDataUrl}
+              element={
+                <NavLayout>
+                  <EditPersonalData />
                 </NavLayout>
               }
             />

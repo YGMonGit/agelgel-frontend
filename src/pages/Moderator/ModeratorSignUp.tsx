@@ -20,7 +20,7 @@ function ModeratorSignUp() {
   const [formNumber, setFormNumber] = useState(1);
 
   // For form sign up username
-  const [image, setImage] = useState<string | null>(null);
+  const [image, setImage] = useState<string | undefined | null>(null);
   const [firstName, setFirstName] = useState("");
   const [lastName, setLastName] = useState("");
   const [email, setEmail] = useState("");
