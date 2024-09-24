@@ -70,218 +70,221 @@ function App() {
   const adjustedHeight = useAdjustedHeight();
 
   return (
-    <div className="w-full flex justify-center items-center">
-      <div
-        className="w-full overflow-x-hidden flex flex-col justify-start items-center max-w-[800px]"
-        style={{
-          scrollbarWidth: "none",
-          msOverflowStyle: "none",
-          height: `calc(${adjustedHeight}px)`,
-        }}
-      >
-        <div className="mt-[56px]"></div>
-        <Routes>
-          <Route path={welcomeUrl} element={<Loading />} />
-          <Route path={moderatorWelcomeUrl} element={<Loading />} />
+    <div className="dark">
 
-          {/* Public routes */}
-          <Route
-            path={loginUrl}
-            element={
-              <NavLayout>
-                <Login />
-              </NavLayout>
-            }
-          />
-          <Route
-            path={signUpUrl}
-            element={
-              <NavLayout>
-                <SignUp />
-              </NavLayout>
-            }
-          />
-          <Route
-            path={updateHealthConditionUrl}
-            element={
-              <NavLayout>
-                <UpdateHealthCondition />
-              </NavLayout>
-            }
-          />
+      <div className="w-full flex justify-center items-center dark:bg-neutral-900 dark:text-white">
+        <div
+          className="w-full overflow-x-hidden flex flex-col justify-start items-center max-w-[800px]"
+          style={{
+            scrollbarWidth: "none",
+            msOverflowStyle: "none",
+            height: `calc(${adjustedHeight}px)`,
+          }}
+        >
+          <div className="mt-[56px]"></div>
+          <Routes>
+            <Route path={welcomeUrl} element={<Loading />} />
+            <Route path={moderatorWelcomeUrl} element={<Loading />} />
 
-          <Route
-            path={editUserInfoUrl}
-            element={
-              <NavLayout>
-                <EditUserInfo />
-              </NavLayout>
-            }
-          />
-
-          {/* Protected user routes */}
-          <Route
-            path="/user"
-            element={<ProtectedRoute />}
-          >
+            {/* Public routes */}
             <Route
-              path={homeUrl}
+              path={loginUrl}
               element={
                 <NavLayout>
-                  <Home />
+                  <Login />
                 </NavLayout>
               }
             />
             <Route
-              path={searchUrl}
+              path={signUpUrl}
               element={
                 <NavLayout>
-                  <Search />
+                  <SignUp />
                 </NavLayout>
               }
             />
             <Route
-              path={`${recipeDetailUrl}/:id`}
+              path={updateHealthConditionUrl}
               element={
                 <NavLayout>
-                  <RecipeDetail />
-                </NavLayout>
-              }
-            />
-            <Route
-              path={postUrl}
-              element={
-                <NavLayout>
-                  <NewRecipeForm />
-                </NavLayout>
-              }
-            />
-            <Route
-              path={`${editPostUrl}/:id`}
-              element={
-                <NavLayout>
-                  <RecipeEditForm />
-                </NavLayout>
-              }
-            />
-            <Route
-              path={mySpaceUrl}
-              element={
-                <NavLayout>
-                  <MySpace />
-                </NavLayout>
-              }
-            />
-            <Route
-              path={personalDataUrl}
-              element={
-                <NavLayout>
-                  <PersonalData />
-                </NavLayout>
-              }
-            />
-            <Route
-              path={editPersonalDataUrl}
-              element={
-                <NavLayout>
-                  <EditPersonalData />
-                </NavLayout>
-              }
-            />
-            <Route
-              path={mealPlannerUrl}
-              element={
-                <NavLayout>
-                  <MealPlanner />
-                </NavLayout>
-              }
-            />
-            <Route
-              path={notificationsUrl}
-              element={
-                <NavLayout>
-                  <UserNotification />
-                </NavLayout>
-              }
-            />
-          </Route>
-
-          {/* Moderator routes */}
-          <Route path="/moderator">
-            {/* Public moderator routes */}
-            <Route
-              path={moderatorSignUpUrl}
-              element={
-                <NavLayout>
-                  <ModeratorSignUp />
-                </NavLayout>
-              }
-            />
-            <Route
-              path={moderatorLoginUrl}
-              element={
-                <NavLayout>
-                  <ModeratorLogin />
+                  <UpdateHealthCondition />
                 </NavLayout>
               }
             />
 
-            {/* Protected moderator routes */}
-            <Route element={<ModeratorProtectedRoute />}>
+            <Route
+              path={editUserInfoUrl}
+              element={
+                <NavLayout>
+                  <EditUserInfo />
+                </NavLayout>
+              }
+            />
+
+            {/* Protected user routes */}
+            <Route
+              path="/user"
+              element={<ProtectedRoute />}
+            >
               <Route
-                path={moderatorHomeUrl}
+                path={homeUrl}
                 element={
                   <NavLayout>
-                    <ModeratorHome />
+                    <Home />
                   </NavLayout>
                 }
               />
               <Route
-                path={moderatorSearchUrl}
+                path={searchUrl}
                 element={
                   <NavLayout>
-                    <ModeratorSearch />
+                    <Search />
                   </NavLayout>
                 }
               />
               <Route
-                path={`${moderatorRecipeDetailUrl}/:id`}
+                path={`${recipeDetailUrl}/:id`}
                 element={
                   <NavLayout>
-                    <ModeratorRecipeDetail />
+                    <RecipeDetail />
                   </NavLayout>
                 }
               />
               <Route
-                path={moderatorSpaceUrl}
+                path={postUrl}
                 element={
                   <NavLayout>
-                    <ModeratorSpace />
+                    <NewRecipeForm />
                   </NavLayout>
                 }
               />
               <Route
-                path={moderatorAddIngredientUrl}
+                path={`${editPostUrl}/:id`}
                 element={
                   <NavLayout>
-                    <ModeratorAddIngredient />
+                    <RecipeEditForm />
                   </NavLayout>
                 }
               />
               <Route
-                path={`${moderatorEditIngredientUrl}/:id`}
+                path={mySpaceUrl}
                 element={
                   <NavLayout>
-                    <ModeratorEditIngredient />
+                    <MySpace />
+                  </NavLayout>
+                }
+              />
+              <Route
+                path={personalDataUrl}
+                element={
+                  <NavLayout>
+                    <PersonalData />
+                  </NavLayout>
+                }
+              />
+              <Route
+                path={editPersonalDataUrl}
+                element={
+                  <NavLayout>
+                    <EditPersonalData />
+                  </NavLayout>
+                }
+              />
+              <Route
+                path={mealPlannerUrl}
+                element={
+                  <NavLayout>
+                    <MealPlanner />
+                  </NavLayout>
+                }
+              />
+              <Route
+                path={notificationsUrl}
+                element={
+                  <NavLayout>
+                    <UserNotification />
                   </NavLayout>
                 }
               />
             </Route>
-          </Route>
 
-          {/* Redirect any unmatched routes to home */}
-          <Route path="*" element={<Navigate to={homeUrl} replace />} />
-        </Routes>
+            {/* Moderator routes */}
+            <Route path="/moderator">
+              {/* Public moderator routes */}
+              <Route
+                path={moderatorSignUpUrl}
+                element={
+                  <NavLayout>
+                    <ModeratorSignUp />
+                  </NavLayout>
+                }
+              />
+              <Route
+                path={moderatorLoginUrl}
+                element={
+                  <NavLayout>
+                    <ModeratorLogin />
+                  </NavLayout>
+                }
+              />
+
+              {/* Protected moderator routes */}
+              <Route element={<ModeratorProtectedRoute />}>
+                <Route
+                  path={moderatorHomeUrl}
+                  element={
+                    <NavLayout>
+                      <ModeratorHome />
+                    </NavLayout>
+                  }
+                />
+                <Route
+                  path={moderatorSearchUrl}
+                  element={
+                    <NavLayout>
+                      <ModeratorSearch />
+                    </NavLayout>
+                  }
+                />
+                <Route
+                  path={`${moderatorRecipeDetailUrl}/:id`}
+                  element={
+                    <NavLayout>
+                      <ModeratorRecipeDetail />
+                    </NavLayout>
+                  }
+                />
+                <Route
+                  path={moderatorSpaceUrl}
+                  element={
+                    <NavLayout>
+                      <ModeratorSpace />
+                    </NavLayout>
+                  }
+                />
+                <Route
+                  path={moderatorAddIngredientUrl}
+                  element={
+                    <NavLayout>
+                      <ModeratorAddIngredient />
+                    </NavLayout>
+                  }
+                />
+                <Route
+                  path={`${moderatorEditIngredientUrl}/:id`}
+                  element={
+                    <NavLayout>
+                      <ModeratorEditIngredient />
+                    </NavLayout>
+                  }
+                />
+              </Route>
+            </Route>
+
+            {/* Redirect any unmatched routes to home */}
+            <Route path="*" element={<Navigate to={homeUrl} replace />} />
+          </Routes>
+        </div>
       </div>
     </div>
   );

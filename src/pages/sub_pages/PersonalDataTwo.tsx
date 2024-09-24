@@ -61,6 +61,7 @@ function PersonalDataTwo({ setFromPage, gender, setGender, activityLevel, setAct
               },
             },
           }}
+          className='dark:bg-neutral-800 text-white'
         >
           <Select
             value={gender}
@@ -104,6 +105,7 @@ function PersonalDataTwo({ setFromPage, gender, setGender, activityLevel, setAct
               },
             },
           }}
+          className='dark:bg-neutral-800'
         >
           <Select
             value={activityLevel}
@@ -147,6 +149,7 @@ function PersonalDataTwo({ setFromPage, gender, setGender, activityLevel, setAct
               },
             },
           }}
+          className='dark:bg-neutral-800'
         >
           <Select
             value={dietGoals}
@@ -170,8 +173,7 @@ function PersonalDataTwo({ setFromPage, gender, setGender, activityLevel, setAct
         </FormControl>
       </div>
       <div className="w-full px-5 mb-5 flex justify-center items-end gap-2">
-        <WideLink label="Back" color="bg-white" outline={true} clickAction={onBackClick} />
-        {/* <WideLink label="Finish" color="bg-content-color" clickAction={onDoneClick} /> */}
+        <WideLink label="Back" color="bg-neutral-900 bg-white" outline={true} clickAction={onBackClick} />
         <WideButton label="Finish" color="bg-content-color" />
       </div>
     </div>

@@ -75,7 +75,7 @@ function Login() {
           register={register}
           errors={!isError && errors.email}
         />
-        <div className="w-full flex-grow">
+        <div className="w-full">
           <Input
             label="Password"
             placeholder="password"
@@ -94,18 +94,7 @@ function Login() {
             </div>
           </Input>
         </div>
-        <div className="w-full px-5 flex justify-between items-center">
-          <label
-            htmlFor="terms"
-            className="flex justify-start py-3 items-center gap-2 text-[1.1rem] leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70 text-neutral-700 font-[500]"
-          >
-            <Checkbox
-              id="terms"
-              className="border-0 bg-[#F9FAFB]"
-              onClick={handleToggle}
-            />
-            <span className="select-none">Remember me</span>
-          </label>
+        <div className="w-full px-5 flex justify-between items-start flex-grow -mt-5">
           <a href="/" className="text-content-color font-[470]">
             Forgot Password?
           </a>

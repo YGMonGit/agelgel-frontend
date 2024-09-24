@@ -106,7 +106,7 @@ function HealthConditions({
         </div>
       ) : (
         <div className="w-full px-5 flex justify-center items-end gap-2">
-          <WideLink label="Back" color="bg-white" outline={true} clickAction={onBackClick} />
+          <WideLink label="Back" color="dark:bg-neutral-900 bg-white" outline={true} clickAction={onBackClick} />
           <WideLink label="Next" color="bg-content-color" clickAction={onNextClick} />
         </div>
       )}

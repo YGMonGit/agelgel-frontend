@@ -43,8 +43,9 @@ function FilterBar({ data, label }: FilterBarProps) {
             onClick={() => handleChipClick(condition)}
             label={condition}
             sx={{ margin: "0 4px", borderRadius: "8px", backgroundColor: "#F3F4F6", height: "25px" }}
-            className="font-[500]"
+            className="font-[500] dark:bg-opacity-30"
           />
+          // <div className="px-4 rounded-[8px] bg-[#F3F4F6] h-[25px] dark:bg-opacity-30" onClick={() => handleChipClick(condition)} key={index}>{condition}</div>
         ))}
       </div>
     </div>

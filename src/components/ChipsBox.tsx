@@ -71,7 +71,7 @@ const ChipsBox: React.FC<ChipsBoxProps> = ({
     <div className="w-full px-5 mb-6">
       <h2 className="text-[1.1rem] mb-[6px] font-semibold">{label}</h2>
       <div
-        className="flex items-center leading-none overflow-x-auto w-full px-[6px] border rounded-xl border-neutral-300"
+        className="flex items-center leading-none overflow-x-auto w-full px-[6px] border rounded-xl border-neutral-300 dark:border-neutral-700"
         style={{ scrollbarWidth: "none", msOverflowStyle: "none" }}
         ref={scrollableDivRef}
         onWheel={handleWheel}
@@ -86,6 +86,7 @@ const ChipsBox: React.FC<ChipsBoxProps> = ({
               borderRadius: "8px",
               backgroundColor: "#F3F4F6",
             }}
+            className="dark:bg-neutral-800 dark:text-white"
             deleteIcon={
               <span className="text-[1.2rem] text-neutral-100 mx-2 cursor-pointer">
                 <IoIosClose className="text-neutral-500" />
@@ -117,7 +118,6 @@ const ChipsBox: React.FC<ChipsBoxProps> = ({
               {...params}
               inputRef={inputRef}
               placeholder="Add here..."
-              className="flex justify-start items-center w-[150px]"
               sx={{
                 margin: "0",
                 "& .MuiOutlinedInput-notchedOutline": {
@@ -126,8 +126,13 @@ const ChipsBox: React.FC<ChipsBoxProps> = ({
                 "& input": {
                   width: "inherit",
                   minWidth: "10ch",
+                  color: "#94a3b8",
+                  "::placeholder": {
+                    color: "#64748b", // This sets the placeholder color
+                  },
                 },
               }}
+              className="flex justify-start items-center w-[150px]"
               InputProps={{
                 ...params.InputProps,
                 endAdornment: inputValue && options.includes(inputValue) ? (

@@ -144,7 +144,7 @@ function Navbar() {
                 <IoMdAdd className="text-[1.6rem]" />
               </div>
             </AlertDialogTrigger>
-            <AlertDialogContent className="bg-white w-[90%] rounded-2xl">
+            <AlertDialogContent className="bg-white dark:bg-neutral-800 w-[90%] rounded-2xl">
               <div className="flex flex-col justify-start items-start gap-2">
                 <p className="text-[1.1rem] font-semibold mt-2">Weight</p>
                 <input 
@@ -289,10 +289,10 @@ function Navbar() {
 
   return (
     <nav
-      className={`w-full flex justify-center items-center bg-red-30 ${location.pathname !== homeUrl && location.pathname !== moderatorHomeUrl && "shadow-md"} fixed top-0 left-0 right-0 z-50 bg-white`}
+      className={`w-full flex justify-center items-center bg-red-30 ${location.pathname !== homeUrl && location.pathname !== moderatorHomeUrl && "shadow-md"} fixed top-0 left-0 right-0 z-50 bg-white dark:bg-neutral-800`}
     >
       <div
-        className={`w-full max-w-[800px] h-[56px] py-[14px] px-5 bg-white flex justify-between items-center z-50`}
+        className={`w-full max-w-[800px] h-[56px] py-[14px] px-5 flex justify-between items-center z-50`}
       >
         <div className="flex items-end">{getLeftContent()}</div>
         <div className="flex items-end">{getRightContent()}</div>

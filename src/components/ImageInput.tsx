@@ -44,7 +44,7 @@ const ImageInput = ({ images, setImages, setValue, register }: ImageInputProps) 
 
   return (
     <div
-      className="w-full flex flex-col justify-center items-center py-10 border-2 border-dashed border-dashed-4 border-[#D1D5DB] bg-[#F9FAFB] rounded-lg mb-6"
+      className="w-full flex flex-col justify-center items-center py-10 border-2 border-dashed border-dashed-4 border-[#D1D5DB] bg-[#F9FAFB] dark:bg-neutral-800 dark:border-neutral-700 rounded-lg mb-6"
       onDragOver={handleDragOver}
       onDrop={handleDrop}
     >

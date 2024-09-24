@@ -59,7 +59,7 @@ function Input({ label, placeholder, value, isPassword, showPassword, onChange, 
           name={placeholder}
           value={value}
           onChange={handleChange}
-          className={`w-full py-[10px] bg-[#F9FAFB] leading-none text-[1rem] px-4 border outline-none rounded-lg border-[#D1D5DB]`}
+          className={`w-full py-[10px] bg-[#F9FAFB] dark:bg-neutral-800 dark:border-neutral-700 leading-none text-[1rem] px-4 border outline-none rounded-lg border-[#D1D5DB]`}
         />
         {children}
         {errors && <p className={errorStyle}>{errors.message}</p>}

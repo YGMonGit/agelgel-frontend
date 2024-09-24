@@ -90,12 +90,12 @@ const DropdownInput: React.FC<DropdownInputProps> = ({
       <label
         className="flex justify-start items-center leading-none font-semibold mb-3 text-[1.2rem]"
         htmlFor={usedFor}
-        style={{ background: "white" }}
+        // style={{ background: "white" }}
       >
         Ingredients
       </label>
       <input
-        className={`w-full py-[10px] bg-[#F9FAFB] leading-none text-[1rem] px-4 border outline-none rounded-lg border-[#D1D5DB]`}
+        className={`w-full py-[10px] bg-[#F9FAFB] dark:bg-neutral-800 leading-none text-[1rem] px-4 border outline-none rounded-lg border-[#D1D5DB] dark:border-neutral-700`}
         // {...register(usedFor)}
         type="text"
         id={usedFor}
