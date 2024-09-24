@@ -2,20 +2,20 @@ import React, { useEffect, useState } from "react";
 import SignUpUsername from "./sub_pages/SignUpUsername";
 import SignUpCreatePassword from "./sub_pages/SignUpCreatePassword";
 import HealthConditions from "./sub_pages/HealthConditions";
-import { useForm } from "react-hook-form";
+import { set, useForm } from "react-hook-form";
 import { zodResolver } from '@hookform/resolvers/zod';
-import { IUserSignUpFrom, EAllergies, EDietaryPreferences, EChronicDisease } from "../api/types/user.type";
-import { useSignUpMutation } from "../api/slices/user.slices";
+import { IUserSignUpFrom, EAllergies, EDietaryPreferences, EChronicDisease, IUserUpdateFrom } from "../api/types/user.type";
+import { useGetUserQuery, useSignUpMutation, useUpdateUserMutation } from "../api/slices/user.slices";
 import * as Bytescale from "@bytescale/sdk";
 import { useNavigate } from "react-router-dom";
-import { signUpSchema } from "../validation/user.validation";
+import { signUpSchema, updateUserSchema } from "../validation/user.validation";
 import { homeUrl } from "../assets/data";
 import useFileUpload from "../hooks/useFileUpload";
 import ErrorPopup from "../components/ErrorPopup";
 
 
 function EditUserInfo() {
-  // Form navigator state
+
   const [formNumber, setFormNumber] = useState(1);
 
   // For form sign up username
@@ -31,20 +31,37 @@ function EditUserInfo() {
 
   const navigate = useNavigate();
 
-  // const [signUp, { isLoading }] = useSignUpMutation();
-  // const { uploadFile, loading } = useFileUpload();
+  const { data: user, isLoading: userIsLoading } = useGetUserQuery();
+
+  const [update, { isLoading }] = useUpdateUserMutation();
+  const { uploadFile, loading } = useFileUpload();
 
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
 
-  const { register, handleSubmit, formState: { errors }, setError, setValue, getValues } = useForm<IUserSignUpFrom>({
-    resolver: zodResolver(signUpSchema),
+  const { register, handleSubmit, formState: { errors }, setError, setValue, getValues } = useForm<IUserUpdateFrom>({
+    resolver: zodResolver(updateUserSchema),
   });
+
+  useEffect(() => {
+    if (!user) return;
+    setValue("email", user.email);
+    setEmail(user.email);
+    setValue("first_name", user.first_name);
+    setFirstName(user.first_name);
+    setValue("last_name", user.last_name);
+    setLastName(user.last_name);
+    setValue("phone_number", user.phone_number);
+    setPhone(user.phone_number);
+    setValue("profile_img", user.profile_img);
+
+  }, [user]);
 
   console.log({ errors });
 
 
-  async function SignUp(user: IUserSignUpFrom) {
-    console.log("signing up in...");
+  async function Update(user: IUserUpdateFrom) {
+    console.log("Update up in...");
+    console.log({ user });
 
     // try {
     //   const file = user.profile_img;
@@ -119,38 +136,27 @@ function EditUserInfo() {
 
 
   return (
-    <form className="w-full flex-grow flex flex-col justify-start items-center" onSubmit={handleSubmit(SignUp)}>
-      {formNumber !== 1 ? (
-        <SignUpCreatePassword
-          setFormNumber={setFormNumber}
-          password={password}
-          setPassword={setPassword}
-          confirmPassword={confirmPassword}
-          setConfirmPassword={setConfirmPassword}
-          register={register}
-          errors={errors}
-          forModerator={true}
-          handleWithGoogleClick={handleWithGoogleClick}
-        />
-      ) : (
-        <SignUpUsername
-          setFormNumber={setFormNumber}
-          image={image}
-          setImage={setImage}
-          firstName={firstName}
-          setFirstName={setFirstName}
-          lastName={lastName}
-          setLastName={setLastName}
-          email={email}
-          setEmail={setEmail}
-          phone={phone}
-          setPhone={setPhone}
-          register={register}
-          setValue={setValue}
-          handleWithGoogleClick={handleWithGoogleClick}
-          errors={errors}
-        />
-      )}
+    <form className="w-full flex-grow flex flex-col justify-start items-center" onSubmit={handleSubmit(Update)}>
+
+      <SignUpUsername
+        setFormNumber={setFormNumber}
+        image={image}
+        setImage={setImage}
+        firstName={firstName}
+        setFirstName={setFirstName}
+        lastName={lastName}
+        setLastName={setLastName}
+        email={email}
+        setEmail={setEmail}
+        phone={phone}
+        setPhone={setPhone}
+        register={register}
+        setValue={setValue}
+        handleWithGoogleClick={handleWithGoogleClick}
+        errors={errors}
+        isLoading={isLoading}
+        isOnly={true}
+      />
       <ErrorPopup error={errorMessage} />
     </form>
   );

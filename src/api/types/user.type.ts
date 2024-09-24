@@ -106,3 +106,8 @@ export interface IModeratorUserUpdateSchema {
     status?: EStatus;
 }
 
+export interface IUserUpdateMedicalConditionFrom {
+    chronicDiseases: EChronicDisease[];
+    dietary_preferences: EDietaryPreferences[];
+    allergies: EAllergies[];
+}
