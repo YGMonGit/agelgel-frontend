@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import { Routes, Route, Navigate } from "react-router-dom";
 import Navbar from "./components/Navbar";
 import Home from "./pages/Home";
@@ -57,20 +57,43 @@ import UserNotification from "./pages/UserNotification";
 
 interface NavLayoutProps {
   children: React.ReactNode;
+  toggleDarkMode?: () => void;
+  dark?: boolean;
 }
 
-const NavLayout: React.FC<NavLayoutProps> = ({ children }) => (
+const NavLayout: React.FC<NavLayoutProps> = ({ children, toggleDarkMode, dark }) => (
   <div className="w-full flex flex-col justify-center items-start flex-grow">
-    <Navbar />
+    <Navbar toggleDarkMode={toggleDarkMode} dark={dark} />
     {children}
   </div>
 );
 
 function App() {
   const adjustedHeight = useAdjustedHeight();
+  // const [darkMode, setDarkMode] = useState(false);
+
+  const [darkMode, setDarkMode] = useState(() => {
+    const savedMode = localStorage.getItem('darkMode');
+    return savedMode !== null ? JSON.parse(savedMode) : false;
+  });
+
+  const toggleDarkMode = () => {
+    console.log("hello");
+    
+    setDarkMode((prevMode: boolean) => {
+      const newMode = !prevMode;
+      localStorage.setItem('darkMode', JSON.stringify(newMode)); // Save new mode to local storage
+      return newMode;
+    });
+  };
+
+  // useEffect(() => {
+  //   // Save dark mode state to local storage on change
+  //   localStorage.setItem('darkMode', JSON.stringify(darkMode));
+  // }, [darkMode]);
 
   return (
-    <div className="dark">
+    <div className={`${darkMode && "dark"}`}>
 
       <div className="w-full flex justify-center items-center dark:bg-neutral-900 dark:text-white">
         <div
@@ -129,7 +152,7 @@ function App() {
               <Route
                 path={homeUrl}
                 element={
-                  <NavLayout>
+                  <NavLayout toggleDarkMode={toggleDarkMode} dark={darkMode}>
                     <Home />
                   </NavLayout>
                 }
@@ -137,7 +160,7 @@ function App() {
               <Route
                 path={searchUrl}
                 element={
-                  <NavLayout>
+                  <NavLayout toggleDarkMode={toggleDarkMode} dark={darkMode}>
                     <Search />
                   </NavLayout>
                 }
@@ -233,7 +256,7 @@ function App() {
                 <Route
                   path={moderatorHomeUrl}
                   element={
-                    <NavLayout>
+                    <NavLayout toggleDarkMode={toggleDarkMode} dark={darkMode}>
                       <ModeratorHome />
                     </NavLayout>
                   }
@@ -241,7 +264,7 @@ function App() {
                 <Route
                   path={moderatorSearchUrl}
                   element={
-                    <NavLayout>
+                    <NavLayout toggleDarkMode={toggleDarkMode} dark={darkMode}>
                       <ModeratorSearch />
                     </NavLayout>
                   }

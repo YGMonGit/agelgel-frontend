@@ -51,7 +51,12 @@ import { MdAdd, MdClose, MdEdit } from "react-icons/md";
 import { IoMdAdd } from "react-icons/io";
 import { useUpdateStatsMutation } from "../api/slices/mealPlanner.slices";
 
-function Navbar() {
+interface NavbarProps {
+  toggleDarkMode?: () => void;
+  dark?: boolean;
+}
+
+function Navbar({toggleDarkMode, dark}: NavbarProps) {
   const location = useLocation();
   const navigate = useNavigate();
 
@@ -104,7 +109,7 @@ function Navbar() {
           >
             <IoSearchOutline width={25} height={25} className="text-[1.3rem]" />
           </NavLink>
-          <CircleDropdown />
+          <CircleDropdown toggleDarkMode={toggleDarkMode} dark={dark} />
         </div>
       );
     } else if (location.pathname === signUpUrl || location.pathname === moderatorSignUpUrl) {
@@ -125,7 +130,7 @@ function Navbar() {
         </NavLink>
       );
     } else if (location.pathname === searchUrl || location.pathname === moderatorSearchUrl) {
-      return <CircleDropdown />;
+      return <CircleDropdown toggleDarkMode={toggleDarkMode} dark={dark} />;
     } else if (location.pathname === mealPlannerUrl) {
       return (
         <div className="flex justify-center items-center gap-1">
@@ -140,7 +145,7 @@ function Navbar() {
           </NavLink>
           <AlertDialog>
             <AlertDialogTrigger asChild>
-              <div className="text-content-color text-[1.1rem] flex items-end font-[600] leading-none gap-1">
+              <div className="text-content-color text-[1.1rem] flex items-end font-[600] leading-none cursor-pointer gap-1">
                 <IoMdAdd className="text-[1.6rem]" />
               </div>
             </AlertDialogTrigger>

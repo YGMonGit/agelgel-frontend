@@ -48,7 +48,7 @@ function NewRecipeFormThree({ setFormNumber, ingredientList, setIngredientList, 
         </div>
       </div>
       <div className="w-full px-5 flex justify-center items-end gap-2">
-        <WideLink label="Back" color="bg-white" outline={true} clickAction={onBackClick} />
+        <WideLink label="Back" color="bg-white dark:bg-neutral-900" outline={true} clickAction={onBackClick} />
         {isLoading ? (
           <WideButton label={
             <div className="flex justify-center items-center w-full h-full gap-2">

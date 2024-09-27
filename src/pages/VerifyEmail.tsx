@@ -56,7 +56,7 @@ function VerifyEmail({ setFormNumber, email, otp, setOtp, forModerator=false }: 
     <div className='w-full flex-grow flex flex-col justify-start items-start'>
       <PageHeader header='Verify Email' detail='Enter the code sent to your email' />
       <div className='w-full px-5 flex-grow flex flex-col justify-start items-center gap-2 pt-3'>
-        <div className='px-4 py-6 bg-gray-50 flex flex-col justify-center items-start gap-2 rounded-lg'>
+        <div className='px-4 py-6 bg-gray-50 dark:bg-neutral-800 flex flex-col justify-center items-start gap-2 rounded-lg'>
           <p className='text-[1rem] italic text-slate-400'>
             Verification code sent to <span className='text-slate-500 font-semibold'>{shortenEmail(email)}</span>
           </p>
@@ -79,7 +79,7 @@ function VerifyEmail({ setFormNumber, email, otp, setOtp, forModerator=false }: 
         </div>
       </div>
       <div className="w-full px-5 flex justify-center items-end gap-2">
-        <WideLink label="Back" color="bg-white" outline={true} clickAction={() => setFormNumber(1)} />
+        <WideLink label="Back" color="dark:bg-neutral-900 bg-white" outline={true} clickAction={() => setFormNumber(1)} />
         <WideLink label="Next" color="bg-content-color" clickAction={onNextClick} />
       </div>
       <div className="w-full px-5 text-slate-400 text-[1rem] mb-10">

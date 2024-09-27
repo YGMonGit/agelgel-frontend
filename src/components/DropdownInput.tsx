@@ -109,7 +109,7 @@ const DropdownInput: React.FC<DropdownInputProps> = ({
       {errors && <p className={errorStyle}>{errors.message}</p>}
       {isOpen && (
         <div className='w-full px-8 relative'>
-          <ul className="absolute top-full rounded-b-lg left-0 w-full px-5 bg-[#F9FAFB] border border-gray-200 shadow-lg border-t-transparent max-h-40 overflow-y-auto z-10">
+          <ul className="absolute top-full rounded-b-lg left-0 w-full px-5 bg-[#F9FAFB] dark:bg-neutral-800 border border-gray-200 dark:border-neutral-700 shadow-lg border-t-transparent max-h-40 overflow-y-auto z-10">
             {filteredOptions.map((option, index) => (
               <li
                 key={index}

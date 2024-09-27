@@ -332,6 +332,7 @@ function RecipeDetail() {
             precision={0.5}
             size="small"
             readOnly
+            className="dark:bg-neutral-600 rounded-full dark:px-1"
           />
           <p className="leading-3 px-1 rounded-md text-content-color text-[.8rem] bg-[#EBFFF8]">
             {recipe.rating.toFixed(1)}
@@ -341,7 +342,7 @@ function RecipeDetail() {
 
           <AlertDialog>
             <AlertDialogTrigger asChild>
-              <button className="w-full px-5 border border-content-color py-2 rounded-lg flex justify-center items-center gap-2 mb-4">
+              <button className="w-full px-5 border border-content-color h-[52px] rounded-lg flex justify-center items-center gap-2 mt-2 mb-5">
                 <MdAdd className="text-[1.3rem] text-content-color" />
                 <p className="text-slate-400 font-normal">Add to Meal Plan</p>
               </button>
@@ -393,60 +394,67 @@ function RecipeDetail() {
               </AlertDialogFooter>
             </AlertDialogContent>
           </AlertDialog>
-        ) : !isUserRecipeExistsError ? <WideButton
-          disable={removeFromMealPlanIsLoading}
-          clickAction={async () => {
-            try {
-              await removeFromMealPlan({
-                recipeID: recipe._id
-              })
-            } catch (error) {
+        ) : !isUserRecipeExistsError ? 
+        <div className="w-full mb-3 mt-2">
 
+          <WideButton
+            disable={removeFromMealPlanIsLoading}
+            clickAction={async () => {
+              try {
+                await removeFromMealPlan({
+                  recipeID: recipe._id
+                })
+              } catch (error) {
+  
+              }
+            }}
+            label={
+              <div className="w-full flex justify-center items-center gap-2">
+                {removeFromMealPlanIsLoading ? (
+                  <ClipLoader
+                    color={"var(--content-color)"}
+                    size={15}
+                    aria-label="Loading Spinner"
+                    data-testid="loader"
+                  />
+                ) : (
+                  <TiMinus className="text-[1.3rem]" />
+                )}
+                <p className="text-slate-400 font-normal">remove from Meal Plan</p>
+              </div>
             }
-          }}
-          label={
-            <div className="w-full flex justify-center items-center gap-2">
-              {removeFromMealPlanIsLoading ? (
-                <ClipLoader
-                  color={"var(--content-color)"}
-                  size={15}
-                  aria-label="Loading Spinner"
-                  data-testid="loader"
-                />
-              ) : (
-                <TiMinus className="text-[1.3rem]" />
-              )}
-              <p className="text-slate-400 font-normal">remove from Meal Plan</p>
-            </div>
-          }
-          color="bg-white"
-          outline={true}
-        /> : null
+            color="dark:bg-neutral-900"
+            outline={true}
+          />
+        </div>
+        :null
         }
         <div className="w-full flex flex-col justify-start items-start gap-2">
           <div className="flex justify-start items-center gap-2 mb-3">
-            <div className="w-full flex justify-start items-center bg-[#F3F4F6] pl-[10px] rounded-[8px]">
+            <div className="w-full flex justify-start items-center bg-[#F3F4F6] dark:bg-opacity-30 pl-[10px] rounded-[8px]">
               <LuClock9 className="text-[.8rem] text-content-color -mr-[6px] z-20 italic" />
               <Chip
                 label={`${recipe.cookingTime} min`}
                 sx={{
                   borderRadius: "8px",
-                  backgroundColor: "#F3F4F6",
+                  backgroundColor: "transparent",
                   height: "25px",
                   fontWeight: "500",
                 }}
+                className="dark:text-white"
               />
             </div>
-            <div className="w-full flex justify-start items-center bg-[#F3F4F6] pl-[10px] rounded-[8px]">
+            <div className="w-full flex justify-start items-center bg-[#F3F4F6] dark:bg-opacity-30 pl-[10px] rounded-[8px]">
               <IoSpeedometerOutline className="text-[.8rem] text-content-color -mr-[6px] z-20 italic" />
               <Chip
                 label={recipe.preparationDifficulty}
                 sx={{
                   borderRadius: "8px",
-                  backgroundColor: "#F3F4F6",
+                  backgroundColor: "transparent",
                   height: "25px",
                   fontWeight: "500",
                 }}
+                className="dark:text-white"
               />
             </div>
           </div>
@@ -630,10 +638,10 @@ function RecipeDetail() {
             onChange={onNewCommentChange}
             autoComplete="off"
             required
-            className={`w-full py-[10px] bg-[#F9FAFB] leading-none text-[1rem] px-4 border outline-none rounded-lg border-[#D1D5DB]`}
+            className={`w-full py-[10px] bg-[#F9FAFB] dark:bg-neutral-800 leading-none text-[1rem] px-4 border outline-none rounded-lg border-[#D1D5DB] dark:border-neutral-700`}
           />
           {!showCommentButton && (
-            <p className="text-yellow-300 text-[.8rem] leading-none mb-3 -mt-2">
+            <p className="text-yellow-300 text-[.8rem] leading-none mb-1 -mt-2">
               {value === 0 && newComment.trim() !== "" && "Please fill retting"}
               {newComment.trim() === "" && value !== 0 && "Please fill comment"}
               {newComment.trim() === "" &&
@@ -663,7 +671,7 @@ function RecipeDetail() {
               type="submit"
               className={`${showCommentButton
                 ? "w-full h-[52px] bg-content-color mb-5 text-white rounded-lg"
-                : "w-full py-[8px] bg-neutral-300 text-neutral-500 mb-5"
+                : "w-full h-[52px] bg-[#5f9482] text-white rounded-lg mb-5"
                 }`}
               disabled={!showCommentButton}
             >

@@ -173,7 +173,7 @@ function PersonalDataTwo({ setFromPage, gender, setGender, activityLevel, setAct
         </FormControl>
       </div>
       <div className="w-full px-5 mb-5 flex justify-center items-end gap-2">
-        <WideLink label="Back" color="bg-neutral-900 bg-white" outline={true} clickAction={onBackClick} />
+        <WideLink label="Back" color="dark:bg-neutral-900 bg-white" outline={true} clickAction={onBackClick} />
         <WideButton label="Finish" color="bg-content-color" />
       </div>
     </div>

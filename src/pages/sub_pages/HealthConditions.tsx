@@ -81,7 +81,7 @@ function HealthConditions({
         <div className="w-full px-5 flex justify-center items-end gap-2">
           <WideLink
             label="Back"
-            color="bg-white"
+            color="dark:bg-neutral-900 bg-white"
             outline={true}
             clickAction={() => setFormNumber(3)}
           />

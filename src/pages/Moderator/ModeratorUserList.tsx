@@ -44,11 +44,7 @@ function ModeratorUserList() {
     <div className='flex flex-col h-full justify-start items-center w-full pt-3'>
       <div className="w-full flex justify-start items-center gap-2 mb-3 mt-5">
         <button
-          className="px-4 py-1 rounded-xl text-white outline-none border-none"
-          style={{
-            backgroundColor: userStatus == EVerified.verified ? "#15803D" : "#F3F4F6",
-            color: userStatus == EVerified.verified ? "#FFFFFF" : "#15803D",
-          }}
+          className={`px-4 py-1 rounded-xl outline-none border-none ${userStatus === EVerified.verified ? "bg-content-color text-white" : "bg-[#F3F4F6] dark:bg-neutral-800 dark:text-white"}`}
           onClick={() => {
             setUserStatus(EVerified.verified)
           }}
@@ -56,11 +52,7 @@ function ModeratorUserList() {
           verified
         </button>
         <button
-          className="px-4 py-1 rounded-xl text-white outline-none border-none"
-          style={{
-            backgroundColor: userStatus == EVerified.pending ? "#15803d" : "#F3F4F6",
-            color: userStatus == EVerified.pending ? "#fff" : "#15803d",
-          }}
+          className={`px-4 py-1 rounded-xl outline-none border-none ${userStatus === EVerified.pending ? "bg-content-color text-white" : "bg-[#F3F4F6] dark:bg-neutral-800 darktext-white"}`}
           onClick={() => {
             setUserStatus(EVerified.pending)
           }}
@@ -82,14 +74,14 @@ function ModeratorUserList() {
           {!isFetching && (
             <div className="w-full p-5 flex justify-center items-center gap-3 mb-5 text-[1rem] select-none z-20">
               <button
-                className="flex justify-center items-center border border-content-color rounded-lg p-2 px-5 shadow-md bg-slate-50 text-slate-500 text-[.9rem]"
+                className="flex justify-center items-center border border-content-color rounded-lg p-2 px-5 shadow-md bg-slate-50 dark:bg-neutral-800 dark:border-0 text-slate-500 text-[.9rem]"
                 onClick={() => pageChange({ direction: "back" })}
               >
                 <FaChevronLeft className="text-content-color text-[1.2rem]" />{" "}
                 Back
               </button>
               <button
-                className="flex justify-center items-center border border-content-color rounded-lg p-2 px-5 shadow-md bg-slate-50 text-slate-500 text-[.9rem]"
+                className="flex justify-center items-center border border-content-color rounded-lg p-2 px-5 shadow-md bg-slate-50 dark:bg-neutral-800 dark:border-0 text-slate-500 text-[.9rem]"
                 onClick={() => pageChange({ direction: "forward" })}
               >
                 Next{" "}
@@ -103,7 +95,7 @@ function ModeratorUserList() {
           <img src={EmptyListIcon} alt="pic" className="w-[75%] sm:w-[50%]" />
           <div className="w-full px-5 flex justify-center items-center gap-3 mb-5 text-[1rem] select-none z-20">
             <button
-              className="flex justify-center items-center border border-content-color rounded-lg p-2 px-5 shadow-md bg-slate-50 text-slate-500 text-[.9rem]"
+              className="flex justify-center items-center border border-content-color rounded-lg p-2 px-5 shadow-md bg-slate-50 dark:bg-neutral-800 dark:border-0 text-slate-500 text-[.9rem]"
               onClick={() => pageChange({ direction: "back" })}
             >
               <FaChevronLeft className="text-content-color text-[1.2rem]" />{" "}

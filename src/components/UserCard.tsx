@@ -32,7 +32,7 @@ const CustomDrawer: React.FC<{
   return (
     <div className="fixed inset-0 bg-black bg-opacity-50 z-50">
       <div
-        className="absolute bottom-0 left-0 right-0 bg-white rounded-t-[20px] overflow-visible"
+        className="absolute bottom-0 left-0 right-0 bg-white dark:bg-neutral-900 rounded-t-[20px] overflow-visible"
         style={{ maxHeight: "calc(100% - 100px)" }}
       >
         <div className="absolute -top-10 left-1/2 transform -translate-x-1/2">
@@ -85,7 +85,7 @@ const CustomDrawer: React.FC<{
                 }
               </Select>
             </FormControl>
-            <div className="w-full flex justify-start items-center gap-2 mb-3">
+            <div className="w-full flex justify-start items-center gap-2 mb-3 select-none">
               <Switch
                 id="airplane-mode"
                 style={{
@@ -95,7 +95,7 @@ const CustomDrawer: React.FC<{
                 disabled={setUserData == undefined}
                 onCheckedChange={(checked) => setUserData(checked ? EVerified.verified : EVerified.pending)}
               />
-              <p>Verified</p>
+              <label htmlFor="airplane-mode" className="cursor-pointer">Verified</label>
             </div>
           </div>
 
@@ -115,9 +115,9 @@ const CustomDrawer: React.FC<{
 
           <Button
             variant="outline"
-            className="absolute top-4 right-2 border-none shadow-none"
-            onClick={async (e) => {
-              e.preventDefault();
+            className="absolute top-4 right-2 border-none shadow-none dark:bg-neutral-900"
+            onClick={() => {
+              onClose();
             }}
           >
             <RiCloseLargeLine className="text-[1rem] text-content-color" />
@@ -135,7 +135,7 @@ function UserCard({ user }: UserCardProps) {
 
   if (!user) {
     return (
-      <div className="flex justify-start items-center p-2 w-full rounded-lg bg-neutral-100 leading-4 select-none gap-3">
+      <div className="flex justify-start items-center p-2 w-full rounded-lg bg-neutral-100 dark:bg-neutral-800 leading-4 select-none gap-3">
         <Skeleton className="h-[61px] aspect-square rounded-full" />
         <div className="flex-grow flex flex-col justify-center items-start h-full">
           <Skeleton className="h-[10px] w-[55%] rounded-md" />
@@ -149,7 +149,7 @@ function UserCard({ user }: UserCardProps) {
 
   return (
     <>
-      <div className="w-full flex justify-start items-center gap-2 py-2 bg-[#F6F6F6] px-3 rounded-lg">
+      <div className="w-full flex justify-start items-center gap-2 py-2 bg-[#F6F6F6] dark:bg-neutral-800 px-3 rounded-lg">
         <img
           src={user.profile_img}
           className="w-[61px] aspect-square rounded-full"

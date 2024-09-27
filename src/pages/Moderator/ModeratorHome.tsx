@@ -110,14 +110,14 @@ function ModeratorHome() {
               {!isFetching && (
                 <div className="w-full px-5 flex justify-center items-center gap-3 mb-5 text-[1rem] select-none z-20">
                   <button
-                    className="flex justify-center items-center border border-content-color rounded-lg p-2 px-5 shadow-md bg-slate-50 text-slate-500 text-[.9rem]"
+                    className="flex justify-center items-center border border-content-color rounded-lg p-2 px-5 shadow-md bg-slate-50 dark:bg-neutral-800 dark:border-0 text-slate-500 text-[.9rem]"
                     onClick={() => pageChange({ direction: "back" })}
                   >
                     <FaChevronLeft className="text-content-color text-[1.2rem]" />{" "}
                     Back
                   </button>
                   <button
-                    className="flex justify-center items-center border border-content-color rounded-lg p-2 px-5 shadow-md bg-slate-50 text-slate-500 text-[.9rem]"
+                    className="flex justify-center items-center border border-content-color rounded-lg p-2 px-5 shadow-md bg-slate-50 dark:bg-neutral-800 dark:border-0 text-slate-500 text-[.9rem]"
                     onClick={() => pageChange({ direction: "forward" })}
                   >
                     Next{" "}
@@ -135,7 +135,7 @@ function ModeratorHome() {
               />
               <div className="w-full px-5 flex justify-center items-center gap-3 mb-5 text-[1rem] select-none z-20">
                 <button
-                  className="flex justify-center items-center border border-content-color rounded-lg p-2 px-5 shadow-md bg-slate-50 text-slate-500 text-[.9rem]"
+                  className="flex justify-center items-center border border-content-color rounded-lg p-2 px-5 shadow-md bg-slate-50 dark:bg-neutral-800 dark:border-0 text-slate-500 text-[.9rem]"
                   onClick={() => pageChange({ direction: "back" })}
                 >
                   <FaChevronLeft className="text-content-color text-[1.2rem]" />{" "}

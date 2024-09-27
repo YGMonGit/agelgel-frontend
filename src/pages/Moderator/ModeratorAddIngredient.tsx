@@ -115,6 +115,7 @@ function ModeratorAddIngredient() {
               },
             },
           }}
+          className="dark:bg-neutral-800"
         >
           <Select
             value={type}

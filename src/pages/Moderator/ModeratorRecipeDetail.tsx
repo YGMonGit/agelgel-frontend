@@ -254,6 +254,7 @@ function ModeratorRecipeDetail() {
             precision={0.5}
             size="small"
             readOnly
+            className="dark:bg-neutral-600 rounded-full dark:px-1"
           />
           <p className="leading-3 px-1 rounded-md text-content-color text-[.8rem] bg-[#EBFFF8]">
             {recipe.rating.toFixed(1)}
@@ -261,28 +262,30 @@ function ModeratorRecipeDetail() {
         </div>
         <div className="w-full flex flex-col justify-start items-start gap-2">
           <div className="flex justify-start items-center gap-2 mb-3">
-            <div className="w-full flex justify-start items-center bg-[#F3F4F6] pl-[10px] rounded-[8px]">
+            <div className="w-full flex justify-start items-center bg-[#F3F4F6] dark:bg-opacity-30 pl-[10px] rounded-[8px]">
               <LuClock9 className="text-[.8rem] text-content-color -mr-[6px] z-10 italic" />
               <Chip
                 label={`${recipe.cookingTime} min`}
                 sx={{
                   borderRadius: "8px",
-                  backgroundColor: "#F3F4F6",
+                  backgroundColor: "transparent",
                   height: "25px",
                   fontWeight: "500",
-                }}
+                }}              
+                className="dark:text-white"
               />
             </div>
-            <div className="w-full flex justify-start items-center bg-[#F3F4F6] pl-[10px] rounded-[8px]">
+            <div className="w-full flex justify-start items-center bg-[#F3F4F6] dark:bg-opacity-30 pl-[10px] rounded-[8px]">
               <IoSpeedometerOutline className="text-[.8rem] text-content-color -mr-[6px] z-10 italic" />
               <Chip
                 label={recipe.preparationDifficulty}
                 sx={{
                   borderRadius: "8px",
-                  backgroundColor: "#F3F4F6",
+                  backgroundColor: "transparent",
                   height: "25px",
                   fontWeight: "500",
                 }}
+                className="dark:text-white"
               />
             </div>
           </div>
@@ -451,6 +454,7 @@ function ModeratorRecipeDetail() {
           hideScrollbars={true}
           onClose={closeDrawer}
           isVisible={isVisible}
+          className="dark:bg-neutral-900"
         >
           <div
             className="w-full overflow-y-auto max-h-[70vh] flex flex-col justify-start items-start mt-8"
@@ -502,7 +506,7 @@ function ModeratorRecipeDetail() {
             </div>
             <Button
               variant="outline"
-              className="absolute top-4 right-2 border-none shadow-none"
+              className="absolute top-4 right-2 border-none shadow-none dark:bg-neutral-900"
               onClick={(e) => {
                 e.preventDefault();
                 closeDrawer();

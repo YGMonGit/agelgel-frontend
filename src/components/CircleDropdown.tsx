@@ -4,8 +4,14 @@ import { editUserInfoUrl, homeUrl, moderatorEditInfoUrl, moderatorHomeUrl, moder
 import { useGetUserQuery, useLogOutMutation } from "../api/slices/user.slices";
 import { useGetModeratorQuery, useModeratorIogOutMutation } from "../api/slices/moderator.slices";
 import { welcomeUrl } from "../assets/data";
+import { MdDarkMode, MdOutlineLightMode } from "react-icons/md";
 
-function CircleDropdown() {
+interface CircularDropdownProps {
+  toggleDarkMode?: () => void;
+  dark?: boolean;
+}
+
+function CircleDropdown({toggleDarkMode, dark}: CircularDropdownProps) {
   const navigate = useNavigate();
   const location = useLocation();
   const [isOpen, setIsOpen] = useState<boolean>(false);
@@ -71,26 +77,28 @@ function CircleDropdown() {
       {isOpen && (
         <div
           ref={dropdownRef}
-          className="absolute top-10 right-0 bg-white shadow-lg border border-gray-300 rounded-lg py-2 w-[200px] z-50"
+          className="absolute top-10 right-0 bg-white dark:bg-neutral-800 shadow-lg border border-gray-300 dark:border-neutral-700 rounded-lg py-2 w-[200px] z-50"
         >
           <ul className="space-y-1">
-            <li className="hover:bg-gray-100 p-1 px-3 cursor-pointer flex flex-col justify-center items-start border-b border-gray-400" onClick={() => navigate(location.pathname.startsWith("/moderator") ? moderatorEditInfoUrl : editUserInfoUrl)}>
+            <li className="hover:bg-gray-100 dark:hover:bg-neutral-700 dark:hover:bg-opacity-30 p-1 px-3 cursor-pointer flex flex-col justify-center items-start border-b border-gray-400" onClick={() => navigate(location.pathname.startsWith("/moderator") ? moderatorEditInfoUrl : editUserInfoUrl)}>
               <p className="text-[.9rem] font-semibold">{user?.first_name}</p>
               <p className="text-[.8rem] text-slate-500 -mt-1">{user?.email}</p>
             </li>
-            <li className="hover:bg-gray-100 text-slate-500 rounded-md p-1 px-3 cursor-pointer" onClick={() => navigate(location.pathname.startsWith("/moderator") ? moderatorSpaceUrl : mySpaceUrl)}>
+            <li className="hover:bg-gray-100 dark:hover:bg-neutral-700 dark:hover:bg-opacity-30 text-slate-500 p-1 px-3 cursor-pointer" onClick={() => navigate(location.pathname.startsWith("/moderator") ? moderatorSpaceUrl : mySpaceUrl)}>
               Recipes
             </li>
-            <li className="hover:bg-gray-100 text-slate-500 rounded-md p-1 px-3 cursor-pointer flex justify-start items-center gap-2" onClick={() => navigate(notificationsUrl)}>
-              <p>Notification</p>
-              <div className="w-[14px] h-[14px] bg-content-color text-white text-[.6rem] rounded-full flex justify-center items-center">3</div>
-            </li>
             {(location.pathname === homeUrl || location.pathname === searchUrl) && (
-              <li className="hover:bg-gray-100 text-slate-500 rounded-md p-1 px-3 cursor-pointer" onClick={() => navigate(updateHealthConditionUrl)}>
-                Health condition
-              </li>
+              <>
+                <li className="hover:bg-gray-100 dark:hover:bg-neutral-700 dark:hover:bg-opacity-30 text-slate-500 p-1 px-3 cursor-pointer flex justify-start items-center gap-2" onClick={() => navigate(notificationsUrl)}>
+                  <p>Notification</p>
+                  <div className="w-[14px] h-[14px] bg-content-color text-white text-[.6rem] rounded-full flex justify-center items-center">3</div>
+                </li>
+                <li className="hover:bg-gray-100 dark:hover:bg-neutral-700 dark:hover:bg-opacity-30 text-slate-500 p-1 px-3 cursor-pointer" onClick={() => navigate(updateHealthConditionUrl)}>
+                  Health condition
+                </li>
+              </>
             )}
-            <li className="hover:bg-gray-100 rounded-md p-1 px-3 cursor-pointer text-red-700" onClick={async () => {
+            <li className="hover:bg-gray-100 dark:hover:bg-neutral-700 dark:hover:bg-opacity-30 p-1 px-3 cursor-pointer text-red-700" onClick={async () => {
               if (location.pathname.startsWith("/user")) {
                 await logOut().unwrap();
                 navigate(welcomeUrl);
@@ -104,6 +112,13 @@ function CircleDropdown() {
               Logout
             </li>
           </ul>
+          <div className="w-6 flex justify-center items-center aspect-square rounded-full bg-neutral-200 dark:bg-neutral-700 absolute top-4 right-2 cursor-pointer" onClick={toggleDarkMode}>
+            {dark ? (
+              <MdOutlineLightMode className="text-content-color" />
+            ) : (
+              <MdDarkMode className="text-content-color" />
+            )}
+          </div>
         </div>
       )}
     </div>

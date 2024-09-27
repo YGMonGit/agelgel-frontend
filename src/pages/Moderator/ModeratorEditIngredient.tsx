@@ -137,6 +137,7 @@ function ModeratorEditIngredient() {
               },
             },
           }}
+          className="dark:bg-neutral-800"
         >
           <Select
             value={type}

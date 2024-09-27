@@ -52,7 +52,7 @@ function Choice({ label, data, value, setValues, multiSelect, noPad }: ChoicePro
               px-3 py-1 rounded-lg text-sm font-medium
               ${isSelected(item)
                 ? 'bg-green-200 text-green-700'
-                : 'bg-[#F3F4F6] text-gray-700'}
+                : 'bg-[#F3F4F6] text-gray-700 dark:bg-opacity-30 dark:text-white'}
               transition-colors duration-200 ease-in-out
             `}
           >
