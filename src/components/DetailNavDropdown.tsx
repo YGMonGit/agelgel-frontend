@@ -2,18 +2,13 @@ import React, { useState, useRef, useEffect } from "react";
 import { PiDotsThreeOutlineVerticalLight } from "react-icons/pi";
 import QRCode from "react-qr-code";
 
-
 import { Button } from "./ui/button";
 
 import {
   useGetPrivateRecipeByIdQuery,
   useRemoveRecipeMutation,
 } from "../api/slices/recipe.slices";
-import {
-  useLocation,
-  useNavigate,
-  useParams,
-} from "react-router-dom";
+import { useLocation, useNavigate, useParams } from "react-router-dom";
 import ClipLoader from "react-spinners/ClipLoader";
 import { editPostUrl } from "../assets/data";
 import Drawer from "react-bottom-drawer";
@@ -22,7 +17,7 @@ import { LiaTelegram } from "react-icons/lia";
 import { IoClipboardOutline } from "react-icons/io5";
 import { LiaFacebookSquare } from "react-icons/lia";
 import { FaWhatsapp } from "react-icons/fa";
-
+import AlertDialogBox from "./AlertDialogBox";
 
 function DetailNavDropdown() {
   const rID = useParams();
@@ -31,7 +26,7 @@ function DetailNavDropdown() {
   const location = useLocation();
   const navigate = useNavigate();
 
-  const [removeRecipe, {isLoading}] = useRemoveRecipeMutation();
+  const [removeRecipe, { isLoading }] = useRemoveRecipeMutation();
 
   const [isOpen, setIsOpen] = useState<boolean>(false);
   const dropdownRef = useRef<HTMLDivElement>(null);
@@ -75,10 +70,18 @@ function DetailNavDropdown() {
     toggleDropdown();
   };
 
+  const openDialog = () => {
+    setOpenDialogBox(true);
+  };
+  const closeDialog = () => {
+    setOpenDialogBox(false);
+  };
+
   const handleDeletion = async () => {
     try {
       console.log("Recipe ID:", rID["id"]);
       await removeRecipe(String(rID["id"])).unwrap();
+      closeDialog();
       console.log("Recipe removed successfully");
       navigate(-1);
     } catch (error) {
@@ -94,9 +97,6 @@ function DetailNavDropdown() {
   const openDrawer = React.useCallback(() => setIsVisible(true), []);
   const closeDrawer = React.useCallback(() => setIsVisible(false), []);
 
-  const openDialog = () => {setOpenDialogBox(true);}
-  const closeDialog = () => {setOpenDialogBox(false);}
-  
   return (
     <div className="relative">
       <div
@@ -173,7 +173,7 @@ function DetailNavDropdown() {
                     target="_blank"
                     rel="noreferrer"
                   >
-                    <FaWhatsapp  className="text-[1.2rem]"/>
+                    <FaWhatsapp className="text-[1.2rem]" />
                   </a>
                 </button>
               </div>
@@ -201,34 +201,22 @@ function DetailNavDropdown() {
                     >
                       Edit
                     </li>
-                    <li className="hover:bg-gray-100 dark:hover:bg-neutral-700 dark:hover:bg-opacity-30 p-1 px-3 cursor-pointer text-red-700" onClick={openDialog}>
+                    <li
+                      className="hover:bg-gray-100 dark:hover:bg-neutral-700 dark:hover:bg-opacity-30 p-1 px-3 cursor-pointer text-red-700"
+                      onClick={openDialog}
+                    >
                       Delete
                     </li>
                     {openDialogBox && (
-                      <div className="fixed top-0 left-0 bg-black bg-opacity-40 h-screen w-screen z-20 flex justify-center items-center">
-                        <div className="w-[90%] max-w-[500px] bg-white dark:bg-neutral-900 dark:border-neutral-700 py-5 px-3 rounded-xl flex flex-col justify-start items-center xs:items-start">
-                          <p className="w-full px-2 text-[1.3rem] font-semibold">Confirm Deletion</p>
-                          <p className="w-full px-2 text-[1rem] text-slate-500 font-semibold">Are you sure you want to delete this recipe?</p>
-                          <div className="w-full flex flex-col xs:flex-row justify-end items-end gap-2 mt-4">
-                            <button className="w-full xs:w-auto px-5 text-[1.2rem] h-[40px] rounded-xl bg-neutral-800 flex justify-center items-center xs:order-1 order-2" onClick={closeDialog}>Cancel</button>
-                            <button className="w-full xs:w-auto px-5 text-[1.2rem] h-[40px] bg-red-700 rounded-xl xs:order-2 order-1" onClick={handleDeletion}>
-                              {isLoading? (
-                                <div className="flex justify-center items-center w-full h-full gap-2">
-                                  <ClipLoader
-                                    color={"white"}
-                                    size={15}
-                                    aria-label="Loading Spinner"
-                                    data-testid="loader"
-                                  />
-                                  <p className="text-white text-[1.1rem] italic">loading ...</p>
-                                </div>
-                              ): (
-                                <span>Yes, delete recipe</span>
-                              )}
-                            </button>
-                          </div>
-                        </div>
-                      </div>
+                      <AlertDialogBox
+                        title="Confirm Deletion"
+                        detail="Are you sure you want to delete this recipe?"
+                        cancelContent="Cancel"
+                        buttonContent="Yes, delete recipe"
+                        closeDialog={closeDialog}
+                        handleAction={handleDeletion}
+                        isLoading={isLoading}
+                      />
                     )}
                   </>
                 ) : (
@@ -236,7 +224,6 @@ function DetailNavDropdown() {
                     Report
                   </li>
                 )}
-
               </>
             )}
           </ul>

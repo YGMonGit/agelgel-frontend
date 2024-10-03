@@ -50,6 +50,7 @@ import { IoSearchOutline } from "react-icons/io5";
 import { MdAdd, MdClose, MdEdit } from "react-icons/md";
 import { IoMdAdd } from "react-icons/io";
 import { useUpdateStatsMutation } from "../api/slices/mealPlanner.slices";
+import AlertDialogBox from "./AlertDialogBox";
 
 interface NavbarProps {
   toggleDarkMode?: () => void;
@@ -61,11 +62,15 @@ function Navbar({toggleDarkMode, dark}: NavbarProps) {
   const navigate = useNavigate();
 
   const [changeWeight, { isLoading, isSuccess }] = useUpdateStatsMutation();
+  
+  const [openDialogBox, setOpenDialogBox] = useState(false);
+  const [openDialogBoxTwo, setOpenDialogBoxTwo] = useState(false);
 
   const updateWeight = async () => {
     try {
       console.log("Weight Updating");
       await changeWeight({statsData: {weight: weight}});
+      setOpenDialogBox(false);
       console.log("Weight Updated");
       
     } catch (error) {
@@ -74,6 +79,7 @@ function Navbar({toggleDarkMode, dark}: NavbarProps) {
     }
     
   }
+
 
   
   const [weight, setWeight] = useState<number>(0);
@@ -143,36 +149,20 @@ function Navbar({toggleDarkMode, dark}: NavbarProps) {
           >
             <MdEdit className="text-[1.6rem]" />
           </NavLink>
-          <AlertDialog>
-            <AlertDialogTrigger asChild>
-              <div className="text-content-color text-[1.1rem] flex items-end font-[600] leading-none cursor-pointer gap-1">
-                <IoMdAdd className="text-[1.6rem]" />
-              </div>
-            </AlertDialogTrigger>
-            <AlertDialogContent className="bg-white dark:bg-neutral-800 w-[90%] rounded-2xl">
-              <div className="flex flex-col justify-start items-start gap-2">
-                <p className="text-[1.1rem] font-semibold mt-2">Weight</p>
-                <input 
-                  type="number"
-                  value={weight}
-                  onChange={onWeightChange}
-                  placeholder="weight"
-                  className="py-[10px] w-full bg-[#F9FAFB] leading-none text-[1rem] px-4 border outline-none rounded-lg border-[#D1D5DB]"
-                />
-              </div>
-              <AlertDialogFooter>
-                <AlertDialogCancel className="text-[1.1rem] border-0 absolute top-2 right-3 outline-none">
-                  <MdClose />
-                </AlertDialogCancel>
-                <AlertDialogAction
-                  className="text-[1.2rem] h-[50px] bg-content-color rounded-xl"
-                  onClick={updateWeight}
-                >
-                  Update Weight
-                </AlertDialogAction>
-              </AlertDialogFooter>
-            </AlertDialogContent>
-          </AlertDialog>
+          <div className="text-content-color text-[1.1rem] flex items-end font-[600] leading-none cursor-pointer gap-1" onClick={() => {setOpenDialogBox(true)}}>
+            <IoMdAdd className="text-[1.6rem]" />
+          </div>
+          {openDialogBox && (
+            <AlertDialogBox title="Weight" buttonContent="Update Weight" closeDialog={() => {setOpenDialogBox(false)}} handleAction={updateWeight} isLoading={isLoading} single={true}>
+              <input 
+                type="number"
+                value={weight}
+                onChange={onWeightChange}
+                placeholder="weight"
+                className="py-[10px] mt-4 w-full bg-[#F9FAFB] dark:bg-neutral-900 leading-none text-[1rem] px-4 border outline-none rounded-lg border-[#D1D5DB] dark:border-neutral-800"
+              />
+            </AlertDialogBox>
+          )}
         </div>
       );
     } else if (location.pathname === loginUrl || location.pathname === moderatorLoginUrl) {
@@ -194,37 +184,26 @@ function Navbar({toggleDarkMode, dark}: NavbarProps) {
       );
     } else if (location.pathname === postUrl) {
       return (
-        <AlertDialog>
-          <AlertDialogTrigger asChild>
-            <div className="rounded-full w-9 h-9 flex justify-center items-center cursor-pointer">
-              <SlClose className="text-red-600 text-[1.4rem]" />
-            </div>
-          </AlertDialogTrigger>
-          <AlertDialogContent className="bg-white w-[90%] rounded-2xl">
-            <AlertDialogHeader>
-              <AlertDialogTitle className="text-[1.6rem]">
-                Discard New Recipe
-              </AlertDialogTitle>
-              <AlertDialogDescription className="text-[1.2rem] text-slate-400">
-                Are you sure you want to delete this recipe?
-              </AlertDialogDescription>
-            </AlertDialogHeader>
-            <AlertDialogFooter>
-              <AlertDialogCancel className="text-[1.2rem] h-[56px] rounded-xl">
-                No, I've changed my mind
-              </AlertDialogCancel>
-              <AlertDialogAction
-                className="text-[1.2rem] h-[56px] bg-red-700 rounded-xl"
-                onClick={() => {
-                  navigate(homeUrl);
-                  window.scrollTo({ top: 0 });
-                }}
-              >
-                Yes, delete it
-              </AlertDialogAction>
-            </AlertDialogFooter>
-          </AlertDialogContent>
-        </AlertDialog>
+        <>
+          <div className="rounded-full w-9 h-9 flex justify-center items-center cursor-pointer" onClick={() => {setOpenDialogBoxTwo(true)}}>
+            <SlClose className="text-red-600 text-[1.4rem]" />
+          </div>
+          {openDialogBoxTwo && (
+            <AlertDialogBox
+              title="Discard New Recipe"
+              detail="Are you sure you want to delete this recipe?"
+              cancelContent="No, I've changed my mind"
+              buttonContent="Yes, delete it"
+              closeDialog={() => {setOpenDialogBoxTwo(false)}}
+              handleClick={() => {
+                setOpenDialogBoxTwo(false);
+                navigate(homeUrl);
+                window.scrollTo({ top: 0 });
+              }}
+              isLoading={isLoading}
+            />
+          )}
+        </>
       );
     } else if (location.pathname.startsWith(recipeDetailUrl)) {
       return <DetailNavDropdown />;
