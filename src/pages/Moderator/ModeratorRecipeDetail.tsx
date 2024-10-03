@@ -43,18 +43,20 @@ import {
 } from "../../api/slices/review.slices";
 import CircularProgress from "../../components/CircularProgress";
 import DisplayCard from "../../components/DisplayCard";
-import { useToggleBookedRecipeMutation } from "../../api/slices/user.slices";
+import { useGetUserByIdQuery, useToggleBookedRecipeMutation } from "../../api/slices/user.slices";
 import ClipLoader from "react-spinners/ClipLoader";
 import { getCalorieColor, getCarbsColor, getFatColor, getFiberColor, getProteinColor } from "../../assets/data";
 
 // import { IoAdd } from "react-icons/io5";
-import { MdVerified } from "react-icons/md";
+import { MdEmail, MdVerified } from "react-icons/md";
 import DetailInput from "../../components/DetailInput";
 import { Button } from "../../components/ui/button";
 import { RiCloseLargeLine } from "react-icons/ri";
 import { useUpdateRecipeStatusMutation } from "../../api/slices/moderator.slices";
 import { ERecipeStatus } from "../../api/types/recipe.type";
 import { set } from "react-hook-form";
+import AlertDialogBox from "../../components/AlertDialogBox";
+import { FaPhoneAlt } from "react-icons/fa";
 
 const StyledRating = styled(Rating)({
   fontSize: "1rem",
@@ -66,6 +68,8 @@ function ModeratorRecipeDetail() {
   const [value, setValue] = React.useState<number | null>(0);
   const [mComment, setMComment] = useState("");
   const showCommentButton = value !== 0 && newComment.trim() !== "";
+
+
 
   const scrollableDivRef = useRef<HTMLDivElement>(null);
 
@@ -114,6 +118,8 @@ function ModeratorRecipeDetail() {
       </button>
     ),
   };
+
+  const [openDialogBoxTwo, setOpenDialogBoxTwo] = useState(false);
 
   const { data: recipe, isLoading: recipesLoading } =
     useGetModeratorRecipeByIdQuery(String(rID.id));
@@ -187,6 +193,8 @@ function ModeratorRecipeDetail() {
   const onMCommentChange = (e: React.ChangeEvent<HTMLTextAreaElement>) =>
     setMComment(e.target.value);
 
+  const { data: user } = useGetUserByIdQuery(String(recipe?.user.user));
+
   if (!recipe) {
     return (
       <div className="w-full h-full max-w-[800px] px-5 flex flex-col justify-start items-start gap-3">
@@ -209,7 +217,7 @@ function ModeratorRecipeDetail() {
   if (recipe) {
     return (
       <div className="w-full max-w-[800px] px-5 flex flex-col justify-start items-center">
-        <div className=" bg-neutral-100 my-5 slide-container bg-custom-content-bg w-full max-w-[500px]">
+        <div className="bg-neutral-100 dark:bg-transparent dark:text-slate-400 italic my-5 slide-container bg-custom-content-bg w-full max-w-[500px]">
           {recipe?.imgs.length > 1 ? (
             <Slide
               duration={9000}
@@ -220,25 +228,47 @@ function ModeratorRecipeDetail() {
             >
               {recipe?.imgs.map((slideImage, index) => (
                 <div key={index}>
-                  <div className="flex justify-center items-center bg-white w-full h-full relative overflow-hidden">
+                  <div className="flex justify-center items-center bg-white dark:bg-neutral-800 w-full h-full relative overflow-hidden">
                     <img src={slideImage} alt="pic" className="w-full" />
                   </div>
                 </div>
               ))}
             </Slide>
           ) : (
-            <div className="flex justify-center items-center bg-cover w-full h-full rounded-3xl relative">
+            <div className="flex justify-center items-center bg-cover dark:bg-neutral-800 w-full h-full rounded-3xl relative">
               <img src={recipe?.imgs[0]} alt="pic" className="w-full" />
             </div>
           )}
         </div>
         <div className="w-full flex justify-between items-center leading-none">
-          <div className="flex items-center gap-2">
+          <div className="flex items-center gap-2 select-none cursor-pointer"
+            onClick={() => {
+              setOpenDialogBoxTwo(true);
+            }}
+          >
             <img
               src={recipe.user.profile_img}
               className="w-8 h-8 rounded-full object-cover"
               alt="pic"
             />
+            {openDialogBoxTwo && (
+              <AlertDialogBox
+                  buttonContent="Close"
+                  closeDialog={() => {
+                    setOpenDialogBoxTwo(false);
+                  }}
+                  handleClick={() => {
+                    setOpenDialogBoxTwo(false);
+                  }}
+                  single={true}
+                >
+                  <div className="w-full flex flex-col items-start justify-start gap-2 *:pl-4">
+                    <p className="flex justify-start items-center gap-2 text-slate-400 italic"><img src={recipe.user.profile_img} className="w-6 h-6 object-cover rounded-full bg-neutral-100 dark:bg-neutral-800" /> {user?.full_name}</p>
+                    <p className="flex justify-start items-center gap-2 text-slate-400 italic"><FaPhoneAlt className="text-content-color" /> {user?.phone_number}</p>
+                    <p className="flex justify-start items-center gap-2 text-slate-400 italic"><MdEmail className="text-content-color"/> {user?.email}</p>
+                  </div>
+                </AlertDialogBox>
+            )}
             <p className="text-[1.3rem] font-semibold">
               {recipe.user.full_name}
             </p>
@@ -466,8 +496,6 @@ function ModeratorRecipeDetail() {
               value={mComment}
               onChange={onMCommentChange}
               noPad={true}
-            // register={register}
-            // errors={errors && errors.instructions}
             />
             <div className="w-full flex flex-col justify-center items-center px-2 gap-2 pb-8">
               <WideButton
