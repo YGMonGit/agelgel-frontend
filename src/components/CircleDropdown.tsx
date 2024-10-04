@@ -5,13 +5,14 @@ import { useGetUserQuery, useLogOutMutation } from "../api/slices/user.slices";
 import { useGetModeratorQuery, useModeratorIogOutMutation } from "../api/slices/moderator.slices";
 import { welcomeUrl } from "../assets/data";
 import { MdDarkMode, MdOutlineLightMode } from "react-icons/md";
+import { useGetMyNotificationCountQuery } from "../api/slices/notification.slices";
 
 interface CircularDropdownProps {
   toggleDarkMode?: () => void;
   dark?: boolean;
 }
 
-function CircleDropdown({toggleDarkMode, dark}: CircularDropdownProps) {
+function CircleDropdown({ toggleDarkMode, dark }: CircularDropdownProps) {
   const navigate = useNavigate();
   const location = useLocation();
   const [isOpen, setIsOpen] = useState<boolean>(false);
@@ -20,6 +21,8 @@ function CircleDropdown({toggleDarkMode, dark}: CircularDropdownProps) {
   const [user, setUser] = useState<any>(null);
   const { data: _user } = useGetUserQuery({} as any, { skip: !location.pathname.startsWith("/user") });
   const { data: moderator } = useGetModeratorQuery({} as any, { skip: !location.pathname.startsWith("/moderator") });
+
+  const { data: notificationCount } = useGetMyNotificationCountQuery();
 
   useEffect(() => {
     if (location.pathname.startsWith("/user")) {
@@ -91,7 +94,7 @@ function CircleDropdown({toggleDarkMode, dark}: CircularDropdownProps) {
               <>
                 <li className="hover:bg-gray-100 dark:hover:bg-neutral-700 dark:hover:bg-opacity-30 text-slate-500 p-1 px-3 cursor-pointer flex justify-start items-center gap-2" onClick={() => navigate(notificationsUrl)}>
                   <p>Notification</p>
-                  <div className="w-[14px] h-[14px] bg-content-color text-white text-[.6rem] rounded-full flex justify-center items-center">3</div>
+                  <div className="w-[14px] h-[14px] bg-content-color text-white text-[.6rem] rounded-full flex justify-center items-center">{notificationCount ?? 0}</div>
                 </li>
                 <li className="hover:bg-gray-100 dark:hover:bg-neutral-700 dark:hover:bg-opacity-30 text-slate-500 p-1 px-3 cursor-pointer" onClick={() => navigate(updateHealthConditionUrl)}>
                   Health condition

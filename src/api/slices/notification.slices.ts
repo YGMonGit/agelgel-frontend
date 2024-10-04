@@ -1,5 +1,5 @@
 import agelgilAPI from "..";
-import { INotification, } from "../types/Notification.type";
+import { INotification, } from "../types/notification.type";
 
 const notificationApiSlice = agelgilAPI.injectEndpoints({
     endpoints: (builder) => ({
@@ -20,9 +20,13 @@ const notificationApiSlice = agelgilAPI.injectEndpoints({
                     : [{ type: 'Notification' as const, id: 'Notification-LIST' }],
             transformResponse: (response: { body: INotification[] }) => response.body,
         }),
+        getMyNotificationCount: builder.query<number, void>({
+            query: () => '/private/notification/user/count',
+            transformResponse: (response: { body: number }) => response.body,
+        }),
         markAsRead: builder.mutation<INotification, { id: string }>({
             query: ({ id }) => ({
-                url: `/private/notification/markAsRead${id}`,
+                url: `/private/notification/markAsRead/${id}`,
                 method: 'PATCH',
             }),
             invalidatesTags: (result, _, { id }) => result ? [{ type: 'Notification', id }] : [],
@@ -35,5 +39,6 @@ const notificationApiSlice = agelgilAPI.injectEndpoints({
 export const {
     useGetNotificationByIdQuery,
     useGetMyNotificationQuery,
+    useGetMyNotificationCountQuery,
     useMarkAsReadMutation
 } = notificationApiSlice
