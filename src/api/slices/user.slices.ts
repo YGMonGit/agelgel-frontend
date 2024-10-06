@@ -11,7 +11,7 @@ const userApiSlice = agelgilAPI.injectEndpoints({
         }),
         getUser: builder.query<IUser, void>({
             query: () => `/private/user/`,
-            providesTags: ['User'],
+            providesTags: (result) => result ? [{ type: 'User', id: result._id }] : [],
             transformResponse: (response: { body: IUser }) => response.body,
         }),
         updateUser: builder.mutation<IUser, { id: string, data: IUserUpdateFrom }>({
