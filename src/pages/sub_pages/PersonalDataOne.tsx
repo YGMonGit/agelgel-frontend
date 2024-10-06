@@ -11,8 +11,8 @@ import { Controller } from "react-hook-form";
 
 interface PersonalDataOneProps {
   setFromPage: React.Dispatch<React.SetStateAction<number>>;
-  weight: number;
-  setWeight: React.Dispatch<React.SetStateAction<number>>;
+  weight?: number;
+  setWeight?: React.Dispatch<React.SetStateAction<number>>;
   height: number;
   setHeight: React.Dispatch<React.SetStateAction<number>>;
   age: number;
@@ -20,15 +20,17 @@ interface PersonalDataOneProps {
   register: any;
   errors: any;
   control: any;
+  showWeight?: boolean;
 }
 
-function PersonalDataOne({ setFromPage, weight, setWeight, height, setHeight, age, setAge, register, errors, control }: PersonalDataOneProps) {
+function PersonalDataOne({ setFromPage, weight, setWeight, height, setHeight, age, setAge, register, errors, control, showWeight = true }: PersonalDataOneProps) {
   const onWeightChange = (e: React.ChangeEvent<HTMLInputElement>) =>
-    setWeight(Number.parseInt(e.target.value));
+    setWeight && setWeight(Number.parseInt(e.target.value));
   const onHeightChange = (e: React.ChangeEvent<HTMLInputElement>) =>
     setHeight(Number.parseInt(e.target.value));
   const onAgeChange = (e: React.ChangeEvent<HTMLInputElement>) =>
     setAge(Number.parseInt(e.target.value));
+
 
   const nextPage = () => setFromPage(2);
 
@@ -36,26 +38,30 @@ function PersonalDataOne({ setFromPage, weight, setWeight, height, setHeight, ag
     <div className="w-full flex flex-col flex-grow justify-start items-center">
       <img src={SpaceOne} alt="pic" className="w-full p-9 pt-12 max-w-[450px]" />
 
-      <Controller
-        name="weight"
-        control={control}
-        defaultValue={weight}
-        render={({ field }) => (
-          <Input
-            type="number"
-            label="Weight"
-            placeholder="weight"
-            {...field}
-            value={weight}
-            onChange={(e) => {
-              const value = e.target.value;
-              field.onChange(Number.parseInt(value));
-              onWeightChange(e);
-            }}
-            errors={errors.weight}
+      {
+        showWeight == true ? (
+          <Controller
+            name="weight"
+            control={control}
+            defaultValue={weight}
+            render={({ field }) => (
+              <Input
+                type="number"
+                label="Weight"
+                placeholder="weight"
+                {...field}
+                value={weight}
+                onChange={(e) => {
+                  const value = e.target.value;
+                  field.onChange(Number.parseInt(value));
+                  onWeightChange(e);
+                }}
+                errors={errors.weight}
+              />
+            )}
           />
-        )}
-      />
+        ) : null
+      }
 
       <Controller
         name="height"

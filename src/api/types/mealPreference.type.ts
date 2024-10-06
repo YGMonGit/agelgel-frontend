@@ -41,7 +41,7 @@ export interface IUserStats {
     date: Date;
     value: number;
   }[];
-  
+
   weight: number;
   height: number;
   age: number;

@@ -18,3 +18,11 @@ export const AddMealPreferenceSchema = z.object({
   activityLevel: z.nativeEnum(EActivityLevel, { message: "Invalid input" }),
   diet_goals: z.nativeEnum(EDietGoals, { message: "Invalid input" }),
 });
+
+export const updateMealPreferenceSchema = z.object({
+  height: z.number().min(1, "Height must be greater than 0").refine((value) => !isNaN(value), "Height is required"),
+  age: z.number().int().min(1, "Age must be greater than 0").max(110, "Age cannot be this high"),
+  gender: z.nativeEnum(EGender, { message: "Invalid input Male or Female" }),
+  activityLevel: z.nativeEnum(EActivityLevel, { message: "Invalid input" }),
+  diet_goals: z.nativeEnum(EDietGoals, { message: "Invalid input" }),
+});
