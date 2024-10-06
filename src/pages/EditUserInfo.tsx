@@ -59,35 +59,39 @@ function EditUserInfo() {
 
   console.log({ errors });
 
+  const [updateUser] = useUpdateUserMutation();
 
-  async function Update(user: IUserUpdateFrom) {
+
+  async function Update(_user: IUserUpdateFrom) {
     console.log("Update up in...");
-    console.log({ user });
+    console.log({ _user });
 
-    // try {
-    //   const file = user.profile_img;
-    //   const fileUrl = await uploadFile(file as any);
+    try {
+      const file = _user.profile_img;
+      const fileUrl = await uploadFile(file as any);
 
-    //   await signUp({
-    //     data: {
-    //       ...user,
-    //       profile_img: fileUrl,
-    //       medical_condition: {
-    //         chronicDiseases: healthCondition.length == 0 ? [EChronicDisease.none] : healthCondition,
-    //         allergies: allergy.length == 0 ? [EAllergies.none] : allergy,
-    //         dietary_preferences: mealPreference.length == 0 ? [EDietaryPreferences.none] : mealPreference
-    //       }
-    //     }
-    //   }).unwrap();
+      await updateUser({
+        id: user?._id ?? "",
+        data: {
+          ..._user,
+          profile_img: fileUrl
+        }
+      }).unwrap();
 
-    //   navigate(`/user/${homeUrl}`);
+      navigate(`/user/${homeUrl}`);
 
-    // } catch (error: any) {
-    //   if (!error.data.error) return;
-    //   const err = error.data.error;
-    //   if (err.type === "Validation")
-    //     setError(err.attr, { message: err.error });
-    // }
+      setImage(null);
+      setFirstName("");
+      setLastName("");
+      setEmail("");
+      setPhone("");
+
+    } catch (error: any) {
+      if (!error.data.error) return;
+      const err = error.data.error;
+      if (err.type === "Validation")
+        setError(err.attr, { message: err.error });
+    }
   }
 
   const formatErrors = (): string | null => {
