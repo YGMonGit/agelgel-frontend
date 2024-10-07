@@ -17,6 +17,7 @@ interface SingUpCreatePasswordProps {
   errors: any;
   forModerator?: boolean;
   isLoading?: any;
+  second?: boolean;
 }
 
 function SignUpCreatePassword({
@@ -29,6 +30,7 @@ function SignUpCreatePassword({
   errors,
   forModerator = false,
   isLoading,
+  second,
 }: SingUpCreatePasswordProps) {
   const [showPassword, setShowPassword] = useState(false);
   const [showCPassword, setShowCPassword] = useState(false);
@@ -39,7 +41,7 @@ function SignUpCreatePassword({
     setPassword(e.target.value);
 
   const onBackClick = () => {
-    setFormNumber(2);
+    setFormNumber(second? 1 : 2);
   };
   const onNextClick = () => {
     setFormNumber(4);
@@ -115,11 +117,16 @@ function SignUpCreatePassword({
             />
           )
         ): (
+          second ? 
           <WideLink
             label="Next"
             color="bg-content-color"
             clickAction={onNextClick}
-          />
+          /> : 
+          <WideButton
+              label="Finish"
+              color="bg-content-color"
+            />
         )}
       </div>
       <div className="w-full px-5 text-slate-400 text-[1rem] mb-10">

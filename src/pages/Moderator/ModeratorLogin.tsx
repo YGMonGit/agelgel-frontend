@@ -4,7 +4,7 @@ import { Input } from "../../components/Input";
 import { RiEyeCloseLine, RiEyeLine } from "react-icons/ri";
 import { Checkbox } from "../../components/ui/checkbox";
 import WideButton from "../../components/WideButton";
-import { moderatorHomeUrl, moderatorSignUpUrl, signUpUrl } from "../../assets/data";
+import { moderatorChangePasswordUrl, moderatorHomeUrl, moderatorSignUpUrl, signUpUrl } from "../../assets/data";
 import { useForm } from "react-hook-form";
 import { IUserLogInFrom } from "../../api/types/user.type";
 import { zodResolver } from '@hookform/resolvers/zod';
@@ -72,7 +72,7 @@ function ModeratorLogin() {
           </Input>
         </div>
         <div className="w-full px-5 flex justify-between items-start flex-grow -mt-5">
-          <a href="/" className="text-content-color font-[470]">Forgot Password?</a>
+          <a href={moderatorChangePasswordUrl} className="text-content-color font-[470]">Forgot Password?</a>
         </div>
         <div className="w-full px-5">
           {isLoading ? (
