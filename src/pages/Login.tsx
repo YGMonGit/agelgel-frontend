@@ -4,7 +4,7 @@ import { Input } from "../components/Input";
 import { RiEyeCloseLine, RiEyeLine } from "react-icons/ri";
 import { Checkbox } from "../components/ui/checkbox";
 import WideButton from "../components/WideButton";
-import { homeUrl, signUpUrl } from "../assets/data";
+import { changePasswordUrl, homeUrl, signUpUrl } from "../assets/data";
 import { useLogInMutation } from "../api/slices/user.slices";
 import { useForm } from "react-hook-form";
 import { IUserLogInFrom } from "../api/types/user.type";
@@ -13,6 +13,7 @@ import { useNavigate } from "react-router-dom";
 import { logInSchema } from "../validation/user.validation";
 import ClipLoader from "react-spinners/ClipLoader";
 import ErrorPopup from "../components/ErrorPopup"; // Import the ErrorPopup component
+import ChangePassword from "./ChangePassword";
 
 function Login() {
   const [email, setEmail] = useState("");
@@ -95,7 +96,7 @@ function Login() {
           </Input>
         </div>
         <div className="w-full px-5 flex justify-between items-start flex-grow -mt-5">
-          <a href="/" className="text-content-color font-[470]">
+          <a href={changePasswordUrl} className="text-content-color font-[470]">
             Forgot Password?
           </a>
         </div>

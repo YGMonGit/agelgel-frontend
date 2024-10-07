@@ -42,6 +42,8 @@ import {
   editUserInfoUrl,
   editPersonalDataUrl,
   notificationsUrl,
+  changePasswordUrl,
+  moderatorChangePasswordUrl,
 } from "./assets/data";
 import ModeratorAddIngredient from "./pages/Moderator/ModeratorAddIngredient";
 import ModeratorEditIngredient from "./pages/Moderator/ModeratorEditIngredient";
@@ -52,6 +54,8 @@ import UpdateHealthCondition from "./pages/UpdateHealthCondition";
 import EditUserInfo from "./pages/EditUserInfo";
 import EditPersonalData from "./pages/EditPersonalData";
 import UserNotification from "./pages/UserNotification";
+import Page404 from "./pages/Page404";
+import ChangePassword from "./pages/ChangePassword";
 
 // ... (other imports remain the same)
 
@@ -61,7 +65,11 @@ interface NavLayoutProps {
   dark?: boolean;
 }
 
-const NavLayout: React.FC<NavLayoutProps> = ({ children, toggleDarkMode, dark }) => (
+const NavLayout: React.FC<NavLayoutProps> = ({
+  children,
+  toggleDarkMode,
+  dark,
+}) => (
   <div className="w-full flex flex-col justify-center items-start flex-grow">
     <Navbar toggleDarkMode={toggleDarkMode} dark={dark} />
     {children}
@@ -73,16 +81,16 @@ function App() {
   // const [darkMode, setDarkMode] = useState(false);
 
   const [darkMode, setDarkMode] = useState(() => {
-    const savedMode = localStorage.getItem('darkMode');
+    const savedMode = localStorage.getItem("darkMode");
     return savedMode !== null ? JSON.parse(savedMode) : false;
   });
 
   const toggleDarkMode = () => {
     console.log("hello");
-    
+
     setDarkMode((prevMode: boolean) => {
       const newMode = !prevMode;
-      localStorage.setItem('darkMode', JSON.stringify(newMode)); // Save new mode to local storage
+      localStorage.setItem("darkMode", JSON.stringify(newMode)); // Save new mode to local storage
       return newMode;
     });
   };
@@ -94,7 +102,6 @@ function App() {
 
   return (
     <div className={`${darkMode && "dark"}`}>
-
       <div className="w-full flex justify-center items-center dark:bg-neutral-900 dark:text-white">
         <div
           className="w-full overflow-x-hidden flex flex-col justify-start items-center max-w-[800px]"
@@ -143,12 +150,25 @@ function App() {
                 </NavLayout>
               }
             />
+            <Route
+              path={changePasswordUrl}
+              element={
+                <NavLayout>
+                  <ChangePassword />
+                </NavLayout>
+              }
+            />
+            <Route
+              path={moderatorChangePasswordUrl}
+              element={
+                <NavLayout>
+                  <ChangePassword />
+                </NavLayout>
+              }
+            />
 
             {/* Protected user routes */}
-            <Route
-              path="/user"
-              element={<ProtectedRoute />}
-            >
+            <Route path="/user" element={<ProtectedRoute />}>
               <Route
                 path={homeUrl}
                 element={
@@ -162,6 +182,14 @@ function App() {
                 element={
                   <NavLayout toggleDarkMode={toggleDarkMode} dark={darkMode}>
                     <Search />
+                  </NavLayout>
+                }
+              />
+              <Route
+                path="/user/page-404"
+                element={
+                  <NavLayout toggleDarkMode={toggleDarkMode} dark={darkMode}>
+                    <Page404 />
                   </NavLayout>
                 }
               />

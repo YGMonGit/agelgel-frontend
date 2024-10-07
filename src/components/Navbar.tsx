@@ -30,6 +30,8 @@ import {
   updateHealthConditionUrl,
   editPersonalDataUrl,
   notificationsUrl,
+  moderatorChangePasswordUrl,
+  changePasswordUrl,
 } from "../assets/data";
 
 import { SlClose, SlArrowLeft } from "react-icons/sl";
@@ -57,42 +59,40 @@ interface NavbarProps {
   dark?: boolean;
 }
 
-function Navbar({toggleDarkMode, dark}: NavbarProps) {
+function Navbar({ toggleDarkMode, dark }: NavbarProps) {
   const location = useLocation();
   const navigate = useNavigate();
 
   const [changeWeight, { isLoading, isSuccess }] = useUpdateStatsMutation();
-  
+
   const [openDialogBox, setOpenDialogBox] = useState(false);
   const [openDialogBoxTwo, setOpenDialogBoxTwo] = useState(false);
 
   const updateWeight = async () => {
     try {
       console.log("Weight Updating");
-      await changeWeight({statsData: {weight: weight}});
+      await changeWeight({ statsData: { weight: weight } });
       setOpenDialogBox(false);
       console.log("Weight Updated");
-      
     } catch (error) {
       console.log(error);
-      
     }
-    
-  }
+  };
 
-
-  
   const [weight, setWeight] = useState<number>(0);
   const onWeightChange = (e: React.ChangeEvent<HTMLInputElement>) =>
     setWeight(Number.parseInt(e.target.value));
-  
+
   useEffect(() => {
     console.log("weight update success");
     setWeight(0);
   }, [isSuccess]);
 
   const getRightContent = () => {
-    if (location.pathname === homeUrl || location.pathname === moderatorHomeUrl) {
+    if (
+      location.pathname === homeUrl ||
+      location.pathname === moderatorHomeUrl
+    ) {
       return (
         <div className="flex justify-center items-center gap-2">
           {location.pathname === homeUrl && (
@@ -103,7 +103,11 @@ function Navbar({toggleDarkMode, dark}: NavbarProps) {
                 window.scrollTo({ top: 0 });
               }}
             >
-              <BiSolidUserDetail width={25} height={25} className="text-[1.3rem]" />
+              <BiSolidUserDetail
+                width={25}
+                height={25}
+                className="text-[1.3rem]"
+              />
             </NavLink>
           )}
           <NavLink
@@ -118,7 +122,10 @@ function Navbar({toggleDarkMode, dark}: NavbarProps) {
           <CircleDropdown toggleDarkMode={toggleDarkMode} dark={dark} />
         </div>
       );
-    } else if (location.pathname === signUpUrl || location.pathname === moderatorSignUpUrl) {
+    } else if (
+      location.pathname === signUpUrl ||
+      location.pathname === moderatorSignUpUrl
+    ) {
       return (
         <NavLink
           to="#"
@@ -135,7 +142,10 @@ function Navbar({toggleDarkMode, dark}: NavbarProps) {
           />
         </NavLink>
       );
-    } else if (location.pathname === searchUrl || location.pathname === moderatorSearchUrl) {
+    } else if (
+      location.pathname === searchUrl ||
+      location.pathname === moderatorSearchUrl
+    ) {
       return <CircleDropdown toggleDarkMode={toggleDarkMode} dark={dark} />;
     } else if (location.pathname === mealPlannerUrl) {
       return (
@@ -149,12 +159,26 @@ function Navbar({toggleDarkMode, dark}: NavbarProps) {
           >
             <MdEdit className="text-[1.6rem]" />
           </NavLink>
-          <div className="text-content-color text-[1.1rem] flex items-end font-[600] leading-none cursor-pointer gap-1" onClick={() => {setOpenDialogBox(true)}}>
+          <div
+            className="text-content-color text-[1.1rem] flex items-end font-[600] leading-none cursor-pointer gap-1"
+            onClick={() => {
+              setOpenDialogBox(true);
+            }}
+          >
             <IoMdAdd className="text-[1.6rem]" />
           </div>
           {openDialogBox && (
-            <AlertDialogBox title="Weight" buttonContent="Update Weight" closeDialog={() => {setOpenDialogBox(false)}} handleAction={updateWeight} isLoading={isLoading} single={true}>
-              <input 
+            <AlertDialogBox
+              title="Weight"
+              buttonContent="Update Weight"
+              closeDialog={() => {
+                setOpenDialogBox(false);
+              }}
+              handleAction={updateWeight}
+              isLoading={isLoading}
+              single={true}
+            >
+              <input
                 type="number"
                 value={weight}
                 onChange={onWeightChange}
@@ -165,10 +189,19 @@ function Navbar({toggleDarkMode, dark}: NavbarProps) {
           )}
         </div>
       );
-    } else if (location.pathname === loginUrl || location.pathname === moderatorLoginUrl) {
+    } else if (
+      location.pathname === loginUrl ||
+      location.pathname === moderatorLoginUrl ||
+      location.pathname === changePasswordUrl ||
+      location.pathname === moderatorChangePasswordUrl
+    ) {
       return (
         <NavLink
-          to={location.pathname.startsWith("/moderator") ? moderatorSignUpUrl : signUpUrl}
+          to={
+            location.pathname.startsWith("/moderator")
+              ? moderatorSignUpUrl
+              : signUpUrl
+          }
           className="text-content-color text-[1.1rem] flex items-end font-[600] leading-none gap-1"
           onClick={() => {
             window.scrollTo({ top: 0 });
@@ -185,7 +218,12 @@ function Navbar({toggleDarkMode, dark}: NavbarProps) {
     } else if (location.pathname === postUrl) {
       return (
         <>
-          <div className="rounded-full w-9 h-9 flex justify-center items-center cursor-pointer" onClick={() => {setOpenDialogBoxTwo(true)}}>
+          <div
+            className="rounded-full w-9 h-9 flex justify-center items-center cursor-pointer"
+            onClick={() => {
+              setOpenDialogBoxTwo(true);
+            }}
+          >
             <SlClose className="text-red-600 text-[1.4rem]" />
           </div>
           {openDialogBoxTwo && (
@@ -194,7 +232,9 @@ function Navbar({toggleDarkMode, dark}: NavbarProps) {
               detail="Are you sure you want to delete this recipe?"
               cancelContent="No, I've changed my mind"
               buttonContent="Yes, delete it"
-              closeDialog={() => {setOpenDialogBoxTwo(false)}}
+              closeDialog={() => {
+                setOpenDialogBoxTwo(false);
+              }}
               handleClick={() => {
                 setOpenDialogBoxTwo(false);
                 navigate(homeUrl);
@@ -222,11 +262,18 @@ function Navbar({toggleDarkMode, dark}: NavbarProps) {
       location.pathname === moderatorLoginUrl ||
       location.pathname === signUpUrl ||
       location.pathname === moderatorSignUpUrl ||
+      location.pathname === changePasswordUrl ||
+      location.pathname === moderatorChangePasswordUrl ||
+      location.pathname === "/user/page-404" ||
       location.pathname === postUrl
     ) {
       return (
         <NavLink
-          to={location.pathname.startsWith("/moderator") ? moderatorHomeUrl : homeUrl}
+          to={
+            location.pathname.startsWith("/moderator")
+              ? moderatorHomeUrl
+              : homeUrl
+          }
           className="flex justify-start items-center gap-2 select-none"
           onClick={() => {
             window.scrollTo({ top: 0 });
@@ -250,7 +297,7 @@ function Navbar({toggleDarkMode, dark}: NavbarProps) {
       location.pathname === editPersonalDataUrl ||
       location.pathname === notificationsUrl ||
       location.pathname === moderatorEditInfoUrl ||
-      location.pathname.startsWith(moderatorEditIngredientUrl) 
+      location.pathname.startsWith(moderatorEditIngredientUrl)
     ) {
       return (
         <NavLink
@@ -273,7 +320,11 @@ function Navbar({toggleDarkMode, dark}: NavbarProps) {
 
   return (
     <nav
-      className={`w-full flex justify-center items-center bg-red-30 ${location.pathname !== homeUrl && location.pathname !== moderatorHomeUrl && "shadow-md"} fixed top-0 left-0 right-0 z-50 bg-white dark:bg-neutral-800`}
+      className={`w-full flex justify-center items-center bg-red-30 ${
+        location.pathname !== homeUrl &&
+        location.pathname !== moderatorHomeUrl &&
+        "shadow-md"
+      } fixed top-0 left-0 right-0 z-50 bg-white dark:bg-neutral-800`}
     >
       <div
         className={`w-full max-w-[800px] h-[56px] py-[14px] px-5 flex justify-between items-center z-50`}
