@@ -16,6 +16,8 @@ import { useModeratorSignUpMutation } from "../api/slices/moderator.slices";
 import { IModeratorSignUpFrom } from "../api/types/moderator.type";
 import VerifyEmail from "./VerifyEmail";
 import { Input } from "../components/Input";
+import { useForgotPasswordMutation, useSendEmailOtpMutation } from "../api/slices/user.slices";
+import { Button } from "@mui/material";
 
 function ChangePassword() {
   // Form navigator state
@@ -34,7 +36,8 @@ function ChangePassword() {
 
   const navigate = useNavigate();
 
-  const [signUp, { isLoading }] = useModeratorSignUpMutation();
+  const [SendEmail, { isLoading }] = useSendEmailOtpMutation();
+  const [ForgotPassword, { isLoading: forgotPasswordLoading }] = useForgotPasswordMutation();
 
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
 
@@ -50,8 +53,30 @@ function ChangePassword() {
 
   console.log({ errors });
 
-  async function SignUp(user: IModeratorSignUpFrom) {
-    console.log("signing up in...");
+  async function sendEmail(user: IModeratorSignUpFrom) {
+    try {
+      await SendEmail({ email: email });
+      setFormNumber(2);
+    } catch (error) {
+      console.error("Failed to send email:", error);
+      setError("email", {
+        type: "manual",
+        message: "Failed to send email",
+      });
+    }
+  }
+
+  async function forgotPassword(user: IModeratorSignUpFrom) {
+    try {
+      await ForgotPassword({ email: email, otp: otp, password: password });
+      navigate(moderatorHomeUrl);
+    } catch (error) {
+      console.error("Failed to change password:", error);
+      setError("email", {
+        type: "manual",
+        message: "Failed to change password",
+      });
+    }
   }
 
   const formatErrors = (): string | null => {
@@ -90,7 +115,7 @@ function ChangePassword() {
   return (
     <form
       className="w-full flex-grow flex flex-col justify-start items-center"
-      onSubmit={handleSubmit(SignUp)}
+      onSubmit={handleSubmit(forgotPassword)}
     >
       {formNumber === 1 ? (
         <>
@@ -110,6 +135,9 @@ function ChangePassword() {
             setOtp={setOtp}
             forModerator={true}
           />
+          <Button type="button" variant="contained" color="primary" onClick={sendEmail as any}>
+            Send Email
+          </Button>
         </>
       ) : (
         <SignUpCreatePassword

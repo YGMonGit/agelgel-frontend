@@ -149,6 +149,19 @@ const userApiSlice = agelgilAPI.injectEndpoints({
                     : [{ type: 'Users' as const, id: 'List' }],
             transformResponse: (response: { body: IUser[] }) => response.body,
         }),
+        sendEmailOtp: builder.mutation<void, { email: string }>({
+            query: ({ email }) => ({
+                url: `/public/user/sendEmailOtp/${email}`,
+                method: 'GET'
+            }),
+        }),
+        forgotPassword: builder.mutation<void, { email: string, otp: string, password: string }>({
+            query: ({ email, otp, password }) => ({
+                url: `/public/user/forgotPassword`,
+                method: 'PATCH',
+                body: { email, otp, password }
+            }),
+        }),
     }),
 });
 
@@ -164,4 +177,6 @@ export const {
     useRefreshTokenQuery,
     useLogOutMutation,
     useListUsersQuery,
+    useSendEmailOtpMutation,
+    useForgotPasswordMutation,
 } = userApiSlice
