@@ -3,8 +3,8 @@ import { useParams } from "react-router-dom";
 
 import { HiOutlineBookmark, HiMiniBookmark } from "react-icons/hi2";
 import { GoDotFill } from "react-icons/go";
-import { BsFillPersonCheckFill } from "react-icons/bs";
-import { MdVerified } from "react-icons/md";
+import { MdAdd, MdClose, MdEmail, MdVerified } from "react-icons/md";
+import { TiMinus } from "react-icons/ti";
 
 import { LuClock9 } from "react-icons/lu";
 import { IoSpeedometerOutline } from "react-icons/io5";
@@ -16,12 +16,8 @@ import { styled } from "@mui/system";
 import Comment, { ModeratorComment } from "../components/Comment";
 import {
   useGetPrivateRecipeByIdQuery,
-  useGetRecipeByIdQuery,
-  useGetRecipeCarbsQuery,
-  useGetRecipesQuery,
   useSimilarQuery,
 } from "../api/slices/recipe.slices";
-import { IIngredient } from "../api/types/ingredient.type";
 import { IReview } from "../api/types/review.type";
 import { Slide } from "react-slideshow-image";
 import "react-slideshow-image/dist/styles.css";
@@ -41,15 +37,33 @@ import {
   useCreateReviewMutation,
   useGetRecipeReviewsQuery,
 } from "../api/slices/review.slices";
-import { set } from "react-hook-form";
 import CircularProgress from "../components/CircularProgress";
-import { HiFire } from "react-icons/hi";
 import DisplayCard from "../components/DisplayCard";
-import { useGetUserByIdQuery, useToggleBookedRecipeMutation } from "../api/slices/user.slices";
+import {
+  useGetUserByIdQuery,
+  useToggleBookedRecipeMutation,
+} from "../api/slices/user.slices";
 import ClipLoader from "react-spinners/ClipLoader";
 import FilterBarActive from "../components/FilterBarActive";
-import { getCalorieColor, getCarbsColor, getFatColor, getFiberColor, getProteinColor } from "../assets/data";
+import {
+  getCalorieColor,
+  getCarbsColor,
+  getFatColor,
+  getFiberColor,
+  getProteinColor,
+} from "../assets/data";
 import PieChart from "../components/PieChart";
+import {
+  useAddToMealPlanMutation,
+  useCheckIfUserRecipeExistsQuery,
+  useRemoveFromMealPlanMutation,
+} from "../api/slices/mealPlanner.slices";
+
+import {
+  EPreferredMealTimeForMealPlan,
+} from "../api/types/recipe.type";
+import AlertDialogBox from "../components/AlertDialogBox";
+import { FaPhoneAlt } from "react-icons/fa";
 
 const StyledRating = styled(Rating)({
   fontSize: "1rem",
@@ -60,6 +74,12 @@ function RecipeDetail() {
   const [newComment, setNewComment] = useState("");
   const [value, setValue] = React.useState<number | null>(0);
   const showCommentButton = value !== 0 && newComment.trim() !== "";
+
+  const [filter, setFilter] = useState(EPreferredMealTimeForMealPlan.breakfast);
+
+  useEffect(() => {
+    console.log(filter);
+  }, [filter]);
 
   const scrollableDivRef = useRef<HTMLDivElement>(null);
 
@@ -109,8 +129,12 @@ function RecipeDetail() {
     ),
   };
 
-  const { data: recipe, isLoading: recipesLoading, isSuccess: recipeSuccess } =
-    useGetPrivateRecipeByIdQuery(String(rID.id));
+  const [openDialogBox, setOpenDialogBox] = useState(false);
+  const [openDialogBoxTwo, setOpenDialogBoxTwo] = useState(false);
+
+  const {
+    data: recipe,
+  } = useGetPrivateRecipeByIdQuery(String(rID.id));
   const [reviewsPagination, setReviewsPagination] = useState({
     skip: 0,
     limit: 10,
@@ -183,13 +207,26 @@ function RecipeDetail() {
     return `https://www.youtube.com/embed/${videoId}`;
   }
 
-
   const onNewCommentChange = (e: React.ChangeEvent<HTMLInputElement>) =>
     setNewComment(e.target.value);
-  
-  const { data: user } =
-  useGetUserByIdQuery(String(recipe?.user.user)); 
-  
+
+  const { data: user } = useGetUserByIdQuery(String(recipe?.user.user));
+
+  const [addToMealPlan, { isLoading: addToMealPlanIsLoading }] =
+    useAddToMealPlanMutation();
+  const [removeFromMealPlan, { isLoading: removeFromMealPlanIsLoading }] =
+    useRemoveFromMealPlanMutation();
+
+  const { data: isUserRecipeExists, isError: isUserRecipeExistsError } =
+    useCheckIfUserRecipeExistsQuery(
+      {
+        recipeID: recipe?._id as any,
+      },
+      {
+        skip: !recipe,
+      }
+    );
+
   if (!recipe) {
     return (
       <div className="w-full h-full max-w-[800px] px-5 flex flex-col justify-start items-start gap-3">
@@ -210,16 +247,20 @@ function RecipeDetail() {
   }
 
   if (recipe) {
-    console.log({recipe});
+    let caloryInGram = recipe.nutrition.calories * 0.129598;
 
-    let caloryInGram = recipe.nutrition.calories *  0.129598;
-
-    const pieChartData ={
+    const pieChartData = {
       labels: ["Calorie", "Protein", "Fat", "Carbs", "Fiber"],
       datasets: [
         {
           label: "Nutrition",
-          data: [caloryInGram, recipe.nutrition.protein_g, recipe.nutrition.fat_total_g, recipe.nutrition.carbohydrates_total_g, recipe.nutrition.fiber_g],
+          data: [
+            caloryInGram,
+            recipe.nutrition.protein_g,
+            recipe.nutrition.fat_total_g,
+            recipe.nutrition.carbohydrates_total_g,
+            recipe.nutrition.fiber_g,
+          ],
           backgroundColor: [
             "rgba(255, 99, 132, 0.9)",
             "rgba(54, 162, 235, 0.9)",
@@ -231,10 +272,10 @@ function RecipeDetail() {
         },
       ],
     };
-    
+
     return (
       <div className="w-full max-w-[800px] px-5 flex flex-col justify-start items-center">
-        <div className=" bg-neutral-100 my-5 slide-container bg-custom-content-bg w-full max-w-[500px]">
+        <div className=" bg-neutral-100 dark:bg-transparent dark:text dark:text-slate-400 italic my-5 slide-container bg-custom-content-bg w-full max-w-[500px]">
           {recipe?.imgs.length > 1 ? (
             <Slide
               duration={9000}
@@ -245,25 +286,48 @@ function RecipeDetail() {
             >
               {recipe?.imgs.map((slideImage, index) => (
                 <div key={index}>
-                  <div className="flex justify-center items-center bg-white w-full h-full relative overflow-hidden">
-                    <img src={slideImage} alt="pic" className="w-full" />
+                  <div className="flex justify-center items-center bg-white dark:bg-neutral-800 w-full h-full relative overflow-hidden">
+                    <img src={slideImage} alt={recipe?.name} className="w-full" />
                   </div>
                 </div>
               ))}
             </Slide>
           ) : (
-            <div className="flex justify-center items-center bg-cover w-full h-full rounded-3xl relative">
-              <img src={recipe?.imgs[0]} alt="pic" className="w-full" />
+            <div className="flex justify-center items-center bg-cover dark:bg-neutral-800 w-full h-full rounded-3xl relative">
+              <img src={recipe?.imgs[0]} alt={recipe?.name} className="w-full" />
             </div>
           )}
         </div>
         <div className="w-full flex justify-between items-center leading-none">
-          <div className="flex items-center gap-2">
+          <div className="flex items-center gap-2 select-none cursor-pointer"
+            onClick={() => {
+              setOpenDialogBoxTwo(true);
+            }}
+          >
             <img
               src={recipe.user.profile_img}
               className="w-8 h-8 rounded-full object-cover"
               alt="pic"
             />
+            {openDialogBoxTwo && (
+              <AlertDialogBox
+                  // cancelContent="Cancel"
+                  buttonContent="Close"
+                  closeDialog={() => {
+                    setOpenDialogBoxTwo(false);
+                  }}
+                  handleClick={() => {
+                    setOpenDialogBoxTwo(false);
+                  }}
+                  single={true}
+                >
+                  <div className="w-full flex flex-col items-start justify-start gap-2 *:pl-4">
+                    <p className="flex justify-start items-center gap-2 text-slate-400 italic"><img src={recipe.user.profile_img} className="w-6 h-6 object-cover rounded-full bg-neutral-100 dark:bg-neutral-800" /> {user?.full_name}</p>
+                    <p className="flex justify-start items-center gap-2 text-slate-400 italic"><FaPhoneAlt className="text-content-color" /> {user?.phone_number}</p>
+                    <p className="flex justify-start items-center gap-2 text-slate-400 italic"><MdEmail className="text-content-color"/> {user?.email}</p>
+                  </div>
+                </AlertDialogBox>
+            )}
             <p className="text-[1.3rem] font-semibold">
               {recipe.user.full_name}
             </p>
@@ -314,35 +378,142 @@ function RecipeDetail() {
             precision={0.5}
             size="small"
             readOnly
+            className="dark:bg-neutral-600 rounded-full dark:px-1"
           />
           <p className="leading-3 px-1 rounded-md text-content-color text-[.8rem] bg-[#EBFFF8]">
             {recipe.rating.toFixed(1)}
           </p>
         </div>
+        {isUserRecipeExists?.isRecipeInMealPlan == false ? (
+          <>
+            <button
+              className="w-full px-5 border border-content-color h-[52px] rounded-lg flex justify-center items-center gap-2 mt-2 mb-5"
+              onClick={() => {
+                setOpenDialogBox(true);
+              }}
+            >
+              <MdAdd className="text-[1.3rem] text-content-color" />
+              <p className="text-slate-400 font-normal">Add to Meal Plan</p>
+            </button>
+            {openDialogBox && (
+              <AlertDialogBox
+                cancelContent="Cancel"
+                buttonContent="Yes, delete recipe"
+                closeDialog={() => {
+                  setOpenDialogBox(false);
+                }}
+                handleAction={async () => {
+                  try {
+                    await addToMealPlan({
+                      mealTime: filter,
+                      recipeID: recipe._id,
+                    });
+                    setOpenDialogBox(false);
+                  } catch (error) {}
+                }}
+                isLoading={isLoading}
+              >
+                <div className="w-full flex flex-col justify-start items-start gap-2">
+                  <FilterBarActive
+                    data={[...Object.values(EPreferredMealTimeForMealPlan)]}
+                    selectedChip={filter}
+                    setSelectedChip={(filter) => {
+                      setFilter(filter);
+                    }}
+                  />
+                  <WideButton
+                    disable={addToMealPlanIsLoading}
+                    clickAction={async () => {
+                      try {
+                        await addToMealPlan({
+                          mealTime: filter,
+                          recipeID: recipe._id,
+                        });
+                      } catch (error) {}
+                    }}
+                    label={
+                      <div className="w-full flex justify-center items-center gap-2">
+                        {addToMealPlanIsLoading ? (
+                          <ClipLoader
+                            color={"var(--content-color)"}
+                            size={15}
+                            aria-label="Loading Spinner"
+                            data-testid="loader"
+                          />
+                        ) : (
+                          <MdAdd className="text-[1.3rem]" />
+                        )}
+                        <p className="text-slate-400 font-normal">
+                          Add to Meal Plan
+                        </p>
+                      </div>
+                    }
+                    color="dark:bg-neutral-950 bg-white"
+                    outline={true}
+                  />
+                </div>
+              </AlertDialogBox>
+            )}
+          </>
+        ) : !isUserRecipeExistsError ? (
+          <div className="w-full mb-3 mt-2">
+            <WideButton
+              disable={removeFromMealPlanIsLoading}
+              clickAction={async () => {
+                try {
+                  await removeFromMealPlan({
+                    recipeID: recipe._id,
+                  });
+                } catch (error) {}
+              }}
+              label={
+                <div className="w-full flex justify-center items-center gap-2">
+                  {removeFromMealPlanIsLoading ? (
+                    <ClipLoader
+                      color={"var(--content-color)"}
+                      size={15}
+                      aria-label="Loading Spinner"
+                      data-testid="loader"
+                    />
+                  ) : (
+                    <TiMinus className="text-[1.3rem]" />
+                  )}
+                  <p className="text-slate-400 font-normal">
+                    remove from Meal Plan
+                  </p>
+                </div>
+              }
+              color="dark:bg-neutral-900"
+              outline={true}
+            />
+          </div>
+        ) : null}
         <div className="w-full flex flex-col justify-start items-start gap-2">
           <div className="flex justify-start items-center gap-2 mb-3">
-            <div className="w-full flex justify-start items-center bg-[#F3F4F6] pl-[10px] rounded-[8px]">
-              <LuClock9 className="text-[.8rem] text-content-color -mr-[6px] z-20 italic" />
+            <div className="w-full flex justify-start items-center bg-[#F3F4F6] dark:bg-opacity-30 pl-[10px] rounded-[8px]">
+              <LuClock9 className="text-[.8rem] text-content-color -mr-[6px] z-10 italic" />
               <Chip
                 label={`${recipe.cookingTime} min`}
                 sx={{
                   borderRadius: "8px",
-                  backgroundColor: "#F3F4F6",
+                  backgroundColor: "transparent",
                   height: "25px",
                   fontWeight: "500",
                 }}
+                className="dark:text-white"
               />
             </div>
-            <div className="w-full flex justify-start items-center bg-[#F3F4F6] pl-[10px] rounded-[8px]">
-              <IoSpeedometerOutline className="text-[.8rem] text-content-color -mr-[6px] z-20 italic" />
+            <div className="w-full flex justify-start items-center bg-[#F3F4F6] dark:bg-opacity-30 pl-[10px] rounded-[8px]">
+              <IoSpeedometerOutline className="text-[.8rem] text-content-color -mr-[6px] z-10 italic" />
               <Chip
                 label={recipe.preparationDifficulty}
                 sx={{
                   borderRadius: "8px",
-                  backgroundColor: "#F3F4F6",
+                  backgroundColor: "transparent",
                   height: "25px",
                   fontWeight: "500",
                 }}
+                className="dark:text-white"
               />
             </div>
           </div>
@@ -369,7 +540,8 @@ function RecipeDetail() {
 
         <div className="w-full flex flex-col justify-start items-start mt-5">
           <h3 className="font-semibold mb-1">Macro-nutrients</h3>
-          <div className="flex overflow-x-auto justify-start items-center gap-1 w-full"
+          <div
+            className="flex overflow-x-auto justify-start items-center gap-1 w-full"
             style={{ scrollbarWidth: "none", msOverflowStyle: "none" }}
             ref={scrollableDivRef}
             onWheel={handleWheel}
@@ -400,7 +572,6 @@ function RecipeDetail() {
             />
             <CircularProgress
               color={getCarbsColor(recipe.nutrition.fat_total_g)}
-
               value={recipe.nutrition.carbohydrates_total_g}
               maxValue={100}
               image={CarbsIcon}
@@ -416,7 +587,11 @@ function RecipeDetail() {
               unit="g"
             />
           </div>
-          {(recipe.nutrition.calories !== 0 || recipe.nutrition.protein_g !== 0 || recipe.nutrition.fat_total_g !== 0 || recipe.nutrition.carbohydrates_total_g !== 0 || recipe.nutrition.fiber_g !== 0) && (
+          {(recipe.nutrition.calories !== 0 ||
+            recipe.nutrition.protein_g !== 0 ||
+            recipe.nutrition.fat_total_g !== 0 ||
+            recipe.nutrition.carbohydrates_total_g !== 0 ||
+            recipe.nutrition.fiber_g !== 0) && (
             <div className="w-full p-5">
               <PieChart pieChartData={pieChartData} />
             </div>
@@ -437,14 +612,13 @@ function RecipeDetail() {
                       : IngredientDefaultImage
                   }
                   alt="pic"
-                  className={`min-w-8 w-8 ${ingredientImages[index] === undefined &&
+                  className={`min-w-8 w-8 ${
+                    ingredientImages[index] === undefined &&
                     "rounded-full p-[5px] shadow-md bg-neutral-200"
-                    }`}
+                  }`}
                 />
                 <GoDotFill className="text-[.7rem] ml-[6px] mr-1 text-slate-500" />
-                {ingredient.name}({" "}
-                {ingredient.localName} )-{" "}
-                {ingredient.amount}{" "}
+                {ingredient.name}( {ingredient.localName} )- {ingredient.amount}{" "}
                 {ingredient.unit}
               </div>
             );
@@ -479,11 +653,11 @@ function RecipeDetail() {
             >
               {isLoading
                 ? Array.from({ length: skeletonCount }).map((_, index) => (
-                  <DisplayCard post={null} key={`skeleton-${index}`} />
-                ))
+                    <DisplayCard post={null} key={`skeleton-${index}`} />
+                  ))
                 : recommendedRecipes?.map((post, index) => (
-                  <DisplayCard post={post} key={index} />
-                ))}
+                    <DisplayCard post={post} key={index} />
+                  ))}
             </div>
           ) : (
             <div className="w-full flex justify-center">
@@ -526,10 +700,10 @@ function RecipeDetail() {
             onChange={onNewCommentChange}
             autoComplete="off"
             required
-            className={`w-full py-[10px] bg-[#F9FAFB] leading-none text-[1rem] px-4 border outline-none rounded-lg border-[#D1D5DB]`}
+            className={`w-full py-[10px] bg-[#F9FAFB] dark:bg-neutral-800 leading-none text-[1rem] px-4 border outline-none rounded-lg border-[#D1D5DB] dark:border-neutral-700`}
           />
           {!showCommentButton && (
-            <p className="text-yellow-300 text-[.8rem] leading-none mb-3 -mt-2">
+            <p className="text-yellow-300 text-[.8rem] leading-none mb-1 -mt-2">
               {value === 0 && newComment.trim() !== "" && "Please fill retting"}
               {newComment.trim() === "" && value !== 0 && "Please fill comment"}
               {newComment.trim() === "" &&
@@ -540,10 +714,11 @@ function RecipeDetail() {
           {createLoading ? (
             <button
               type="submit"
-              className={`flex justify-center items-center gap-2 ${showCommentButton
-                ? "w-full h-[52px] bg-content-color mb-5 text-white rounded-lg"
-                : "w-full py-[8px] bg-neutral-300 text-neutral-500 mb-5"
-                }`}
+              className={`flex justify-center items-center gap-2 ${
+                showCommentButton
+                  ? "w-full h-[52px] bg-content-color mb-5 text-white rounded-lg"
+                  : "w-full py-[8px] bg-neutral-300 text-neutral-500 mb-5"
+              }`}
               disabled={false}
             >
               <ClipLoader
@@ -557,10 +732,11 @@ function RecipeDetail() {
           ) : (
             <button
               type="submit"
-              className={`${showCommentButton
-                ? "w-full h-[52px] bg-content-color mb-5 text-white rounded-lg"
-                : "w-full py-[8px] bg-neutral-300 text-neutral-500 mb-5"
-                }`}
+              className={`${
+                showCommentButton
+                  ? "w-full h-[52px] bg-content-color mb-5 text-white rounded-lg"
+                  : "w-full h-[52px] bg-[#5f9482] text-white rounded-lg mb-5"
+              }`}
               disabled={!showCommentButton}
             >
               Comment

@@ -21,6 +21,23 @@ export enum EPreferredMealTimeFilter {
     other = "other",
 }
 
+export enum EPreferredMealTimeForMealPlan {
+    breakfast = "breakfast",
+    lunch = "lunch",
+    dinner = "dinner",
+    snack = "snack",
+}
+
+export enum EPreferredMealTimeForMealPlanFilter {
+    all = "all",
+    breakfast = "breakfast",
+    lunch = "lunch",
+    dinner = "dinner",
+    snack = "snack",
+}
+
+
+
 export type TPreferredMealTime = "breakfast" | "lunch" | "dinner" | "snack" | "dessert" | "other";
 
 
@@ -31,12 +48,17 @@ export enum EPreparationDifficulty {
 }
 export type TPreparationDifficulty = "easy" | "medium" | "hard";
 
-
 export enum ERecipeStatus {
     verified = "verified",
     pending = "pending",
     rejected = "rejected",
 }
+
+export enum ERecipeStatusResponse {
+    verified = "verified",
+    rejected = "rejected",
+}
+
 export type TRecipeStatus = "verified" | "pending" | "rejected";
 export interface IngredientDetail extends IIngredient {
     amount: number;

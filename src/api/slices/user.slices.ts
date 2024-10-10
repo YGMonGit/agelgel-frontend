@@ -11,12 +11,12 @@ const userApiSlice = agelgilAPI.injectEndpoints({
         }),
         getUser: builder.query<IUser, void>({
             query: () => `/private/user/`,
-            providesTags: ['User'],
+            providesTags: (result) => result ? [{ type: 'User', id: result._id }] : [],
             transformResponse: (response: { body: IUser }) => response.body,
         }),
         updateUser: builder.mutation<IUser, { id: string, data: IUserUpdateFrom }>({
-            query: ({ id, data }) => ({
-                url: `/private/user/update/${id}`,
+            query: ({ data }) => ({
+                url: `/private/user/update`,
                 method: 'PATCH',
                 body: data,
             }),
@@ -149,14 +149,18 @@ const userApiSlice = agelgilAPI.injectEndpoints({
                     : [{ type: 'Users' as const, id: 'List' }],
             transformResponse: (response: { body: IUser[] }) => response.body,
         }),
-        updateUserStatus: builder.mutation<IUser, { userId: string; update: IModeratorUserUpdateSchema }>({
-            query: ({ userId, update }) => ({
-                url: `/private/user/updateUserStatus/${userId}`,
-                method: 'PATCH',
-                body: update,
+        sendEmailOtp: builder.mutation<void, { email: string }>({
+            query: ({ email }) => ({
+                url: `/public/user/sendEmailOtp/${email}`,
+                method: 'GET'
             }),
-            invalidatesTags: (result, _, { userId }) => result ? [{ type: 'User', id: userId }] : [],
-            transformResponse: (response: { body: IUser }) => response.body,
+        }),
+        forgotPassword: builder.mutation<void, { email: string, otp: string, password: string }>({
+            query: ({ email, otp, password }) => ({
+                url: `/public/user/forgotPassword`,
+                method: 'PATCH',
+                body: { email, otp, password }
+            }),
         }),
     }),
 });
@@ -173,5 +177,6 @@ export const {
     useRefreshTokenQuery,
     useLogOutMutation,
     useListUsersQuery,
-    useUpdateUserStatusMutation,
+    useSendEmailOtpMutation,
+    useForgotPasswordMutation,
 } = userApiSlice

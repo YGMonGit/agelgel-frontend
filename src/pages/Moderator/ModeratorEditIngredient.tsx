@@ -17,7 +17,7 @@ import {
 import ChipsBox from "../../components/ChipsBoxTwo";
 import ClipLoader from "react-spinners/ClipLoader";
 import { FormControl, InputLabel, MenuItem, Select } from "@mui/material";
-import { useParams } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 
 function ModeratorEditIngredient() {
   const iID = useParams();
@@ -31,6 +31,8 @@ function ModeratorEditIngredient() {
   const [updateIngredient, { isLoading }] = useUpdateIngredientMutation();
 
   const { data: ingredient } = useGetIngredientByIdQuery(String(iID.id));
+
+  const navigator = useNavigate();
 
   const {
     register,
@@ -57,15 +59,13 @@ function ModeratorEditIngredient() {
     }
   }, [ingredient]);
 
-  console.log({ errors });
-  console.log({ getValues: getValues() });
-
   const submit = async (data: INewIngredientFrom) => {
     try {
       await updateIngredient({
         ingredientsId: String(iID.id),
         updates: data,
       }).unwrap();
+      navigator(-1);
     } catch (error: any) {
       if (!error.data.error) return;
       const err = error.data.error;
@@ -137,6 +137,7 @@ function ModeratorEditIngredient() {
               },
             },
           }}
+          className="dark:bg-neutral-800"
         >
           <Select
             value={type}

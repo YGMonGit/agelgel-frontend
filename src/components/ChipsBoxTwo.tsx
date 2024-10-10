@@ -101,6 +101,7 @@ const ChipsBox: React.FC<ChipsBoxProps> = ({
               borderRadius: "8px",
               backgroundColor: "#F3F4F6",
             }}
+            className="dark:bg-neutral-800 dark:text-white"
             deleteIcon={
               <span className="text-[1.2rem] text-neutral-100 mx-2 cursor-pointer">
                 <IoIosClose className="text-neutral-500" />
@@ -158,6 +159,7 @@ const ChipsBox: React.FC<ChipsBoxProps> = ({
                     "& input": {
                       width: "inherit",
                       minWidth: "10ch",
+                      color: "#94a3b8",
                     },
                   }}
                   InputProps={{

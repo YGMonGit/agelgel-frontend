@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import { Routes, Route, Navigate } from "react-router-dom";
 import Navbar from "./components/Navbar";
 import Home from "./pages/Home";
@@ -37,201 +37,305 @@ import {
   moderatorWelcomeUrl,
   editPostUrl,
   personalDataUrl,
+  mealPlannerUrl,
+  updateHealthConditionUrl,
+  editUserInfoUrl,
+  editPersonalDataUrl,
+  notificationsUrl,
+  changePasswordUrl,
+  moderatorChangePasswordUrl,
 } from "./assets/data";
 import ModeratorAddIngredient from "./pages/Moderator/ModeratorAddIngredient";
 import ModeratorEditIngredient from "./pages/Moderator/ModeratorEditIngredient";
 import RecipeEditForm from "./pages/RecipeEditForm";
-import WeightInput from "./pages/WeightInput";
 import PersonalData from "./pages/PersonalData";
+import MealPlanner from "./pages/MealPlanner";
+import UpdateHealthCondition from "./pages/UpdateHealthCondition";
+import EditUserInfo from "./pages/EditUserInfo";
+import EditPersonalData from "./pages/EditPersonalData";
+import UserNotification from "./pages/UserNotification";
+import Page404 from "./pages/Page404";
+import ChangePassword from "./pages/ChangePassword";
 
 // ... (other imports remain the same)
 
 interface NavLayoutProps {
   children: React.ReactNode;
+  toggleDarkMode?: () => void;
+  dark?: boolean;
 }
 
-const NavLayout: React.FC<NavLayoutProps> = ({ children }) => (
+const NavLayout: React.FC<NavLayoutProps> = ({
+  children,
+  toggleDarkMode,
+  dark,
+}) => (
   <div className="w-full flex flex-col justify-center items-start flex-grow">
-    <Navbar />
+    <Navbar toggleDarkMode={toggleDarkMode} dark={dark} />
     {children}
   </div>
 );
 
 function App() {
   const adjustedHeight = useAdjustedHeight();
+  // const [darkMode, setDarkMode] = useState(false);
+
+  const [darkMode, setDarkMode] = useState(() => {
+    const savedMode = localStorage.getItem("darkMode");
+    return savedMode !== null ? JSON.parse(savedMode) : false;
+  });
+
+  const toggleDarkMode = () => {
+    console.log("hello");
+
+    setDarkMode((prevMode: boolean) => {
+      const newMode = !prevMode;
+      localStorage.setItem("darkMode", JSON.stringify(newMode)); // Save new mode to local storage
+      return newMode;
+    });
+  };
+
+  // useEffect(() => {
+  //   // Save dark mode state to local storage on change
+  //   localStorage.setItem('darkMode', JSON.stringify(darkMode));
+  // }, [darkMode]);
 
   return (
-    <div className="w-full flex justify-center items-center">
-      <div
-        className="w-full overflow-x-hidden flex flex-col justify-start items-center max-w-[800px]"
-        style={{
-          scrollbarWidth: "none",
-          msOverflowStyle: "none",
-          height: `calc(${adjustedHeight}px)`,
-        }}
-      >
-        <div className="mt-[56px]"></div>
-        <Routes>
-          <Route path={welcomeUrl} element={<Loading />} />
-          <Route path={moderatorWelcomeUrl} element={<Loading />} />
+    <div className={`${darkMode && "dark"}`}>
+      <div className="w-full flex justify-center items-center dark:bg-neutral-900 dark:text-white">
+        <div
+          className="w-full overflow-x-hidden flex flex-col justify-start items-center max-w-[800px]"
+          style={{
+            scrollbarWidth: "none",
+            msOverflowStyle: "none",
+            height: `calc(${adjustedHeight}px)`,
+          }}
+        >
+          <div className="mt-[56px]"></div>
+          <Routes>
+            <Route path={welcomeUrl} element={<Loading />} />
+            <Route path={moderatorWelcomeUrl} element={<Loading />} />
 
-          {/* Public routes */}
-          <Route
-            path={loginUrl}
-            element={
-              <NavLayout>
-                <Login />
-              </NavLayout>
-            }
-          />
-          <Route
-            path={signUpUrl}
-            element={
-              <NavLayout>
-                <SignUp />
-              </NavLayout>
-            }
-          />
-
-          {/* Protected user routes */}
-          <Route
-            path="/user"
-            element={<ProtectedRoute />}
-          >
+            {/* Public routes */}
             <Route
-              path={homeUrl}
+              path={loginUrl}
               element={
                 <NavLayout>
-                  <Home />
+                  <Login />
                 </NavLayout>
               }
             />
             <Route
-              path={searchUrl}
+              path={signUpUrl}
               element={
                 <NavLayout>
-                  <Search />
+                  <SignUp />
                 </NavLayout>
               }
             />
             <Route
-              path={`${recipeDetailUrl}/:id`}
+              path={updateHealthConditionUrl}
               element={
                 <NavLayout>
-                  <RecipeDetail />
-                </NavLayout>
-              }
-            />
-            <Route
-              path={postUrl}
-              element={
-                <NavLayout>
-                  <NewRecipeForm />
-                </NavLayout>
-              }
-            />
-            <Route
-              path={`${editPostUrl}/:id`}
-              element={
-                <NavLayout>
-                  <RecipeEditForm />
-                </NavLayout>
-              }
-            />
-            <Route
-              path={mySpaceUrl}
-              element={
-                <NavLayout>
-                  <MySpace />
-                </NavLayout>
-              }
-            />
-            <Route
-              path={personalDataUrl}
-              element={
-                <NavLayout>
-                  <PersonalData />
-                </NavLayout>
-              }
-            />
-          </Route>
-
-          {/* Moderator routes */}
-          <Route path="/moderator">
-            {/* Public moderator routes */}
-            <Route
-              path={moderatorSignUpUrl}
-              element={
-                <NavLayout>
-                  <ModeratorSignUp />
-                </NavLayout>
-              }
-            />
-            <Route
-              path={moderatorLoginUrl}
-              element={
-                <NavLayout>
-                  <ModeratorLogin />
+                  <UpdateHealthCondition />
                 </NavLayout>
               }
             />
 
-            {/* Protected moderator routes */}
-            <Route element={<ModeratorProtectedRoute />}>
+            <Route
+              path={editUserInfoUrl}
+              element={
+                <NavLayout>
+                  <EditUserInfo />
+                </NavLayout>
+              }
+            />
+            <Route
+              path={changePasswordUrl}
+              element={
+                <NavLayout>
+                  <ChangePassword />
+                </NavLayout>
+              }
+            />
+            <Route
+              path={moderatorChangePasswordUrl}
+              element={
+                <NavLayout>
+                  <ChangePassword />
+                </NavLayout>
+              }
+            />
+
+            {/* Protected user routes */}
+            <Route path="/user" element={<ProtectedRoute />}>
               <Route
-                path={moderatorHomeUrl}
+                path={homeUrl}
                 element={
-                  <NavLayout>
-                    <ModeratorHome />
+                  <NavLayout toggleDarkMode={toggleDarkMode} dark={darkMode}>
+                    <Home />
                   </NavLayout>
                 }
               />
               <Route
-                path={moderatorSearchUrl}
+                path={searchUrl}
                 element={
-                  <NavLayout>
-                    <ModeratorSearch />
+                  <NavLayout toggleDarkMode={toggleDarkMode} dark={darkMode}>
+                    <Search />
                   </NavLayout>
                 }
               />
               <Route
-                path={`${moderatorRecipeDetailUrl}/:id`}
+                path="/user/page-404"
                 element={
-                  <NavLayout>
-                    <ModeratorRecipeDetail />
+                  <NavLayout toggleDarkMode={toggleDarkMode} dark={darkMode}>
+                    <Page404 />
                   </NavLayout>
                 }
               />
               <Route
-                path={moderatorSpaceUrl}
+                path={`${recipeDetailUrl}/:id`}
                 element={
                   <NavLayout>
-                    <ModeratorSpace />
+                    <RecipeDetail />
                   </NavLayout>
                 }
               />
               <Route
-                path={moderatorAddIngredientUrl}
+                path={postUrl}
                 element={
                   <NavLayout>
-                    <ModeratorAddIngredient />
+                    <NewRecipeForm />
                   </NavLayout>
                 }
               />
               <Route
-                path={`${moderatorEditIngredientUrl}/:id`}
+                path={`${editPostUrl}/:id`}
                 element={
                   <NavLayout>
-                    <ModeratorEditIngredient />
+                    <RecipeEditForm />
+                  </NavLayout>
+                }
+              />
+              <Route
+                path={mySpaceUrl}
+                element={
+                  <NavLayout>
+                    <MySpace />
+                  </NavLayout>
+                }
+              />
+              <Route
+                path={personalDataUrl}
+                element={
+                  <NavLayout>
+                    <PersonalData />
+                  </NavLayout>
+                }
+              />
+              <Route
+                path={editPersonalDataUrl}
+                element={
+                  <NavLayout>
+                    <EditPersonalData />
+                  </NavLayout>
+                }
+              />
+              <Route
+                path={mealPlannerUrl}
+                element={
+                  <NavLayout>
+                    <MealPlanner />
+                  </NavLayout>
+                }
+              />
+              <Route
+                path={notificationsUrl}
+                element={
+                  <NavLayout>
+                    <UserNotification />
                   </NavLayout>
                 }
               />
             </Route>
-          </Route>
 
-          {/* Redirect any unmatched routes to home */}
-          <Route path="*" element={<Navigate to={homeUrl} replace />} />
-        </Routes>
+            {/* Moderator routes */}
+            <Route path="/moderator">
+              {/* Public moderator routes */}
+              <Route
+                path={moderatorSignUpUrl}
+                element={
+                  <NavLayout>
+                    <ModeratorSignUp />
+                  </NavLayout>
+                }
+              />
+              <Route
+                path={moderatorLoginUrl}
+                element={
+                  <NavLayout>
+                    <ModeratorLogin />
+                  </NavLayout>
+                }
+              />
+
+              {/* Protected moderator routes */}
+              <Route element={<ModeratorProtectedRoute />}>
+                <Route
+                  path={moderatorHomeUrl}
+                  element={
+                    <NavLayout toggleDarkMode={toggleDarkMode} dark={darkMode}>
+                      <ModeratorHome />
+                    </NavLayout>
+                  }
+                />
+                <Route
+                  path={moderatorSearchUrl}
+                  element={
+                    <NavLayout toggleDarkMode={toggleDarkMode} dark={darkMode}>
+                      <ModeratorSearch />
+                    </NavLayout>
+                  }
+                />
+                <Route
+                  path={`${moderatorRecipeDetailUrl}/:id`}
+                  element={
+                    <NavLayout>
+                      <ModeratorRecipeDetail />
+                    </NavLayout>
+                  }
+                />
+                <Route
+                  path={moderatorSpaceUrl}
+                  element={
+                    <NavLayout>
+                      <ModeratorSpace />
+                    </NavLayout>
+                  }
+                />
+                <Route
+                  path={moderatorAddIngredientUrl}
+                  element={
+                    <NavLayout>
+                      <ModeratorAddIngredient />
+                    </NavLayout>
+                  }
+                />
+                <Route
+                  path={`${moderatorEditIngredientUrl}/:id`}
+                  element={
+                    <NavLayout>
+                      <ModeratorEditIngredient />
+                    </NavLayout>
+                  }
+                />
+              </Route>
+            </Route>
+
+            {/* Redirect any unmatched routes to home */}
+            <Route path="*" element={<Navigate to={homeUrl} replace />} />
+          </Routes>
+        </div>
       </div>
     </div>
   );

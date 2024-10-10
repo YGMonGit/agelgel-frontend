@@ -5,62 +5,111 @@ import { Input } from "../../components/Input";
 import { HeightIcon } from "@radix-ui/react-icons";
 import WideButton from "../../components/WideButton";
 import WideLink from "../../components/WideLink";
+import { EGender } from "../../api/types/mealPreference.type";
+import { FormControl, InputLabel, MenuItem, Select } from "@mui/material";
+import { Controller } from "react-hook-form";
 
 interface PersonalDataOneProps {
   setFromPage: React.Dispatch<React.SetStateAction<number>>;
-  weight: number;
-  setWeight: React.Dispatch<React.SetStateAction<number>>;
+  weight?: number;
+  setWeight?: React.Dispatch<React.SetStateAction<number>>;
   height: number;
   setHeight: React.Dispatch<React.SetStateAction<number>>;
+  age: number;
+  setAge: React.Dispatch<React.SetStateAction<number>>;
+  register: any;
+  errors: any;
+  control: any;
+  showWeight?: boolean;
 }
 
-function PersonalDataOne({setFromPage, weight, setWeight, height, setHeight}: PersonalDataOneProps) {
-  const onWeightChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const value = e.target.value;
-    setWeight(value ? Number(value) : 0); // Convert to number, default to 0 if empty
-  };
-  const onHeightChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const value = e.target.value;
-    setHeight(value ? Number(value) : 0); // Convert to number, default to 0 if empty
-  };
+function PersonalDataOne({ setFromPage, weight, setWeight, height, setHeight, age, setAge, register, errors, control, showWeight = true }: PersonalDataOneProps) {
+  const onWeightChange = (e: React.ChangeEvent<HTMLInputElement>) =>
+    setWeight && setWeight(Number.parseInt(e.target.value));
+  const onHeightChange = (e: React.ChangeEvent<HTMLInputElement>) =>
+    setHeight(Number.parseInt(e.target.value));
+  const onAgeChange = (e: React.ChangeEvent<HTMLInputElement>) =>
+    setAge(Number.parseInt(e.target.value));
+
+
   const nextPage = () => setFromPage(2);
+
   return (
     <div className="w-full flex flex-col flex-grow justify-start items-center">
-      <img src={SpaceOne} alt="pic" className="w-full p-9 pt-12" />
-      {/* <p className="text-[2rem] font-bold mt-2 mb-5">Weight</p> */}
-      {/* <input 
-        className="rounded-full border border-content-color w-[70%] py-3 px-4"
-        type="number"
-        placeholder="weight"
-        value={weight}
-        onChange={onWeightChange}
-      /> */}
-      <Input
-        type="number"
-        label="Weight"
-        placeholder="weight"
-        value={weight}
-        onChange={onWeightChange}
-        // register={register}
-        // errors={errors.name}
+      <img src={SpaceOne} alt="pic" className="w-full p-9 pt-12 max-w-[450px]" />
+
+      {
+        showWeight == true ? (
+          <Controller
+            name="weight"
+            control={control}
+            defaultValue={weight}
+            render={({ field }) => (
+              <Input
+                type="number"
+                label="Weight"
+                placeholder="weight"
+                {...field}
+                value={weight}
+                onChange={(e) => {
+                  const value = e.target.value;
+                  field.onChange(Number.parseInt(value));
+                  onWeightChange(e);
+                }}
+                errors={errors.weight}
+              />
+            )}
+          />
+        ) : null
+      }
+
+      <Controller
+        name="height"
+        control={control}
+        defaultValue={height}
+        render={({ field }) => (
+          <Input
+            type="number"
+            label="Height"
+            placeholder="height"
+            {...field}
+            value={height}
+            onChange={(e) => {
+              const value = e.target.value;
+              field.onChange(Number.parseInt(value));
+              onHeightChange(e);
+            }}
+            errors={errors.height}
+          />
+        )}
       />
-      <Input
-        type="number"
-        label="Height"
-        placeholder="height"
-        value={height}
-        onChange={onHeightChange}
-        // register={register}
-        // errors={errors.name}
+
+      <Controller
+        name="age"
+        control={control}
+        defaultValue={age}
+        render={({ field }) => (
+          <Input
+            type="number"
+            label="Age"
+            placeholder="age"
+            {...field}
+            value={age}
+            onChange={(e) => {
+              const value = e.target.value;
+              field.onChange(Number.parseInt(value));
+              onAgeChange(e);
+            }}
+            errors={errors.age}
+          />
+        )}
       />
-      <div className="w-full px-5">
+
+      <div className="w-full flex-grow"></div>
+
+      <div className="w-full px-5 mb-5">
         <WideLink label="Next" color="bg-content-color" clickAction={nextPage} />
       </div>
-      {/* <div className="w-full flex flex-grow pt-12 justify-center">
-        <div className="h-16 aspect-square flex justify-center items-center bg-content-color rounded-full">
-          <FaAngleRight className="text-[2rem] text-white"/>
-        </div>
-      </div> */}
     </div>
   );
 }

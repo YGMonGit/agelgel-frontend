@@ -4,7 +4,7 @@ import { IIngredient, INewIngredientFrom, IngredientUpdateFrom } from "../types/
 const ingredientApiSlice = agelgilAPI.injectEndpoints({
     endpoints: (builder) => ({
         getIngredientById: builder.query<IIngredient, string>({
-            query: (ingredientsId) => `/public/ingredients/${ingredientsId}`,
+            query: (ingredientsId) => `/public/ingredients/byId/${ingredientsId}`,
             transformResponse: (response: { body: IIngredient }) => response.body,
             providesTags: (result, _, ingredientsId) => result ? [{ type: 'Ingredient', id: ingredientsId }] : [],
         }),
@@ -61,6 +61,13 @@ const ingredientApiSlice = agelgilAPI.injectEndpoints({
             }),
             invalidatesTags: (result, error, { ingredientsId }) => result ? [{ type: 'Ingredient', id: ingredientsId }] : [],
         }),
+        removeIngredient: builder.mutation<void, string>({
+            query: (ingredientsId) => ({
+                url: `/private/ingredients/remove/id/${ingredientsId}`,
+                method: 'DELETE',
+            }),
+            invalidatesTags: (result, error, ingredientsId) => [{ type: 'Ingredient', id: ingredientsId }],
+        }),
     }),
 });
 
@@ -73,4 +80,5 @@ export const {
     useCreateIngredientMutation,
     useUpdateIngredientMutation,
     useGetUniqueUnitQuery,
+    useRemoveIngredientMutation,
 } = ingredientApiSlice

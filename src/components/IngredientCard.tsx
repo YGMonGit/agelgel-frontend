@@ -5,6 +5,8 @@ import IngredientIcon from "../assets/icons/apple-icon.png";
 import { IIngredient } from "../api/types/ingredient.type";
 import { useNavigate } from "react-router-dom";
 import { moderatorEditIngredientUrl } from "../assets/data";
+import { useRemoveIngredientMutation } from "../api/slices/ingredient.slices";
+import { CircularProgress } from "@mui/material";
 
 interface IngredientCardProps {
   ingredient: IIngredient | null;
@@ -18,14 +20,19 @@ function IngredientCard({ ingredient, ingredientImage }: IngredientCardProps) {
   const goToIngredientEditPage = () => {
     if (ingredient) {
       // console.log(location.pathname);
-      
+
       navigate(`${moderatorEditIngredientUrl}/${ingredient._id}`);
     }
   };
 
+  const [
+    removeIngredient,
+    { isLoading: isRemovingIngredient },
+  ] = useRemoveIngredientMutation();
+
   if (!ingredient) {
     return (
-      <div className="flex justify-start items-center p-2 w-full rounded-lg bg-neutral-100 leading-4 select-none gap-3">
+      <div className="flex justify-start items-center p-2 w-full rounded-lg bg-neutral-100 dark:bg-neutral-800 leading-4 select-none gap-3">
         <Skeleton className="h-[61px] aspect-square rounded-full" />
         <div className="flex-grow flex flex-col justify-center items-start h-full">
           <Skeleton className="h-[10px] w-[55%] rounded-md" />
@@ -38,7 +45,7 @@ function IngredientCard({ ingredient, ingredientImage }: IngredientCardProps) {
     );
   }
   return (
-    <div className="w-full flex justify-start items-center gap-2 py-2 bg-[#F6F6F6] px-3 rounded-lg">
+    <div className="w-full flex justify-start items-center gap-2 py-2 bg-[#F6F6F6] dark:bg-neutral-800 px-3 rounded-lg">
       <img
         src={ingredientImage ?? IngredientIcon}
         className="w-[61px] p-3 aspect-square"
@@ -54,8 +61,13 @@ function IngredientCard({ ingredient, ingredientImage }: IngredientCardProps) {
           {ingredient.type}
         </p>
       </div>
-      <MdEdit className="text-[2.2rem] text-content-color" onClick={goToIngredientEditPage}/>
-      <MdDelete className="text-[2.2rem] text-[#DC3D3D]" />
+      <MdEdit className="text-[2.2rem] text-content-color" onClick={goToIngredientEditPage} />
+      {
+        isRemovingIngredient ? <CircularProgress size={20} /> : <MdDelete className="text-[2.2rem] text-[#DC3D3D]" onClick={async () => {
+          await removeIngredient(ingredient._id).unwrap();
+        }} />
+      }
+
     </div>
   );
 }

@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import PageHeader from "../../components/PageHeader";
-import { Input, UseGoogle } from "../../components/Input";
+import { Input } from "../../components/Input";
 import { RiEyeCloseLine, RiEyeLine } from "react-icons/ri";
 import WideButton from "../../components/WideButton";
 import { loginUrl, moderatorLoginUrl } from "../../assets/data";
@@ -17,7 +17,7 @@ interface SingUpCreatePasswordProps {
   errors: any;
   forModerator?: boolean;
   isLoading?: any;
-  handleWithGoogleClick?: () => void;
+  second?: boolean;
 }
 
 function SignUpCreatePassword({
@@ -30,7 +30,7 @@ function SignUpCreatePassword({
   errors,
   forModerator = false,
   isLoading,
-  handleWithGoogleClick,
+  second,
 }: SingUpCreatePasswordProps) {
   const [showPassword, setShowPassword] = useState(false);
   const [showCPassword, setShowCPassword] = useState(false);
@@ -41,10 +41,10 @@ function SignUpCreatePassword({
     setPassword(e.target.value);
 
   const onBackClick = () => {
-    setFormNumber(1);
+    setFormNumber(second? 1 : 2);
   };
   const onNextClick = () => {
-    setFormNumber(3);
+    setFormNumber(4);
   };
 
   return (
@@ -53,7 +53,6 @@ function SignUpCreatePassword({
         header="Last step!"
         detail="Sign up and create your account."
       />
-      <UseGoogle clickAction={handleWithGoogleClick} />
       <div className="w-full flex flex-col justify-start items-center flex-grow">
         <Input
           label="Password"
@@ -94,7 +93,7 @@ function SignUpCreatePassword({
       <div className="w-full px-5 flex justify-center items-end gap-2">
         <WideLink
           label="Back"
-          color="bg-white"
+          color="dark:bg-neutral-900 bg-white"
           outline={true}
           clickAction={onBackClick}
         />
@@ -118,11 +117,16 @@ function SignUpCreatePassword({
             />
           )
         ): (
+          second ? 
           <WideLink
             label="Next"
             color="bg-content-color"
             clickAction={onNextClick}
-          />
+          /> : 
+          <WideButton
+              label="Finish"
+              color="bg-content-color"
+            />
         )}
       </div>
       <div className="w-full px-5 text-slate-400 text-[1rem] mb-10">

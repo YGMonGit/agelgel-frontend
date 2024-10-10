@@ -3,8 +3,13 @@ import SignUpUsername from "./sub_pages/SignUpUsername";
 import SignUpCreatePassword from "./sub_pages/SignUpCreatePassword";
 import HealthConditions from "./sub_pages/HealthConditions";
 import { useForm } from "react-hook-form";
-import { zodResolver } from '@hookform/resolvers/zod';
-import { IUserSignUpFrom, EAllergies, EDietaryPreferences, EChronicDisease } from "../api/types/user.type";
+import { zodResolver } from "@hookform/resolvers/zod";
+import {
+  IUserSignUpFrom,
+  EAllergies,
+  EDietaryPreferences,
+  EChronicDisease,
+} from "../api/types/user.type";
 import { useSignUpMutation } from "../api/slices/user.slices";
 import * as Bytescale from "@bytescale/sdk";
 import { useNavigate } from "react-router-dom";
@@ -12,18 +17,19 @@ import { signUpSchema } from "../validation/user.validation";
 import { homeUrl } from "../assets/data";
 import useFileUpload from "../hooks/useFileUpload";
 import ErrorPopup from "../components/ErrorPopup";
-
+import VerifyEmail from "./VerifyEmail";
 
 function SignUp() {
   // Form navigator state
   const [formNumber, setFormNumber] = useState(1);
 
   // For form sign up username
-  const [image, setImage] = useState<string | null>(null);
+  const [image, setImage] = useState<string | undefined | null>(null);
   const [firstName, setFirstName] = useState("");
   const [lastName, setLastName] = useState("");
   const [email, setEmail] = useState("");
   const [phone, setPhone] = useState("");
+  const [otp, setOtp] = useState("");
 
   // For form sign up create password
   const [password, setPassword] = useState("");
@@ -32,7 +38,9 @@ function SignUp() {
   // For form sign up health conditions
   const [healthCondition, setHealthCondition] = useState<EChronicDisease[]>([]);
   const [allergy, setAllergy] = useState<EAllergies[]>([]);
-  const [mealPreference, setMealPreference] = useState<EDietaryPreferences[]>([]);
+  const [mealPreference, setMealPreference] = useState<EDietaryPreferences[]>(
+    []
+  );
 
   const navigate = useNavigate();
 
@@ -41,12 +49,18 @@ function SignUp() {
 
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
 
-  const { register, handleSubmit, formState: { errors }, setError, setValue, getValues } = useForm<IUserSignUpFrom>({
+  const {
+    register,
+    handleSubmit,
+    formState: { errors },
+    setError,
+    setValue,
+    getValues,
+  } = useForm<IUserSignUpFrom>({
     resolver: zodResolver(signUpSchema),
   });
 
   console.log({ errors });
-
 
   async function SignUp(user: IUserSignUpFrom) {
     console.log("signing up in...");
@@ -60,25 +74,26 @@ function SignUp() {
           ...user,
           profile_img: fileUrl,
           medical_condition: {
-            chronicDiseases: healthCondition.length == 0 ? [EChronicDisease.none] : healthCondition,
+            chronicDiseases:
+              healthCondition.length == 0
+                ? [EChronicDisease.none]
+                : healthCondition,
             allergies: allergy.length == 0 ? [EAllergies.none] : allergy,
-            dietary_preferences: mealPreference.length == 0 ? [EDietaryPreferences.none] : mealPreference
-          }
-        }
+            dietary_preferences:
+              mealPreference.length == 0
+                ? [EDietaryPreferences.none]
+                : mealPreference,
+          },
+        },
       }).unwrap();
 
       navigate(`/user/${homeUrl}`);
-
     } catch (error: any) {
       if (!error.data.error) return;
       const err = error.data.error;
-      if (err.type === "Validation")
-        setError(err.attr, { message: err.error });
+      if (err.type === "Validation") setError(err.attr, { message: err.error });
     }
   }
-
-
-  const handleWithGoogleClick = () => { };
 
   const formatErrors = (): string | null => {
     const errorMessages: string[] = [];
@@ -86,6 +101,7 @@ function SignUp() {
       1: [],
       2: [],
       3: [],
+      4: [],
     };
 
     const addErrorToPage = (page: number, field: string) => {
@@ -98,14 +114,14 @@ function SignUp() {
     if (errors.email) addErrorToPage(1, "email");
     if (errors.phone_number) addErrorToPage(1, "phone number");
 
-    if (errors.password) addErrorToPage(2, "password");
-    if (errors.confirm_password) addErrorToPage(2, "confirm password");
+    if (errors.password) addErrorToPage(3, "password");
+    if (errors.confirm_password) addErrorToPage(3, "confirm password");
 
     if (errors.medical_condition?.chronicDiseases)
-      addErrorToPage(3, "chronic diseases");
-    if (errors.medical_condition?.allergies) addErrorToPage(3, "allergies");
+      addErrorToPage(4, "chronic diseases");
+    if (errors.medical_condition?.allergies) addErrorToPage(4, "allergies");
     if (errors.medical_condition?.dietary_preferences)
-      addErrorToPage(3, "dietary preferences");
+      addErrorToPage(4, "dietary preferences");
 
     // Format error messages
     Object.entries(pageErrors).forEach(([page, fields]) => {
@@ -122,34 +138,12 @@ function SignUp() {
     setErrorMessage(formattedError);
   }, [errors]);
 
-
   return (
-    <form className="w-full flex-grow flex flex-col justify-start items-center" onSubmit={handleSubmit(SignUp)}>
-      {formNumber !== 1 ? (
-        formNumber === 2 ? (
-          <SignUpCreatePassword
-            setFormNumber={setFormNumber}
-            password={password}
-            setPassword={setPassword}
-            confirmPassword={confirmPassword}
-            setConfirmPassword={setConfirmPassword}
-            register={register}
-            errors={errors}
-            handleWithGoogleClick={handleWithGoogleClick}
-          />
-        ) : (
-          <HealthConditions
-            setFormNumber={setFormNumber}
-            healthCondition={healthCondition}
-            setHealthCondition={setHealthCondition}
-            allergies={allergy}
-            setAllergies={setAllergy}
-            mealPreference={mealPreference}
-            setMealPreference={setMealPreference}
-            isLoading={isLoading || loading}
-          />
-        )
-      ) : (
+    <form
+      className="w-full flex-grow flex flex-col justify-start items-center"
+      onSubmit={handleSubmit(SignUp)}
+    >
+      {formNumber === 1 ? (
         <SignUpUsername
           setFormNumber={setFormNumber}
           image={image}
@@ -164,8 +158,35 @@ function SignUp() {
           setPhone={setPhone}
           register={register}
           setValue={setValue}
-          handleWithGoogleClick={handleWithGoogleClick}
           errors={errors}
+        />
+      ) : formNumber === 2 ? (
+        <VerifyEmail
+          setFormNumber={setFormNumber}
+          email={email}
+          otp={otp}
+          setOtp={setOtp}
+        />
+      ) : formNumber === 3 ? (
+        <SignUpCreatePassword
+          setFormNumber={setFormNumber}
+          password={password}
+          setPassword={setPassword}
+          confirmPassword={confirmPassword}
+          setConfirmPassword={setConfirmPassword}
+          register={register}
+          errors={errors}
+        />
+      ) : (
+        <HealthConditions
+          setFormNumber={setFormNumber}
+          healthCondition={healthCondition}
+          setHealthCondition={setHealthCondition}
+          allergies={allergy}
+          setAllergies={setAllergy}
+          mealPreference={mealPreference}
+          setMealPreference={setMealPreference}
+          isLoading={isLoading || loading}
         />
       )}
       <ErrorPopup error={errorMessage} />

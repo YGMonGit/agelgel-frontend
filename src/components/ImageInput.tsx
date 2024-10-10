@@ -44,7 +44,7 @@ const ImageInput = ({ images, setImages, setValue, register }: ImageInputProps) 
 
   return (
     <div
-      className="w-full flex flex-col justify-center items-center py-10 border-2 border-dashed border-dashed-4 border-[#D1D5DB] bg-[#F9FAFB] rounded-lg mb-6"
+      className="w-full flex flex-col justify-center items-center py-10 border-2 border-dashed border-dashed-4 border-[#D1D5DB] bg-[#F9FAFB] dark:bg-neutral-800 dark:border-neutral-700 rounded-lg mb-6"
       onDragOver={handleDragOver}
       onDrop={handleDrop}
     >
@@ -77,12 +77,12 @@ const ImageInput = ({ images, setImages, setValue, register }: ImageInputProps) 
                 alt={`Uploaded pic ${index + 1}`}
                 className="w-20 h-20 object-cover rounded"
               />
-              <button
+              <div
                 onClick={() => removeImage(index)}
                 className="absolute -top-2 -right-2 bg-red-500 rounded-full p-1 text-white hover:bg-red-600 focus:outline-none focus:ring-2 focus:ring-red-500 focus:ring-opacity-50"
               >
                 <IoCloseCircle size={16} />
-              </button>
+              </div>
             </div>
           ))}
         </div>

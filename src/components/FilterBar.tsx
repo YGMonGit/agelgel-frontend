@@ -18,10 +18,10 @@ function FilterBar({ data, label }: FilterBarProps) {
     }
   };
 
-  const handleChipClick = (condition: string) => {
-    console.log(condition);
-    setSelectedChip(condition === selectedChip ? null : condition);
-  };
+  // const handleChipClick = (condition: string) => {
+  //   console.log(condition);
+  //   setSelectedChip(condition === selectedChip ? null : condition);
+  // };
 
   // Check if the data array contains the value "none"
   if (data.includes("none")) {
@@ -38,13 +38,15 @@ function FilterBar({ data, label }: FilterBarProps) {
         onWheel={handleWheel}
       >
         {data.map((condition, index) => (
-          <Chip
-            key={index}
-            onClick={() => handleChipClick(condition)}
-            label={condition}
-            sx={{ margin: "0 4px", borderRadius: "8px", backgroundColor: "#F3F4F6", height: "25px" }}
-            className="font-[500]"
-          />
+          // <Chip
+          //   key={index}
+          //   onClick={() => handleChipClick(condition)}
+          //   label={condition}
+          //   sx={{ margin: "0 4px", borderRadius: "8px", backgroundColor: "#F3F4F6", height: "25px" }}
+          //   className="font-[500] dark:bg-opacity-30"
+          // />
+          <div className={`px-4 rounded-[8px] ${selectedChip === condition ? "bg-[#bbf7d0] dark:text-neutral-800":"bg-[#F3F4F6] dark:bg-opacity-30"} h-[25px] select-none cursor-pointer`} key={index}>{condition}</div>
+          // <div className="px-4 rounded-[8px] bg-[#F3F4F6] h-[25px] dark:bg-opacity-30" onClick={() => handleChipClick(condition)} key={index}>{condition}</div>
         ))}
       </div>
     </div>

@@ -1,6 +1,7 @@
 import agelgilAPI from "..";
 import { IModerator, IModeratorLogInFrom, IModeratorRecipeUpdateFrom, IModeratorSignUpFrom, IModeratorUpdateFrom } from "../types/moderator.type";
 import { ERecipeStatus, IRecipe } from "../types/recipe.type";
+import { IModeratorUserUpdateSchema, IUser } from "../types/user.type";
 
 const moderatorApiSlice = agelgilAPI.injectEndpoints({
     endpoints: (builder) => ({
@@ -121,6 +122,15 @@ const moderatorApiSlice = agelgilAPI.injectEndpoints({
             providesTags: (result, _, { status }) => result ? [{ type: 'Recipe', status }] : [],
             transformResponse: (response: { body: IRecipe[] }) => response.body,
         }),
+        updateUserStatus: builder.mutation<IUser, { userId: string; update: IModeratorUserUpdateSchema }>({
+            query: ({ userId, update }) => ({
+                url: `/private/moderator/updateUserStatus/${userId}`,
+                method: 'PATCH',
+                body: update,
+            }),
+            invalidatesTags: (result, _, { userId }) => result ? [{ type: 'Users' as const, id: 'List' }] : [],
+            transformResponse: (response: { body: IUser }) => response.body,
+        }),
     }),
 });
 
@@ -133,5 +143,6 @@ export const {
     useModeratorRefreshTokenQuery,
     useModeratorIogOutMutation,
     useUpdateRecipeStatusMutation,
-    useModeratedRecipesQuery
+    useModeratedRecipesQuery,
+    useUpdateUserStatusMutation,
 } = moderatorApiSlice

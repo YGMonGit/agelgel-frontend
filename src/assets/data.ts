@@ -13,14 +13,19 @@ export const homeUrl = "/user/home";
 export const searchUrl = "/user/search";
 export const loginUrl = "/user/login";
 export const signUpUrl = "/user/sign-up";
-export const editUserUrl = "/user/edit-user";
+export const editUserInfoUrl = "/user/edit-info";
 export const recipeDetailUrl = "/user/recipe-detail";
 export const postUrl = "/user/post";
 export const editPostUrl = "/user/edit-post";
 export const mySpaceUrl = "/user/my-space";
 export const welcomeUrl = "/user";
-// export const weightInputUrl = "/user/add-weight";
 export const personalDataUrl = "/user/personal-data";
+export const mealPlannerUrl = "/user/meal-planner";
+export const updateHealthConditionUrl = "/user/update-health-condition";
+export const editPersonalDataUrl = "/user/edit-personal-data";
+export const notificationsUrl = "/user/notifications";
+
+export const changePasswordUrl = "/user/change-password";
 
 export const moderatorSignUpUrl = "/moderator/sign-up";
 export const moderatorLoginUrl = "/moderator/login";
@@ -30,7 +35,9 @@ export const moderatorRecipeDetailUrl = "/moderator/recipe-detail";
 export const moderatorSpaceUrl = "/moderator/space";
 export const moderatorAddIngredientUrl = "/moderator/add-ingredient";
 export const moderatorEditIngredientUrl = "/moderator/edit-ingredient";
+export const moderatorEditInfoUrl = "/moderator/edit-info";
 export const moderatorWelcomeUrl = "/moderator";
+export const moderatorChangePasswordUrl = "/moderator/change-password";
 
 
 export const allergies = [
@@ -288,3 +295,26 @@ export function getFiberColor(fiber: number) {
 
   return hex;
 }
+
+
+//temporary dummy data
+export const notifications = [
+  {
+    status: "verified",
+    title: "Its a great recipe",
+    message: "Very great way of showing how the meal is made!",
+    seen: false,
+  },
+  {
+    status: "rejected",
+    title: "Its a mess",
+    message: "A lot of mistakes exist in your work",
+    seen: false,
+  },
+  {
+    status: "verified",
+    title: "Its a great recipe",
+    message: "Very great way of showing how the meal is made! keep it up",
+    seen: true,
+  },
+];

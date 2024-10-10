@@ -1,14 +1,15 @@
 import React, { useEffect, useRef, useState } from "react";
 import { Chip } from "@mui/material";
-import { EPreferredMealTimeFilter } from "../api/types/recipe.type";
+import { EPreferredMealTimeFilter, EPreferredMealTimeForMealPlan, EPreferredMealTimeForMealPlanFilter } from "../api/types/recipe.type";
 
 interface FilterBarActiveProps {
   data: string[];
-  selectedChip: EPreferredMealTimeFilter | null;
-  setSelectedChip: (condition: EPreferredMealTimeFilter) => void;
+  selectedChip: EPreferredMealTimeFilter | EPreferredMealTimeForMealPlanFilter | EPreferredMealTimeForMealPlan | null;
+  setSelectedChip: (condition: any) => void;
+  large?: boolean;
 }
 
-function FilterBarActive({ data, selectedChip, setSelectedChip }: FilterBarActiveProps) {
+function FilterBarActive({ data, selectedChip, setSelectedChip, large = false }: FilterBarActiveProps) {
 
   const scrollableDivRef = useRef<HTMLDivElement>(null);
 
@@ -51,29 +52,30 @@ function FilterBarActive({ data, selectedChip, setSelectedChip }: FilterBarActiv
         onWheel={handleWheel}
       >
         {data.map((condition, index) => (
-          <Chip
-            key={index}
-            label={condition}
-            onClick={() => { handleChipClick(EPreferredMealTimeFilter[condition as keyof typeof EPreferredMealTimeFilter]) }}
-            sx={{
-              margin: "0 4px",
-              borderRadius: "8px",
-              backgroundColor: selectedChip === condition ? "#bbf7d0" : "#F3F4F6",
-              color: selectedChip === condition ? "#15803d" : "#374151",
-              height: "25px",
-              cursor: "pointer",
-              "&:hover": selectedChip === condition
-                ? {
-                  background: "#bbf7d0",
-                  color: "#15803d"
-                }
-                : {
-                  backgroundColor: "#e5e7eb",
-                  color: "#1f2937",
-                },
-            }}
-            className="font-[500]"
-          />
+          // <Chip
+          //   key={index}
+          //   label={condition}
+          //   onClick={() => { handleChipClick(EPreferredMealTimeFilter[condition as keyof typeof EPreferredMealTimeFilter]) }}
+          //   sx={{
+          //     margin: "0 4px",
+          //     borderRadius: "8px",
+          //     backgroundColor: selectedChip === condition ? "#bbf7d0" : "#F3F4F6",
+          //     color: selectedChip === condition ? "#15803d" : "#374151",
+          //     height: large? "30px" : "25px",
+          //     cursor: "pointer",
+          //     "&:hover": selectedChip === condition
+          //       ? {
+          //         background: "#bbf7d0",
+          //         color: "#15803d"
+          //       }
+          //       : {
+          //         backgroundColor: "#e5e7eb",
+          //         color: "#1f2937",
+          //       },
+          //   }}
+          //   className="font-[500]"
+          // />
+          <div className={`px-4 rounded-[8px] ${selectedChip === condition ? "bg-[#bbf7d0] dark:text-neutral-800":"bg-[#F3F4F6] dark:bg-opacity-30"} h-[25px] select-none cursor-pointer`} onClick={() => { handleChipClick(EPreferredMealTimeFilter[condition as keyof typeof EPreferredMealTimeFilter]) }} key={index}>{condition}</div>
         ))}
       </div>
     </div>

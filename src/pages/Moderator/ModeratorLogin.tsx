@@ -1,10 +1,10 @@
 import React, { useState } from "react";
 import PageHeader from "../../components/PageHeader";
-import { Input, UseGoogle } from "../../components/Input";
+import { Input } from "../../components/Input";
 import { RiEyeCloseLine, RiEyeLine } from "react-icons/ri";
 import { Checkbox } from "../../components/ui/checkbox";
 import WideButton from "../../components/WideButton";
-import { moderatorHomeUrl, moderatorSignUpUrl, signUpUrl } from "../../assets/data";
+import { moderatorChangePasswordUrl, moderatorHomeUrl, moderatorSignUpUrl, signUpUrl } from "../../assets/data";
 import { useForm } from "react-hook-form";
 import { IUserLogInFrom } from "../../api/types/user.type";
 import { zodResolver } from '@hookform/resolvers/zod';
@@ -59,10 +59,9 @@ function ModeratorLogin() {
   return (
     <div className="w-full flex-grow flex flex-col justify-start items-center">
       <PageHeader header="Hey! Welcome Back." detail="Log in to your account." />
-      <UseGoogle clickAction={handleWithGoogleClick} />
       <form className="w-full flex flex-col justify-start items-center flex-grow" onSubmit={handleSubmit(login)}>
         <Input label="Your email" placeholder="email" value={email} onChange={onEmailChange} register={register} errors={!isError && errors.email} />
-        <div className="w-full flex-grow">
+        <div className="w-full">
           <Input label="Password" placeholder="password" value={password} isPassword={true} showPassword={showPassword} onChange={onPasswordChange} register={register} errors={errors.password}>
             <div
               className="text-[#6B7280] text-[1.3rem] absolute top-0 right-2 h-full flex justify-end items-center cursor-pointer border-0 bg-transparent"
@@ -72,15 +71,8 @@ function ModeratorLogin() {
             </div>
           </Input>
         </div>
-        <div className="w-full px-5 flex justify-between items-center">
-          <label
-            htmlFor="terms"
-            className="flex justify-start py-3 items-center gap-2 text-[1.1rem] leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70 text-neutral-700 font-[500]"
-          >
-            <Checkbox id="terms" className="border-0 bg-[#F9FAFB]" onClick={handleToggle} />
-            <span className="select-none">Remember me</span>
-          </label>
-          <a href="/" className="text-content-color font-[470]">Forgot Password?</a>
+        <div className="w-full px-5 flex justify-between items-start flex-grow -mt-5">
+          <a href={moderatorChangePasswordUrl} className="text-content-color font-[470]">Forgot Password?</a>
         </div>
         <div className="w-full px-5">
           {isLoading ? (

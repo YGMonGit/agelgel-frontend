@@ -1,15 +1,17 @@
 import React from "react";
 import PageHeader from "../../components/PageHeader";
-import { Input, UseGoogle } from "../../components/Input";
+import { Input } from "../../components/Input";
 import { loginUrl, moderatorLoginUrl } from "../../assets/data";
 import ProfileImageInput from "../../components/ProfileImageInput";
 import WideLink from "../../components/WideLink";
 import DetailInput from "../../components/DetailInput";
+import WideButton from "../../components/WideButton";
+import ClipLoader from "react-spinners/ClipLoader";
 
 interface SingUpUsernameProps {
   setFormNumber: React.Dispatch<React.SetStateAction<number>>;
-  image: string | null;
-  setImage: React.Dispatch<React.SetStateAction<string | null>>;
+  image: string | undefined | null;
+  setImage: React.Dispatch<React.SetStateAction<string | undefined | null>>;
   firstName: string;
   setFirstName: React.Dispatch<React.SetStateAction<string>>;
   lastName: string;
@@ -18,17 +20,20 @@ interface SingUpUsernameProps {
   setEmail: React.Dispatch<React.SetStateAction<string>>;
   phone: string;
   setPhone: React.Dispatch<React.SetStateAction<string>>;
-  handleWithGoogleClick?: () => void;
   forModerator?: boolean;
   register: any;
   setValue: any
   errors: any
   bio?: string;
   setBio?: React.Dispatch<React.SetStateAction<string>>;
+  isOnly?: boolean;
+  isLoading?: boolean;
 }
 
 function SignUpUsername({
   setFormNumber,
+  isOnly = false,
+  isLoading,
   image,
   setImage,
   firstName,
@@ -40,7 +45,6 @@ function SignUpUsername({
   phone,
   setPhone,
   forModerator = false,
-  handleWithGoogleClick,
   register,
   setValue,
   errors,
@@ -64,8 +68,9 @@ function SignUpUsername({
 
   return (
     <div className="w-full flex-grow flex flex-col justify-start items-center">
-      <PageHeader header="Register" detail="Sign up and create your account." />
-      <UseGoogle clickAction={handleWithGoogleClick} />
+      <PageHeader header={
+        isOnly ? "Update" : "Register"
+      } detail="Sign up and create your account." />
       <div className="w-full flex flex-col justify-start items-center flex-grow">
         <div className="w-full px-5 flex flex-col justify-start items-center">
           <ProfileImageInput register={register} setValue={setValue} image={image} setImage={setImage} />
@@ -114,13 +119,37 @@ function SignUpUsername({
           />)
         }
       </div>
-      <div className="w-full px-5">
-        <WideLink
-          label="Next"
-          color="bg-content-color"
-          clickAction={onNextClick}
-        />
-      </div>
+      {
+        isOnly ? (
+          isLoading ? (
+            <WideButton label={
+              <div className="flex justify-center items-center w-full h-full gap-2">
+                <ClipLoader
+                  color={"white"}
+                  size={15}
+                  aria-label="Loading Spinner"
+                  data-testid="loader"
+                />
+                <p className="text-white text-[1.1rem] italic">loading ...</p>
+              </div>
+            } color="bg-content-color" disable={isLoading} />
+          ) : (
+            <div className="w-full px-5">
+              <WideButton
+                label="Finish"
+                color="bg-content-color"
+              />
+            </div>
+          )
+        ) : (
+          <div className="w-full px-5">
+            <WideLink
+              label="Next"
+              color="bg-content-color"
+              clickAction={onNextClick}
+            />
+          </div>
+        )}
       <div className="w-full px-5 text-slate-400 text-[1rem] mb-10">
         Already have an account?{" "}
         <a href={forModerator ? moderatorLoginUrl : loginUrl} className="text-content-color font-[470]">

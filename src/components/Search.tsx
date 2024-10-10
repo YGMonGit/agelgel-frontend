@@ -228,7 +228,7 @@ function SearchC({
       onSubmit={handleSubmit(onSubmit)}
       className="w-full px-5 flex justify-center items-center gap-2 mt-4"
     >
-      <div className="flex justify-center items-center flex-grow py-2 bg-[#F9FAFB] leading-none text-[1rem] px-5 border outline-none rounded-lg border-[#D1D5DB] gap-1 min-w-0">
+      <div className="flex justify-center items-center flex-grow py-2 bg-[#F9FAFB] dark:bg-neutral-800 dark:border-neutral-700 leading-none text-[1rem] px-5 border outline-none rounded-lg border-[#D1D5DB] gap-1 min-w-0">
         <IoSearchOutline className="text-slate-500 text-[1.2rem] flex-shrink-0" />
         <input
           className="border-none outline-none leading-6 bg-transparent flex-grow min-w-0"
@@ -250,6 +250,7 @@ function SearchC({
         hideScrollbars={true}
         onClose={closeDrawer}
         isVisible={isVisible}
+        className="dark:bg-neutral-900"
       >
         <div
           className="w-full overflow-y-auto max-h-[70vh] flex flex-col justify-start items-start mt-8"
@@ -310,13 +311,6 @@ function SearchC({
           />
 
           <div className="flex justify-start items-center leading-none gap-3 w-full mb-4">
-            {/* <Checkbox
-              checked={useUserData}
-              onChange={(e) => setUserData(!useUserData)}
-              color="primary"
-            /> */}
-
-
             <Switch
               id="airplane-mode"
               style={{
@@ -390,7 +384,7 @@ function SearchC({
 
           <Button
             variant="outline"
-            className="absolute top-4 left-2 border-none shadow-none"
+            className="absolute top-4 left-2 border-none shadow-none dark:bg-neutral-900"
             onClick={(e) => {
               e.preventDefault();
               closeDrawer();
@@ -421,6 +415,7 @@ function SearchC({
         hideScrollbars={true}
         onClose={closeDrawerTwo}
         isVisible={isVisibleTwo}
+        className="dark:bg-neutral-900"
       >
         <div
           className="w-full overflow-y-auto max-h-[70vh] flex flex-col justify-start items-start py-3 gap-2 mt-8"
@@ -453,7 +448,7 @@ function SearchC({
           />
           <Button
             variant="outline"
-            className="absolute top-4 left-2 border-none shadow-none"
+            className="absolute top-4 left-2 border-none shadow-none dark:bg-neutral-900"
             onClick={(e) => {
               e.preventDefault();
               closeDrawerTwo();
@@ -475,7 +470,7 @@ function SearchC({
 
       <button
         type="submit"
-        className="flex justify-center items-center w-[42px] h-[42px] bg-white border border-content-color leading-none text-[1rem] px-2 outline-none rounded-lg"
+        className="flex justify-center items-center w-[42px] h-[42px] bg-white dark:bg-neutral-800 dark:border-neutral-800 border border-content-color leading-none text-[1rem] px-2 outline-none rounded-lg"
       >
         <IoSearchOutline className="text-content-color text-[1.6rem]" />
       </button>

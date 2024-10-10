@@ -40,7 +40,7 @@ function DetailInput({
         placeholder={placeholder}
         id={placeholder}
         value={value}
-        className={`border border-[#D1D5DB] pt-3 outline-none w-full px-4 rounded-lg text-gray-600`}
+        className={`border border-[#D1D5DB] dark:bg-neutral-800 dark:border-neutral-700 pt-3 outline-none w-full px-4 rounded-lg text-gray-600`}
         style={{ scrollbarWidth: "none", msOverflowStyle: "none" }}
         onChange={handleChange}
       />
