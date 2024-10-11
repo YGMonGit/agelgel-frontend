@@ -1,6 +1,6 @@
 import React, { useState, useRef, useEffect } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
-import { editUserInfoUrl, homeUrl, moderatorEditInfoUrl, moderatorHomeUrl, moderatorSpaceUrl, moderatorWelcomeUrl, mySpaceUrl, notificationsUrl, searchUrl, updateHealthConditionUrl } from "../assets/data";
+import { editUserInfoUrl, homeUrl, moderatorEditInfoUrl, moderatorHomeUrl, moderatorSpaceUrl, moderatorUpdatePasswordUrl, moderatorWelcomeUrl, mySpaceUrl, notificationsUrl, searchUrl, updateHealthConditionUrl, updatePasswordUrl } from "../assets/data";
 import { useGetUserQuery, useLogOutMutation } from "../api/slices/user.slices";
 import { useGetModeratorQuery, useModeratorIogOutMutation } from "../api/slices/moderator.slices";
 import { welcomeUrl } from "../assets/data";
@@ -98,6 +98,9 @@ function CircleDropdown({ toggleDarkMode, dark }: CircularDropdownProps) {
                 </li>
                 <li className="hover:bg-gray-100 dark:hover:bg-neutral-700 dark:hover:bg-opacity-30 text-slate-500 p-1 px-3 cursor-pointer" onClick={() => navigate(updateHealthConditionUrl)}>
                   Health condition
+                </li>
+                <li className="hover:bg-gray-100 dark:hover:bg-neutral-700 dark:hover:bg-opacity-30 text-slate-500 p-1 px-3 cursor-pointer" onClick={() => navigate(location.pathname.startsWith("/moderator") ? moderatorUpdatePasswordUrl : updatePasswordUrl)}>
+                  Update password
                 </li>
               </>
             )}

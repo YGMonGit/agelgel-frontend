@@ -44,6 +44,8 @@ import {
   notificationsUrl,
   changePasswordUrl,
   moderatorChangePasswordUrl,
+  updatePasswordUrl,
+  moderatorUpdatePasswordUrl,
 } from "./assets/data";
 import ModeratorAddIngredient from "./pages/Moderator/ModeratorAddIngredient";
 import ModeratorEditIngredient from "./pages/Moderator/ModeratorEditIngredient";
@@ -56,6 +58,7 @@ import EditPersonalData from "./pages/EditPersonalData";
 import UserNotification from "./pages/UserNotification";
 import Page404 from "./pages/Page404";
 import ChangePassword from "./pages/ChangePassword";
+import UpdatePassword from "./pages/UpdatePassword";
 
 // ... (other imports remain the same)
 
@@ -226,6 +229,14 @@ function App() {
                 }
               />
               <Route
+                path={updatePasswordUrl}
+                element={
+                  <NavLayout>
+                    <UpdatePassword />
+                  </NavLayout>
+                }
+              />
+              <Route
                 path={personalDataUrl}
                 element={
                   <NavLayout>
@@ -294,6 +305,14 @@ function App() {
                   element={
                     <NavLayout toggleDarkMode={toggleDarkMode} dark={darkMode}>
                       <ModeratorSearch />
+                    </NavLayout>
+                  }
+                />
+                <Route
+                  path={moderatorUpdatePasswordUrl}
+                  element={
+                    <NavLayout>
+                      <UpdatePassword />
                     </NavLayout>
                   }
                 />
