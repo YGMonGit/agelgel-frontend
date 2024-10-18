@@ -6,7 +6,7 @@ import FilterBarActive from "../components/FilterBarActive";
 import { filterData, postUrl } from "../assets/data";
 import DisplayCard from "../components/DisplayCard";
 import { IoAdd } from "react-icons/io5";
-import { useGetRecipesQuery } from "../api/slices/recipe.slices";
+import { useGetRecipesQuery, useRecommendationQuery } from "../api/slices/recipe.slices";
 import { useNavigate } from "react-router-dom";
 import EmptyListIcon from "../assets/images/empty-list.png";
 import { FaChevronLeft, FaChevronRight } from "react-icons/fa6";
@@ -54,10 +54,10 @@ function Home() {
     isFetching,
     isUninitialized,
     refetch,
-  } = useGetRecipesQuery({
+  } = useRecommendationQuery({
     skip: pagination.skip,
     limit: pagination.limit,
-    filter: filter,
+    filter,
   });
 
   useEffect(() => {
@@ -152,7 +152,7 @@ function Home() {
               <FaChevronLeft className="text-content-color text-[1.2rem]" />{" "}
               Back
             </button>
-            
+
           </div>
         </div>
       )}
