@@ -89,8 +89,8 @@ const recipeApiSlice = agelgilAPI.injectEndpoints({
             }),
             invalidatesTags: (result, _, { recipeId }) => result ? [{ type: 'Recipe', id: recipeId }] : [],
         }),
-        recommendation: builder.query<IRecipe[], { page: number }>({
-            query: ({ page }) => `/private/recipe/recommendation/${page}`,
+        recommendation: builder.query<IRecipe[], { skip: number; limit: number, filter: EPreferredMealTimeFilter }>({
+            query: ({ limit, skip, filter }) => `/private/recipe/recommendation/${filter}/${skip}/${limit}`,
             transformResponse: (response: { body: IRecipe[] }) => response.body,
             providesTags: (result) =>
                 result

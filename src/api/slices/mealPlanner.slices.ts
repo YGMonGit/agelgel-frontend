@@ -28,6 +28,7 @@ const mealPlannerApiSlice = agelgilAPI.injectEndpoints({
                 url: `/private/mealPlanner/mealPlan/${mealTime}/${page}`,
                 method: 'GET',
             }),
+            providesTags: ['User-MealPlan'],
             transformResponse: (response: { body: any }) => response.body,
         }),
 
@@ -39,7 +40,8 @@ const mealPlannerApiSlice = agelgilAPI.injectEndpoints({
             transformResponse: (response: { body: IMealPlanner }) => response.body,
             invalidatesTags: (result, error, { recipeID, mealTime }) => result ? [
                 { type: "checkIfUserRecipeExists" },
-                { type: 'MealPlan-Recipe', id: mealTime }
+                { type: 'MealPlan-Recipe', id: mealTime },
+                { type: 'User-MealPlan' }
             ] : [],
         }),
 
@@ -50,7 +52,8 @@ const mealPlannerApiSlice = agelgilAPI.injectEndpoints({
             }),
             transformResponse: (response: { body: IMealPlanner }) => response.body,
             invalidatesTags: (result, error, { recipeID }) => result ? [
-                { type: "checkIfUserRecipeExists" }
+                { type: "checkIfUserRecipeExists" },
+                { type: 'User-MealPlan' }
             ] : [],
         }),
 
@@ -69,7 +72,7 @@ const mealPlannerApiSlice = agelgilAPI.injectEndpoints({
                 method: 'GET',
             }),
             transformResponse: (response: { body: INutritionGoal }) => response.body,
-            providesTags: ['User-NutritionGoal'],
+            providesTags: ['User-NutritionGoal', 'User-MealPlan'],
         }),
 
         updateStats: builder.mutation<IMealPlanner, { statsData: IMealPlannerUpdateFrom }>({

@@ -3,6 +3,7 @@ import { Input } from '../components/Input';
 import PageHeader from '../components/PageHeader';
 import WideButton from '../components/WideButton';
 import { RiEyeCloseLine, RiEyeLine } from 'react-icons/ri';
+import { useChangePasswordMutation } from '../api/slices/user.slices';
 
 function UpdatePassword() {
   const [oldPassword, setOldPassword] = useState("");
@@ -18,6 +19,22 @@ function UpdatePassword() {
     setPassword(e.target.value);
   const onOldPasswordChange = (e: React.ChangeEvent<HTMLInputElement>) =>
     setOldPassword(e.target.value);
+
+  const [ChangePassword, { isLoading }] = useChangePasswordMutation();
+
+  const onSubmit = async () => {
+    if (password !== confirmPassword) {
+      alert("Passwords do not match");
+      return;
+    }
+    try {
+      await ChangePassword({ oldPassword, newPassword: password });
+    } catch (error) {
+      console.error(error);
+    }
+  }
+
+
 
 
   return (
@@ -36,12 +53,12 @@ function UpdatePassword() {
         <Input
           label="Old Password"
           placeholder="old_password"
-          value={password}
+          value={oldPassword}
           isPassword={true}
           showPassword={showOldPassword}
           onChange={onOldPasswordChange}
-          // register={register}
-          // errors={errors.password}
+        // register={register}
+        // errors={errors.password}
         // errors={errors.first_name}
         >
           <div
@@ -64,8 +81,8 @@ function UpdatePassword() {
           isPassword={true}
           showPassword={showPassword}
           onChange={onPasswordChange}
-          // register={register}
-          // errors={errors.password}
+        // register={register}
+        // errors={errors.password}
         // errors={errors.first_name}
         >
           <div
@@ -82,8 +99,8 @@ function UpdatePassword() {
           isPassword={true}
           showPassword={showCPassword}
           onChange={onConfirmPasswordChange}
-          // register={register}
-          // errors={errors.confirm_password}
+        // register={register}
+        // errors={errors.confirm_password}
         >
           <div
             className="text-[#6B7280] text-[1.3rem] absolute top-0 right-2 h-full flex justify-end items-center cursor-pointer border-0 bg-transparent"
@@ -97,6 +114,7 @@ function UpdatePassword() {
         <WideButton
           label="Finish"
           color="bg-content-color"
+          clickEvent={onSubmit}
         />
       </div>
     </div>
