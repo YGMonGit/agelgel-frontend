@@ -114,14 +114,14 @@ function SignUp() {
     if (errors.email) addErrorToPage(1, "email");
     if (errors.phone_number) addErrorToPage(1, "phone number");
 
-    if (errors.password) addErrorToPage(3, "password");
-    if (errors.confirm_password) addErrorToPage(3, "confirm password");
+    if (errors.password) addErrorToPage(2, "password");
+    if (errors.confirm_password) addErrorToPage(2, "confirm password");
 
     if (errors.medical_condition?.chronicDiseases)
-      addErrorToPage(4, "chronic diseases");
-    if (errors.medical_condition?.allergies) addErrorToPage(4, "allergies");
+      addErrorToPage(3, "chronic diseases");
+    if (errors.medical_condition?.allergies) addErrorToPage(3, "allergies");
     if (errors.medical_condition?.dietary_preferences)
-      addErrorToPage(4, "dietary preferences");
+      addErrorToPage(3, "dietary preferences");
 
     // Format error messages
     Object.entries(pageErrors).forEach(([page, fields]) => {
@@ -161,13 +161,6 @@ function SignUp() {
           errors={errors}
         />
       ) : formNumber === 2 ? (
-        <VerifyEmail
-          setFormNumber={setFormNumber}
-          email={email}
-          otp={otp}
-          setOtp={setOtp}
-        />
-      ) : formNumber === 3 ? (
         <SignUpCreatePassword
           setFormNumber={setFormNumber}
           password={password}

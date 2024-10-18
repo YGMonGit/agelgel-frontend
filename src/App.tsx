@@ -46,6 +46,7 @@ import {
   moderatorChangePasswordUrl,
   updatePasswordUrl,
   moderatorUpdatePasswordUrl,
+  moderatorEditInfoUrl,
 } from "./assets/data";
 import ModeratorAddIngredient from "./pages/Moderator/ModeratorAddIngredient";
 import ModeratorEditIngredient from "./pages/Moderator/ModeratorEditIngredient";
@@ -278,6 +279,14 @@ function App() {
                 element={
                   <NavLayout>
                     <ModeratorSignUp />
+                  </NavLayout>
+                }
+              />
+              <Route
+                path={moderatorEditInfoUrl}
+                element={
+                  <NavLayout>
+                    <EditUserInfo />
                   </NavLayout>
                 }
               />

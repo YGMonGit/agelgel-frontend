@@ -461,8 +461,8 @@ function ModeratorRecipeDetail() {
         </div>
 
         <div className="w-full flex flex-col justify-start items-start mt-5">
-          <h3 className="font-semibold mb-1">Comments {recipe.totalReviews}</h3>
           <ModeratorComment moderator={recipe.moderator} />
+          <h3 className="font-semibold mb-1">Comments {recipe.totalReviews}</h3>
 
           {reviews?.map((review, index) => (
             <Comment key={index} comments={review as IReview} />

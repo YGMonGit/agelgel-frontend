@@ -52,12 +52,12 @@ export function ModeratorComment({ moderator }: ModeratorCommentProps) {
   if (!moderator) return null;
 
   return (
-    <div className="w-full flex justify-start items-start mt-1 mb-3 pb-8 border-b gap-3">
+    <div className="w-full flex justify-start items-start mt-1 mb-3 pb-8 border border-content-color rounded-lg p-3 gap-3">
       <div className="h-full flex justify-center items-start">
         <img src={moderator.moderator.profile_img} className="min-w-8 w-8 rounded-full object-cover" alt="pic" />
       </div>
       <div className="flex flex-col justify-start items-start flex-grow">
-        <h3 className="font-semibold mb-1">{moderator.moderator.full_name} <StarIcon className="text-yellow-400 w-4 h-4" /> </h3>
+        <h3 className="font-semibold mb-1">{moderator.moderator.full_name} <p className="text-green-500 italic text-[.7rem] -mt-[6px]">Moderator</p> </h3>
         <h3 className="w-full leading-5 text-slate-500 text-[1rem]">{moderator.comment}</h3>
       </div>
     </div>

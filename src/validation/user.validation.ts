@@ -29,6 +29,19 @@ export const signUpSchema = z.object({
     confirm_password: undefined,
 }));
 
+export const forgotPasswordSchema = z.object({
+    password: z.string()
+        .min(8, { message: "Password must be at least 8 characters long." })
+        .min(1, { message: "Password is required." }),
+    confirm_password: z.string().min(1, { message: "Confirm password is required." }),
+}).refine((data) => data.password === data.confirm_password, {
+    path: ['confirm_password'],
+    message: "Passwords do not match.",
+}).transform((obj) => ({
+    ...obj,
+    confirm_password: undefined,
+}));
+
 export const updateUserSchema = z.object({
     email: z.string()
         .email({ message: "Please enter a valid email address." })

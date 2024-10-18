@@ -227,7 +227,6 @@ function NewRecipeForm() {
               errors={errors}
               setError={setErrorMessage}
             />
-            {/* <button type="submit" className="btn-primary mt-4">Submit</button> */}
           </>
         ) : formNumber === 4 ? (
           <>
@@ -257,8 +256,8 @@ function NewRecipeForm() {
               finish={false}
               register={register}
               errors={errors}
+              recipe={true}
             />
-            {/* <button type="submit" className="btn-primary mt-4">Submit</button> */}
           </>
         )
       ) : (
@@ -283,7 +282,6 @@ function NewRecipeForm() {
             setValue={setValue}
             errors={errors}
           />
-          {/* <button type="submit" className="btn-primary mt-4">Submit</button> */}
         </>
       )}
       <ErrorPopup error={errorMessage} />

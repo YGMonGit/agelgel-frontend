@@ -291,7 +291,6 @@ function Navbar({ toggleDarkMode, dark }: NavbarProps) {
       location.pathname.startsWith(editPostUrl) ||
       location.pathname === mySpaceUrl ||
       location.pathname === personalDataUrl ||
-      location.pathname === mealPlannerUrl ||
       location.pathname === moderatorSpaceUrl ||
       location.pathname === moderatorAddIngredientUrl ||
       location.pathname === updateHealthConditionUrl ||
@@ -317,7 +316,22 @@ function Navbar({ toggleDarkMode, dark }: NavbarProps) {
           <p className="text-[1.2rem] font-semibold leading-none">Back</p>
         </NavLink>
       );
-    } else {
+    } else if(location.pathname === mealPlannerUrl) {
+      return(
+        <NavLink
+          to="#"
+          className="flex justify-start items-center gap-5 py-2 select-none cursor-pointer"
+          onClick={(e) => {
+            e.preventDefault();
+            navigate(homeUrl);
+            window.scrollTo({ top: 0 });
+          }}
+        >
+          <SlArrowLeft className="text-content-color text-[1rem]" />
+          <p className="text-[1.2rem] font-semibold leading-none">Back</p>
+        </NavLink>
+      );
+    }else {
       return null;
     }
   };

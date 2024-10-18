@@ -15,9 +15,10 @@ interface VerifyEmailProps {
   otp: string;
   setOtp: React.Dispatch<React.SetStateAction<string>>;
   forModerator?: boolean;
+  click?: any;
 }
 
-function VerifyEmail({ setFormNumber, email, otp, setOtp, forModerator=false }: VerifyEmailProps) {
+function VerifyEmail({ setFormNumber, email, otp, setOtp, forModerator=false, click }: VerifyEmailProps) {
   const temp = "123456"; // Dummy OTP value
   const [error, setError] = useState("");
 
@@ -55,7 +56,7 @@ function VerifyEmail({ setFormNumber, email, otp, setOtp, forModerator=false }: 
   };
 
   return (
-    <div className='w-full flex-grow flex flex-col justify-start items-start -mt-5'>
+    <div className='w-full mb-4 flex flex-col justify-start items-start -mt-5'>
       <PageHeader header='Verify Email' detail='Enter the code sent to your email' />
       <div className='w-full px-5 flex-grow flex flex-col justify-start items-center gap-2 pt-3'>
         <div className='px-4 py-6 bg-gray-50 dark:bg-neutral-800 flex flex-col justify-center items-start gap-2 rounded-lg w-full'>
@@ -78,17 +79,17 @@ function VerifyEmail({ setFormNumber, email, otp, setOtp, forModerator=false }: 
           {/* Error message */}
           {error && <p className="text-red-500 text-sm leading-none -my-1">{error}</p>}
           <p className='flex justify-start items-center text-blue-500 underline select-none cursor-pointer'>Resend code</p>
+          <div className="w-full flex justify-center items-center bg-content-color h-[35px] text-white rounded-lg select-none cursor-pointer" onClick={click}>
+            Send Email
+          </div>
         </div>
       </div>
-      <div className="w-full px-5 flex justify-center items-end gap-2">
-        <WideLink label="Next" color="bg-content-color" clickAction={onNextClick} />
-      </div>
-      <div className="w-full px-5 text-slate-400 text-[1rem] mb-10">
+      {/* <div className="w-full px-5 text-slate-400 text-[1rem] mb-10">
         Already have an account?{" "}
         <a href={ forModerator ? moderatorLoginUrl : loginUrl } className="text-content-color font-[470]">
           Login now
         </a>
-      </div>
+      </div> */}
     </div>
   );
 }
