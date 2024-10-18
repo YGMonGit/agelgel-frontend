@@ -32,6 +32,8 @@ import {
   notificationsUrl,
   moderatorChangePasswordUrl,
   changePasswordUrl,
+  updatePasswordUrl,
+  moderatorUpdatePasswordUrl,
 } from "../assets/data";
 
 import { SlClose, SlArrowLeft } from "react-icons/sl";
@@ -294,6 +296,8 @@ function Navbar({ toggleDarkMode, dark }: NavbarProps) {
       location.pathname === moderatorAddIngredientUrl ||
       location.pathname === updateHealthConditionUrl ||
       location.pathname === editUserInfoUrl ||
+      location.pathname === updatePasswordUrl ||
+      location.pathname === moderatorUpdatePasswordUrl ||
       location.pathname === editPersonalDataUrl ||
       location.pathname === notificationsUrl ||
       location.pathname === moderatorEditInfoUrl ||

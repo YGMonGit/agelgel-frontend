@@ -26,6 +26,7 @@ export const editPersonalDataUrl = "/user/edit-personal-data";
 export const notificationsUrl = "/user/notifications";
 
 export const changePasswordUrl = "/user/change-password";
+export const updatePasswordUrl = "/user/update-password";
 
 export const moderatorSignUpUrl = "/moderator/sign-up";
 export const moderatorLoginUrl = "/moderator/login";
@@ -38,6 +39,7 @@ export const moderatorEditIngredientUrl = "/moderator/edit-ingredient";
 export const moderatorEditInfoUrl = "/moderator/edit-info";
 export const moderatorWelcomeUrl = "/moderator";
 export const moderatorChangePasswordUrl = "/moderator/change-password";
+export const moderatorUpdatePasswordUrl = "/moderator/update-password";
 
 
 export const allergies = [
