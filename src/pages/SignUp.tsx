@@ -55,7 +55,6 @@ function SignUp() {
     formState: { errors },
     setError,
     setValue,
-    getValues,
   } = useForm<IUserSignUpFrom>({
     resolver: zodResolver(signUpSchema),
   });

@@ -43,11 +43,11 @@ export const editRecipeSchema = z.object({
     instructions: z.string().min(1, "Instructions are required"),
     name: z.string().min(1, "Recipe name is required"),
     preferredMealTime: z.array(z.nativeEnum(EPreferredMealTime)).nonempty(),
-    ingredients: z.array(z.object({
-        ingredient: z.string().min(1, "Ingredient is required"),
-        unit: z.string().min(1, "Ingredient unit is required"),
-        amount: z.number().nonnegative().min(1, "Amount must be a positive number"),
-    })),
+    // ingredients: z.array(z.object({
+    //     ingredient: z.string().min(1, "Ingredient is required"),
+    //     unit: z.string().min(1, "Ingredient unit is required"),
+    //     amount: z.number().nonnegative().min(1, "Amount must be a positive number"),
+    // })),
     youtubeLink: z.string().url().optional(),
     medical_condition: z.object({
         chronicDiseases: z.array(z.nativeEnum(EChronicDisease)).nonempty("At least one chronic disease is required"),
