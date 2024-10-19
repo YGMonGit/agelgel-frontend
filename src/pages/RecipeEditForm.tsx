@@ -172,6 +172,7 @@ function RecipeEditForm() {
         recipeId: String(rID.id),
         updates: {
           ...recipe,
+          ingredients: ingredientList,
           imgs: [...defaultImages, ...fileUrls],
           preparationDifficulty: difficulty,
           preferredMealTime: mealTime,
