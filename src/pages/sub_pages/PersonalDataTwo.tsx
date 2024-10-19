@@ -6,6 +6,7 @@ import WideButton from '../../components/WideButton';
 import WideLink from '../../components/WideLink';
 import { useNavigate } from 'react-router-dom';
 import { mealPlannerUrl } from '../../assets/data';
+import ClipLoader from 'react-spinners/ClipLoader';
 
 interface PersonalDataTwoProps {
   setFromPage: React.Dispatch<React.SetStateAction<number>>;
@@ -17,9 +18,10 @@ interface PersonalDataTwoProps {
   setDietGoals: React.Dispatch<React.SetStateAction<string>>;
   register: any;
   errors: any;
+  isLoading?: boolean;
 }
 
-function PersonalDataTwo({ setFromPage, gender, setGender, activityLevel, setActivityLevel, dietGoals, setDietGoals, register, errors }: PersonalDataTwoProps) {
+function PersonalDataTwo({ setFromPage, gender, setGender, activityLevel, setActivityLevel, dietGoals, setDietGoals, register, errors, isLoading }: PersonalDataTwoProps) {
 
   const navigate = useNavigate();
   const onGenderChange = (e: React.ChangeEvent<HTMLInputElement>) =>
@@ -174,7 +176,25 @@ function PersonalDataTwo({ setFromPage, gender, setGender, activityLevel, setAct
       </div>
       <div className="w-full px-5 mb-5 flex justify-center items-end gap-2">
         <WideLink label="Back" color="dark:bg-neutral-900 bg-white" outline={true} clickAction={onBackClick} />
-        <WideButton label="Finish" color="bg-content-color" />
+        {isLoading ? (
+            <WideButton label={
+              <div className="flex justify-center items-center w-full h-full gap-2">
+                <ClipLoader
+                  color={"white"}
+                  size={15}
+                  aria-label="Loading Spinner"
+                  data-testid="loader"
+                />
+                <p className="text-white text-[1.1rem] italic">loading ...</p>
+              </div>
+            } color="bg-content-color" disable={isLoading} />
+          ) : (
+            <WideButton
+              label="Finish"
+              color="bg-content-color"
+            />
+          )}
+        {/* <WideButton label="Finish" color="bg-content-color" /> */}
       </div>
     </div>
   )

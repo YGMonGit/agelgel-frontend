@@ -94,8 +94,8 @@ function ModeratorSignUp() {
     if (errors.email) addErrorToPage(1, "email");
     if (errors.phone_number) addErrorToPage(1, "phone number");
 
-    if (errors.password) addErrorToPage(3, "password");
-    if (errors.confirm_password) addErrorToPage(3, "confirm password");
+    if (errors.password) addErrorToPage(2, "password");
+    if (errors.confirm_password) addErrorToPage(2, "confirm password");
 
 
     // Format error messages
@@ -137,14 +137,6 @@ function ModeratorSignUp() {
           bio={bio}
           setBio={setBio}
           errors={errors}
-        />
-      ) : formNumber === 2 ? (
-        <VerifyEmail
-          setFormNumber={setFormNumber}
-          email={email}
-          otp={otp}
-          setOtp={setOtp}
-          forModerator={true}
         />
       ) : (
         <SignUpCreatePassword

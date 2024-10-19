@@ -1,4 +1,5 @@
 import React, { Children } from "react";
+import { MdClose } from "react-icons/md";
 import ClipLoader from "react-spinners/ClipLoader";
 
 interface AlertDialogBoxProps {
@@ -27,7 +28,7 @@ function AlertDialogBox({ title, detail, cancelContent, buttonContent, closeDial
 
   return (
     <div className="fixed top-0 left-0 bg-black bg-opacity-40 h-screen w-screen z-20 flex justify-center items-center" onClick={handleSingleSpace}>
-      <div className="w-[90%] max-w-[500px] bg-white dark:bg-neutral-950 dark:border-neutral-700 py-5 px-3 rounded-xl flex flex-col justify-start items-center xs:items-start" onClick={handleContentClick}>
+      <div className="w-[90%] max-w-[500px] bg-white dark:bg-neutral-950 dark:border-neutral-700 py-5 px-3 rounded-xl flex flex-col justify-start items-center xs:items-start relative" onClick={handleContentClick}>
         {title && (
           <p className="w-full px-2 text-[1.3rem] font-semibold">
             {title}
@@ -40,7 +41,7 @@ function AlertDialogBox({ title, detail, cancelContent, buttonContent, closeDial
         )}
         {children}
         <div className="w-full flex flex-col xs:flex-row justify-end items-end gap-2 mt-4">
-          {!single && (
+          {!single && cancelContent && (
             <button
               className="w-full xs:w-auto px-5 text-[1.2rem] h-[40px] rounded-xl bg-neutral-900 text-white flex justify-center items-center xs:order-1 order-2"
               onClick={closeDialog}
@@ -48,25 +49,30 @@ function AlertDialogBox({ title, detail, cancelContent, buttonContent, closeDial
               {cancelContent}
             </button>
           )}
-          <button
-            className={`w-full xs:w-auto px-5 text-[1.2rem] h-[40px] border border-content-color ${single ? "bg-content-color text-white" : "bg-red-700"} rounded-xl xs:order-2 order-1`}
-            onClick={handleAction ? handleAction : handleClick}
-          >
-            {isLoading ? (
-              <div className="flex justify-center items-center w-full h-full gap-2">
-                <ClipLoader
-                  color={"white"}
-                  size={15}
-                  aria-label="Loading Spinner"
-                  data-testid="loader"
-                />
-                <p className="text-white text-[1.1rem] italic">loading ...</p>
-              </div>
-            ) : (
-              <span>{buttonContent}</span>
-            )}
-          </button>
+          {buttonContent && (
+            <button
+              className={`w-full xs:w-auto px-5 text-[1.2rem] h-[40px] border border-content-color ${single ? "bg-content-color text-white" : "bg-red-700"} rounded-xl xs:order-2 order-1`}
+              onClick={handleAction ? handleAction : handleClick}
+            >
+              {isLoading ? (
+                <div className="flex justify-center items-center w-full h-full gap-2">
+                  <ClipLoader
+                    color={"white"}
+                    size={15}
+                    aria-label="Loading Spinner"
+                    data-testid="loader"
+                  />
+                  <p className="text-white text-[1.1rem] italic">loading ...</p>
+                </div>
+              ) : (
+                <span>{buttonContent}</span>
+              )}
+            </button>
+          )}
         </div>
+        {!buttonContent && (
+          <button onClick={closeDialog} className="absolute top-3 right-4 text-[1.3rem] text-neutral-400"><MdClose /></button>
+        )}
       </div>
     </div>
   );

@@ -33,7 +33,7 @@ function PersonalData() {
     resolver: zodResolver(AddMealPreferenceSchema),
   });
 
-  const [CreateMealPlan] = useCreateMealPlanMutation();
+  const [CreateMealPlan, {isLoading}] = useCreateMealPlanMutation();
   const [serverError, setServerError] = useState<string | null>(null);
   console.log({ errors, serverError });
 
@@ -96,6 +96,7 @@ function PersonalData() {
           setDietGoals={setDietGoals}
           register={register}
           errors={errors}
+          isLoading={isLoading}
         />
       )}
     </form>

@@ -18,6 +18,7 @@ interface SingUpCreatePasswordProps {
   forModerator?: boolean;
   isLoading?: any;
   second?: boolean;
+  singleBtn?: boolean;
 }
 
 function SignUpCreatePassword({
@@ -31,6 +32,7 @@ function SignUpCreatePassword({
   forModerator = false,
   isLoading,
   second,
+  singleBtn,
 }: SingUpCreatePasswordProps) {
   const [showPassword, setShowPassword] = useState(false);
   const [showCPassword, setShowCPassword] = useState(false);
@@ -41,7 +43,7 @@ function SignUpCreatePassword({
     setPassword(e.target.value);
 
   const onBackClick = () => {
-    setFormNumber(second? 1 : 2);
+    setFormNumber(1);
   };
   const onNextClick = () => {
     setFormNumber(4);
@@ -49,10 +51,11 @@ function SignUpCreatePassword({
 
   return (
     <div className="w-full flex-grow flex flex-col justify-start items-center">
+      {!singleBtn && (
       <PageHeader
         header="Last step!"
         detail="Sign up and create your account."
-      />
+      />)}
       <div className="w-full flex flex-col justify-start items-center flex-grow">
         <Input
           label="Password"
@@ -91,12 +94,14 @@ function SignUpCreatePassword({
         </Input>
       </div>
       <div className="w-full px-5 flex justify-center items-end gap-2">
-        <WideLink
-          label="Back"
-          color="dark:bg-neutral-900 bg-white"
-          outline={true}
-          clickAction={onBackClick}
-        />
+        {!singleBtn && (
+          <WideLink
+            label="Back"
+            color="dark:bg-neutral-900 bg-white"
+            outline={true}
+            clickAction={onBackClick}
+          />
+        )}
         {forModerator ? (
           isLoading ? (
             <WideButton label={
@@ -117,24 +122,21 @@ function SignUpCreatePassword({
             />
           )
         ): (
-          second ? 
           <WideLink
             label="Next"
             color="bg-content-color"
             clickAction={onNextClick}
-          /> : 
-          <WideButton
-              label="Finish"
-              color="bg-content-color"
-            />
+          />
         )}
       </div>
+      {!singleBtn && (
       <div className="w-full px-5 text-slate-400 text-[1rem] mb-10">
         Already have an account?{" "}
         <a href={ forModerator ? moderatorLoginUrl : loginUrl } className="text-content-color font-[470]">
           Login now
         </a>
       </div>
+      )}
     </div>
   );
 }

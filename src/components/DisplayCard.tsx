@@ -12,10 +12,10 @@ import { Skeleton } from "../components/ui/skeleton";
 // });
 const StyledRating = styled(Rating)(({ theme }) => ({
   fontSize: '0.8rem',
-  color: theme.palette.mode === 'dark' ? 'white' : '#000000',
-  '& .MuiRating-iconFilled': {
-    color: theme.palette.mode === 'dark' ? 'white' : '#000000',
-  },
+  // color: theme.palette.mode === 'dark' ? 'white' : '#000000',
+  // '& .MuiRating-iconFilled': {
+  //   color: theme.palette.mode === 'dark' ? 'white' : '#000000',
+  // },
 }));
 
 interface DisplayCardProps {
@@ -60,8 +60,8 @@ function DisplayCard({ post, HSlide = false }: DisplayCardProps) {
       <img src={post.imgs[0]} className="w-full aspect-square rounded-t-md" alt="pic" />
       <h2 className="text-[.8rem] mt-3 font-bold whitespace-pre-wrap overflow-hidden line-clamp-1">{post.name}</h2>
       <div className="flex justify-start items-center gap-1 my-2">
-        <StyledRating name="read-only" defaultValue={post.rating} precision={0.5} size="small" readOnly className="dark:bg-neutral-600 dark:px-1 rounded-full" />
-        <p className="leading-3 px-1 rounded-md text-content-color text-[.6rem] bg-[#EBFFF8] dark:bg-opacity-30">{post.rating.toFixed(1)}</p>
+        <StyledRating name="read-only" defaultValue={post.rating} precision={0.5} size="small" readOnly className="dark:bg-neutral-700 dark:px-1 rounded-full" />
+        <p className="leading-3 px-1 rounded-md text-content-color text-[.6rem] bg-[#EBFFF8] dark:bg-opacity-15">{post.rating.toFixed(1)}</p>
       </div>
       <p className="text-[.67rem] text-slate-500 whitespace-pre-wrap overflow-hidden line-clamp-2 flex-grow">{post.description}</p>
       <div className="flex justify-start items-center w-full gap-1">

@@ -157,7 +157,7 @@ const userApiSlice = agelgilAPI.injectEndpoints({
         }),
         forgotPassword: builder.mutation<void, { email: string, otp: string, password: string }>({
             query: ({ email, otp, password }) => ({
-                url: `/public/user/forgotPassword`,
+                url: `/public/user/forgotPassword/email/${otp}/${email}/${password}`,
                 method: 'PATCH',
                 body: { email, otp, password }
             }),

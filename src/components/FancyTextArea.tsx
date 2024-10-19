@@ -183,9 +183,9 @@ export default function FancyTextArea({ onChange, errors, register, instruction 
         <IconButton variant="plain" color="neutral" onClick={handleBulletPoints}>
           <MdOutlineFormatListBulleted className="text-content-color text-[1.2rem]" />
         </IconButton>
-        <IconButton variant="plain" color="neutral" onClick={handleNumberedList}>
+        {/* <IconButton variant="plain" color="neutral" onClick={handleNumberedList}>
           <MdOutlineFormatListNumbered className="text-content-color text-[1.2rem]" />
-        </IconButton>
+        </IconButton> */}
         <IconButton variant="plain" color="neutral" onClick={() => handleIndent(true)}>
           <MdFormatIndentIncrease className="text-content-color text-[1.2rem]" />
         </IconButton>

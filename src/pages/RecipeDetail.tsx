@@ -378,9 +378,9 @@ function RecipeDetail() {
             precision={0.5}
             size="small"
             readOnly
-            className="dark:bg-neutral-600 rounded-full dark:px-1"
+            className="dark:bg-neutral-800 rounded-full dark:px-1"
           />
-          <p className="leading-3 px-1 rounded-md text-content-color text-[.8rem] bg-[#EBFFF8]">
+          <p className="leading-3 px-1 py-[2px] rounded-full text-content-color text-[.8rem] bg-[#EBFFF8] bg-opacity-10">
             {recipe.rating.toFixed(1)}
           </p>
         </div>
@@ -397,8 +397,7 @@ function RecipeDetail() {
             </button>
             {openDialogBox && (
               <AlertDialogBox
-                cancelContent="Cancel"
-                buttonContent="Yes, delete recipe"
+                
                 closeDialog={() => {
                   setOpenDialogBox(false);
                 }}
@@ -671,9 +670,8 @@ function RecipeDetail() {
         </div>
 
         <div className="w-full flex flex-col justify-start items-start mt-5">
-          <h3 className="font-semibold mb-1">Comments {recipe.totalReviews}</h3>
           <ModeratorComment moderator={recipe.moderator} />
-
+          <h3 className="font-semibold mb-1">Comments {recipe.totalReviews}</h3>
           {reviews?.map((review, index) => (
             <Comment key={index} comments={review as IReview} />
           ))}

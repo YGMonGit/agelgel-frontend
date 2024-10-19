@@ -14,8 +14,11 @@ import { useGetUniqueTypeQuery, useGetUniqueUnitQuery, useCreateIngredientMutati
 import ChipsBox from "../../components/ChipsBoxTwo";
 import ClipLoader from "react-spinners/ClipLoader";
 import { FormControl, InputLabel, MenuItem, Select } from "@mui/material";
+import { useNavigate } from "react-router-dom";
+import { moderatorHomeUrl } from "../../assets/data";
 
 function ModeratorAddIngredient() {
+  const navigate = useNavigate();
   const [ingredientName, setIngredientName] = useState("");
   const [ingredientAmharicName, setIngredientAmharicName] = useState("");
   const [type, setType] = useState("");
@@ -44,7 +47,7 @@ function ModeratorAddIngredient() {
   const submit = async (data: INewIngredientFrom) => {
     try {
       await createIngredient(data).unwrap();
-
+      navigate(moderatorHomeUrl);
     } catch (error: any) {
       if (!error.data.error) return;
       const err = error.data.error;

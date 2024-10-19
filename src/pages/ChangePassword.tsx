@@ -8,8 +8,8 @@ import {
 } from "../api/types/user.type";
 
 import { useNavigate } from "react-router-dom";
-import { signUpSchema } from "../validation/user.validation";
-import { moderatorHomeUrl } from "../assets/data";
+import { forgotPasswordSchema, signUpSchema } from "../validation/user.validation";
+import { homeUrl, moderatorHomeUrl } from "../assets/data";
 import useFileUpload from "../hooks/useFileUpload";
 import ErrorPopup from "../components/ErrorPopup";
 import { useModeratorSignUpMutation } from "../api/slices/moderator.slices";
@@ -48,15 +48,17 @@ function ChangePassword() {
     setError,
     setValue,
   } = useForm<IModeratorSignUpFrom>({
-    resolver: zodResolver(signUpSchema),
+    resolver: zodResolver(forgotPasswordSchema),
   });
 
   console.log({ errors });
 
   async function sendEmail(user: IModeratorSignUpFrom) {
+    console.log("hello");
+    
     try {
       await SendEmail({ email: email });
-      setFormNumber(2);
+      // setFormNumber(2);
     } catch (error) {
       console.error("Failed to send email:", error);
       setError("email", {
@@ -69,7 +71,7 @@ function ChangePassword() {
   async function forgotPassword(user: IModeratorSignUpFrom) {
     try {
       await ForgotPassword({ email: email, otp: otp, password: password });
-      navigate(moderatorHomeUrl);
+      navigate(homeUrl);
     } catch (error) {
       console.error("Failed to change password:", error);
       setError("email", {
@@ -83,16 +85,14 @@ function ChangePassword() {
     const errorMessages: string[] = [];
     const pageErrors: { [key: number]: string[] } = {
       1: [],
-      2: [],
-      3: [],
     };
 
     const addErrorToPage = (page: number, field: string) => {
       pageErrors[page].push(field);
     };
 
-    if (errors.password) addErrorToPage(2, "password");
-    if (errors.confirm_password) addErrorToPage(2, "confirm password");
+    if (errors.password) addErrorToPage(1, "password");
+    if (errors.confirm_password) addErrorToPage(1, "confirm password");
 
 
     // Format error messages
@@ -117,7 +117,6 @@ function ChangePassword() {
       className="w-full flex-grow flex flex-col justify-start items-center"
       onSubmit={handleSubmit(forgotPassword)}
     >
-      {formNumber === 1 ? (
         <>
           <div className="pt-8"></div>
           <Input
@@ -134,25 +133,22 @@ function ChangePassword() {
             otp={otp}
             setOtp={setOtp}
             forModerator={true}
+            click={sendEmail as any}
           />
-          <Button type="button" variant="contained" color="primary" onClick={sendEmail as any}>
-            Send Email
-          </Button>
+          <SignUpCreatePassword
+            setFormNumber={setFormNumber}
+            password={password}
+            setPassword={setPassword}
+            confirmPassword={confirmPassword}
+            setConfirmPassword={setConfirmPassword}
+            register={register}
+            errors={errors}
+            forModerator={true}
+            isLoading={isLoading}
+            second={true}
+            singleBtn={true}
+          />
         </>
-      ) : (
-        <SignUpCreatePassword
-          setFormNumber={setFormNumber}
-          password={password}
-          setPassword={setPassword}
-          confirmPassword={confirmPassword}
-          setConfirmPassword={setConfirmPassword}
-          register={register}
-          errors={errors}
-          forModerator={true}
-          isLoading={isLoading}
-          second={true}
-        />
-      )}
       <ErrorPopup error={errorMessage} />
     </form>
   );

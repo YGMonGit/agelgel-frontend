@@ -220,9 +220,7 @@ function DetailNavDropdown() {
                     )}
                   </>
                 ) : (
-                  <li className="hover:bg-gray-100 dark:hover:bg-neutral-700 dark:hover:bg-opacity-30 text-slate-500 p-1 px-3 cursor-pointer">
-                    Report
-                  </li>
+                  null
                 )}
               </>
             )}

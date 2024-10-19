@@ -15,11 +15,11 @@ const Loading = () => {
   const [currentSlide, setCurrentSlide] = useState(0);
 
   const slideImages = [
-    {image: Logo, text: "Meal Planner"},
-    {image: MealPlannerImage, text: "Meal Planner"},
-    {image: Recommendation, text: "Personalized Recommendation"},
-    {image: Search, text: "Dynamic Search"},
-    {image: Post, text: "Recipe Post"},
+    { image: Logo, text: "Meal Planner" },
+    { image: MealPlannerImage, text: "Meal Planner" },
+    { image: Recommendation, text: "Personalized Recommendation" },
+    { image: Search, text: "Dynamic Search" },
+    { image: Post, text: "Recipe Post" },
   ];
 
   return (
@@ -34,18 +34,17 @@ const Loading = () => {
           pauseOnHover={true}
           indicators={(index) => (
             <div
-              className={`w-[15px] h-[15px] rounded-full ${
-                index === currentSlide ? "bg-green-500" : "bg-gray-300 dark:bg-neutral-700"
-              } inline-block mx-1 cursor-pointer`}
+              className={`w-[15px] h-[15px] rounded-full ${index === currentSlide ? "bg-green-500" : "bg-gray-300 dark:bg-neutral-700"
+                } inline-block mx-1 cursor-pointer`}
             ></div>
           )}
           onChange={(oldIndex, newIndex) => setCurrentSlide(newIndex)}
         >
           {slideImages.map((slideImage, index) => (
             <div className='px-5 w-full'>
-              <div key={index} className="flex flex-col justify-center items-center h-[240px] bg-gray-700 bg-opacity-60 py-1 gap-2 rounded-lg relative">
-                <img 
-                  src={slideImage.image} 
+              <div key={index} className="flex flex-col justify-center items-center h-[240px] bg-neutral-200 dark:bg-gray-700 bg-opacity-60 py-1 gap-2 rounded-lg relative">
+                <img
+                  src={slideImage.image}
                   alt={`slide-${index}`}
                   className={`w-auto h-[90%] object-cover ${index === 0 && "p-5"}`}
                 />

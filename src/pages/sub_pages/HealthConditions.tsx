@@ -18,6 +18,7 @@ interface HealthConditionProps {
   register?: any;
   errors?: any;
   isLoading?: any;
+  recipe?: boolean;
 }
 
 function HealthConditions({
@@ -32,9 +33,10 @@ function HealthConditions({
   register,
   errors,
   isLoading,
+  recipe,
 }: HealthConditionProps) {
 
-  const onBackClick = () => { setFormNumber(1) };
+  const onBackClick = () => { setFormNumber(recipe ? 1 : 2) };
   const onNextClick = () => { setFormNumber(3) };
 
   return (
@@ -83,7 +85,7 @@ function HealthConditions({
             label="Back"
             color="dark:bg-neutral-900 bg-white"
             outline={true}
-            clickAction={() => setFormNumber(3)}
+            clickAction={() => setFormNumber(2)}
           />
           {isLoading ? (
             <WideButton label={
