@@ -22,9 +22,26 @@ function ModeratorHome() {
   const [filter, setFilter] = useState<EPreferredMealTimeFilter>(
     EPreferredMealTimeFilter.all
   );
-  const [spaceType, setSpaceType] = useState<"recipe" | "user" | "ingredient">(
-    "recipe"
-  );
+  // const [spaceType, setSpaceType] = useState<"recipe" | "user" | "ingredient">(
+  //   "recipe"
+  // );
+
+  const [spaceType, setSpaceType] = useState<"recipe" | "user" | "ingredient">(() => {
+    const storedSpaceType = localStorage.getItem("spaceType");
+    
+    if (storedSpaceType) {
+      return storedSpaceType as "recipe" | "user" | "ingredient";
+    } else {
+      localStorage.setItem("spaceType", "recipe");
+      return "recipe";
+    }
+  });
+
+  useEffect(() => {
+    localStorage.setItem("spaceType", spaceType);
+  }, [spaceType]);
+  
+  
 
   const pageSize = 10;
   const [pagination, setPagination] = useState({
