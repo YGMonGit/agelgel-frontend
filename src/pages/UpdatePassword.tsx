@@ -4,6 +4,7 @@ import PageHeader from '../components/PageHeader';
 import WideButton from '../components/WideButton';
 import { RiEyeCloseLine, RiEyeLine } from 'react-icons/ri';
 import { useChangePasswordMutation } from '../api/slices/user.slices';
+import ClipLoader from 'react-spinners/ClipLoader';
 
 function UpdatePassword() {
   const [oldPassword, setOldPassword] = useState("");
@@ -111,11 +112,25 @@ function UpdatePassword() {
         </Input>
       </div>
       <div className="w-full px-5 flex justify-center items-end gap-2">
-        <WideButton
-          label="Finish"
-          color="bg-content-color"
-          clickEvent={onSubmit}
-        />
+      {isLoading ? (
+            <WideButton label={
+              <div className="flex justify-center items-center w-full h-full gap-2">
+                <ClipLoader
+                  color={"white"}
+                  size={15}
+                  aria-label="Loading Spinner"
+                  data-testid="loader"
+                />
+                <p className="text-white text-[1.1rem] italic">loading ...</p>
+              </div>
+            } color="bg-content-color" disable={isLoading} />
+          ) : (
+            <WideButton
+              label="Finish"
+              color="bg-content-color"
+              clickEvent={onSubmit}
+            />
+          )}
       </div>
     </div>
   )

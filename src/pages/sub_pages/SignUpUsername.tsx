@@ -22,8 +22,8 @@ interface SingUpUsernameProps {
   setPhone: React.Dispatch<React.SetStateAction<string>>;
   forModerator?: boolean;
   register: any;
-  setValue: any
-  errors: any
+  setValue: any;
+  errors: any;
   bio?: string;
   setBio?: React.Dispatch<React.SetStateAction<string>>;
   isOnly?: boolean;
@@ -68,13 +68,21 @@ function SignUpUsername({
 
   return (
     <div className="w-full flex-grow flex flex-col justify-start items-center">
-      <PageHeader header={
-        isOnly ? "Update" : "Register"
-      } detail="Sign up and create your account." />
+      <PageHeader
+        header={isOnly ? "Update" : "Register"}
+        detail="Sign up and create your account."
+      />
       <div className="w-full flex flex-col justify-start items-center flex-grow">
         <div className="w-full px-5 flex flex-col justify-start items-center">
-          <ProfileImageInput register={register} setValue={setValue} image={image} setImage={setImage} />
-          {errors.profile_img && <p className={errorStyle}>{errors.profile_img.message}</p>}
+          <ProfileImageInput
+            register={register}
+            setValue={setValue}
+            image={image}
+            setImage={setImage}
+          />
+          {errors.profile_img && (
+            <p className={errorStyle}>{errors.profile_img.message}</p>
+          )}
         </div>
         <Input
           label="First Name"
@@ -108,21 +116,21 @@ function SignUpUsername({
           register={register}
           errors={errors.phone_number}
         />
-        {
-          bio != undefined && (<DetailInput
+        {bio != undefined && (
+          <DetailInput
             label="bio"
             placeholder="bio"
             value={bio}
             onChange={(e) => (setBio as any)(e.target.value)}
             register={register}
             errors={errors.bio}
-          />)
-        }
+          />
+        )}
       </div>
-      {
-        isOnly ? (
-          isLoading ? (
-            <WideButton label={
+      {isOnly ? (
+        isLoading ? (
+          <WideButton
+            label={
               <div className="flex justify-center items-center w-full h-full gap-2">
                 <ClipLoader
                   color={"white"}
@@ -132,27 +140,54 @@ function SignUpUsername({
                 />
                 <p className="text-white text-[1.1rem] italic">loading ...</p>
               </div>
-            } color="bg-content-color" disable={isLoading} />
-          ) : (
-            <div className="w-full px-5">
-              <WideButton
-                label="Finish"
-                color="bg-content-color"
-              />
-            </div>
-          )
+            }
+            color="bg-content-color"
+            disable={isLoading}
+          />
         ) : (
           <div className="w-full px-5">
-            <WideLink
-              label="Next"
-              color="bg-content-color"
-              clickAction={onNextClick}
-            />
+            {/* <WideButton
+                label="Finish"
+                color="bg-content-color"
+              /> */}
+            {isLoading ? (
+              <WideButton
+                label={
+                  <div className="flex justify-center items-center w-full h-full gap-2">
+                    <ClipLoader
+                      color={"white"}
+                      size={15}
+                      aria-label="Loading Spinner"
+                      data-testid="loader"
+                    />
+                    <p className="text-white text-[1.1rem] italic">
+                      loading ...
+                    </p>
+                  </div>
+                }
+                color="bg-content-color"
+                disable={isLoading}
+              />
+            ) : (
+              <WideButton label="Finish" color="bg-content-color" />
+            )}
           </div>
-        )}
+        )
+      ) : (
+        <div className="w-full px-5">
+          <WideLink
+            label="Next"
+            color="bg-content-color"
+            clickAction={onNextClick}
+          />
+        </div>
+      )}
       <div className="w-full px-5 text-slate-400 text-[1rem] mb-10">
         Already have an account?{" "}
-        <a href={forModerator ? moderatorLoginUrl : loginUrl} className="text-content-color font-[470]">
+        <a
+          href={forModerator ? moderatorLoginUrl : loginUrl}
+          className="text-content-color font-[470]"
+        >
           Login now
         </a>
       </div>

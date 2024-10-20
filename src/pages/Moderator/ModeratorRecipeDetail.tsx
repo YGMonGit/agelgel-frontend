@@ -43,9 +43,18 @@ import {
 } from "../../api/slices/review.slices";
 import CircularProgress from "../../components/CircularProgress";
 import DisplayCard from "../../components/DisplayCard";
-import { useGetUserByIdQuery, useToggleBookedRecipeMutation } from "../../api/slices/user.slices";
+import {
+  useGetUserByIdQuery,
+  useToggleBookedRecipeMutation,
+} from "../../api/slices/user.slices";
 import ClipLoader from "react-spinners/ClipLoader";
-import { getCalorieColor, getCarbsColor, getFatColor, getFiberColor, getProteinColor } from "../../assets/data";
+import {
+  getCalorieColor,
+  getCarbsColor,
+  getFatColor,
+  getFiberColor,
+  getProteinColor,
+} from "../../assets/data";
 
 // import { IoAdd } from "react-icons/io5";
 import { MdEmail, MdVerified } from "react-icons/md";
@@ -68,8 +77,6 @@ function ModeratorRecipeDetail() {
   const [value, setValue] = React.useState<number | null>(0);
   const [mComment, setMComment] = useState("");
   const showCommentButton = value !== 0 && newComment.trim() !== "";
-
-
 
   const scrollableDivRef = useRef<HTMLDivElement>(null);
 
@@ -169,7 +176,6 @@ function ModeratorRecipeDetail() {
     }
   }, [recipe]);
 
-
   function convertToEmbedUrl(youtubeLink: string) {
     const videoId = youtubeLink.split("v=")[1];
     const ampersandPosition = videoId ? videoId.indexOf("&") : -1;
@@ -181,7 +187,6 @@ function ModeratorRecipeDetail() {
     }
     return `https://www.youtube.com/embed/${videoId}`;
   }
-
 
   const onNewCommentChange = (e: React.ChangeEvent<HTMLInputElement>) =>
     setNewComment(e.target.value);
@@ -241,7 +246,8 @@ function ModeratorRecipeDetail() {
           )}
         </div>
         <div className="w-full flex justify-between items-center leading-none">
-          <div className="flex items-center gap-2 select-none cursor-pointer"
+          <div
+            className="flex items-center gap-2 select-none cursor-pointer"
             onClick={() => {
               setOpenDialogBoxTwo(true);
             }}
@@ -253,21 +259,32 @@ function ModeratorRecipeDetail() {
             />
             {openDialogBoxTwo && (
               <AlertDialogBox
-                  buttonContent="Close"
-                  closeDialog={() => {
-                    setOpenDialogBoxTwo(false);
-                  }}
-                  handleClick={() => {
-                    setOpenDialogBoxTwo(false);
-                  }}
-                  single={true}
-                >
-                  <div className="w-full flex flex-col items-start justify-start gap-2 *:pl-4">
-                    <p className="flex justify-start items-center gap-2 text-slate-400 italic"><img src={recipe.user.profile_img} className="w-6 h-6 object-cover rounded-full bg-neutral-100 dark:bg-neutral-800" /> {user?.full_name}</p>
-                    <p className="flex justify-start items-center gap-2 text-slate-400 italic"><FaPhoneAlt className="text-content-color" /> {user?.phone_number}</p>
-                    <p className="flex justify-start items-center gap-2 text-slate-400 italic"><MdEmail className="text-content-color"/> {user?.email}</p>
-                  </div>
-                </AlertDialogBox>
+                buttonContent="Close"
+                closeDialog={() => {
+                  setOpenDialogBoxTwo(false);
+                }}
+                handleClick={() => {
+                  setOpenDialogBoxTwo(false);
+                }}
+                single={true}
+              >
+                <div className="w-full flex flex-col items-start justify-start gap-2 *:pl-4">
+                  <p className="flex justify-start items-center gap-2 text-slate-400 italic">
+                    <img
+                      src={recipe.user.profile_img}
+                      className="w-6 h-6 object-cover rounded-full bg-neutral-100 dark:bg-neutral-800"
+                    />{" "}
+                    {user?.full_name}
+                  </p>
+                  <p className="flex justify-start items-center gap-2 text-slate-400 italic">
+                    <FaPhoneAlt className="text-content-color" />{" "}
+                    {user?.phone_number}
+                  </p>
+                  <p className="flex justify-start items-center gap-2 text-slate-400 italic">
+                    <MdEmail className="text-content-color" /> {user?.email}
+                  </p>
+                </div>
+              </AlertDialogBox>
             )}
             <p className="text-[1.3rem] font-semibold">
               {recipe.user.full_name}
@@ -301,7 +318,7 @@ function ModeratorRecipeDetail() {
                   backgroundColor: "transparent",
                   height: "25px",
                   fontWeight: "500",
-                }}              
+                }}
                 className="dark:text-white"
               />
             </div>
@@ -369,7 +386,6 @@ function ModeratorRecipeDetail() {
             />
             <CircularProgress
               color={getCarbsColor(recipe.nutrition.fat_total_g)}
-
               value={recipe.nutrition.carbohydrates_total_g}
               maxValue={100}
               image={CarbsIcon}
@@ -401,14 +417,13 @@ function ModeratorRecipeDetail() {
                       : IngredientDefaultImage
                   }
                   alt="pic"
-                  className={`min-w-8 w-8 ${ingredientImages[index] === undefined &&
+                  className={`min-w-8 w-8 ${
+                    ingredientImages[index] === undefined &&
                     "rounded-full p-[5px] shadow-md bg-neutral-200"
-                    }`}
+                  }`}
                 />
                 <GoDotFill className="text-[.7rem] ml-[6px] mr-1 text-slate-500" />
-                {ingredient.name}({" "}
-                {ingredient.localName} )-{" "}
-                {ingredient.amount}{" "}
+                {ingredient.name}( {ingredient.localName} )- {ingredient.amount}{" "}
                 {ingredient.unit}
               </div>
             );
@@ -443,11 +458,11 @@ function ModeratorRecipeDetail() {
             >
               {isLoading
                 ? Array.from({ length: skeletonCount }).map((_, index) => (
-                  <DisplayCard post={null} key={`skeleton-${index}`} />
-                ))
+                    <DisplayCard post={null} key={`skeleton-${index}`} />
+                  ))
                 : recommendedRecipes?.map((post, index) => (
-                  <DisplayCard post={post} key={index} />
-                ))}
+                    <DisplayCard post={post} key={index} />
+                  ))}
             </div>
           ) : (
             <div className="w-full flex justify-center">
@@ -469,9 +484,12 @@ function ModeratorRecipeDetail() {
           ))}
         </div>
 
-        <div className="w-full flex justify-end items-center sticky bottom-0 px-2 pb-6" style={{
-          display: recipe.isModeratedRecipe ? "none" : "flex"
-        }}>
+        <div
+          className="w-full flex justify-end items-center sticky bottom-0 px-2 pb-6"
+          // style={{
+          //   display: recipe.isModeratedRecipe ? "none" : "flex",
+          // }}
+        >
           <div
             className="w-14 h-14 bg-content-color flex justify-center items-center rounded-full text-[2rem] text-white"
             onClick={openDrawer}
@@ -498,39 +516,79 @@ function ModeratorRecipeDetail() {
               noPad={true}
             />
             <div className="w-full flex flex-col justify-center items-center px-2 gap-2 pb-8">
-              <WideButton
-                label="Approve"
-                color="bg-content-color"
-                disable={createLoading}
-                clickEvent={async () => {
-                  await UpdateRecipeStatus({
-                    recipeId: recipe._id,
-                    updates: {
-                      comment: mComment,
-                      status: ERecipeStatus.verified,
-                    }
-                  });
-                  setMComment("");
-                  closeDrawer();
-                }}
-              />
-              <WideButton
-                label="Disapprove"
-                color="bg-red-500"
-                borderColor="border-red-500"
-                disable={createLoading}
-                clickEvent={async () => {
-                  await UpdateRecipeStatus({
-                    recipeId: recipe._id,
-                    updates: {
-                      comment: mComment,
-                      status: ERecipeStatus.verified,
-                    }
-                  }).unwrap();
-                  setMComment("");
-                  closeDrawer();
-                }}
-              />
+              {isLoading ? (
+                <WideButton
+                  label={
+                    <div className="flex justify-center items-center w-full h-full gap-2">
+                      <ClipLoader
+                        color={"white"}
+                        size={15}
+                        aria-label="Loading Spinner"
+                        data-testid="loader"
+                      />
+                      <p className="text-white text-[1.1rem] italic">
+                        loading ...
+                      </p>
+                    </div>
+                  }
+                  color="bg-content-color"
+                  disable={isLoading}
+                />
+              ) : (
+                <WideButton
+                  label="Approve"
+                  color="bg-content-color"
+                  disable={createLoading}
+                  clickEvent={async () => {
+                    await UpdateRecipeStatus({
+                      recipeId: recipe._id,
+                      updates: {
+                        comment: mComment,
+                        status: ERecipeStatus.verified,
+                      },
+                    });
+                    setMComment("");
+                    closeDrawer();
+                  }}
+                />
+              )}
+              {isLoading ? (
+                <WideButton
+                  label={
+                    <div className="flex justify-center items-center w-full h-full gap-2">
+                      <ClipLoader
+                        color={"white"}
+                        size={15}
+                        aria-label="Loading Spinner"
+                        data-testid="loader"
+                      />
+                      <p className="text-white text-[1.1rem] italic">
+                        loading ...
+                      </p>
+                    </div>
+                  }
+                  color="bg-content-color"
+                  disable={isLoading}
+                />
+              ) : (
+                <WideButton
+                  label="Disapprove"
+                  color="bg-red-500"
+                  borderColor="border-red-500"
+                  disable={createLoading}
+                  clickEvent={async () => {
+                    await UpdateRecipeStatus({
+                      recipeId: recipe._id,
+                      updates: {
+                        comment: mComment,
+                        status: ERecipeStatus.verified,
+                      },
+                    }).unwrap();
+                    setMComment("");
+                    closeDrawer();
+                  }}
+                />
+              )}
             </div>
             <Button
               variant="outline"
