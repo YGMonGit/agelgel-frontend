@@ -330,6 +330,7 @@ function RecipeEditForm() {
           finish={false}
           register={register}
           errors={errors}
+          recipe={true}
         />
       )}
       {formNumber === 3 && (

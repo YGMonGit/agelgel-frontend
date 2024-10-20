@@ -114,7 +114,7 @@ const DropdownInput: React.FC<DropdownInputProps> = ({
               <li
                 key={index}
                 id={option._id}
-                className="px-4 py-2 hover:bg-gray-100 cursor-pointer"
+                className="px-4 py-2 hover:bg-gray-100 dark:hover:bg-neutral-700 cursor-pointer"
                 onClick={() => handleOptionClick(option)}
               >
                 {option.name}  ({option.localName})
